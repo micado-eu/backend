@@ -10,12 +10,12 @@ The Docker compose file is there to help development; in particular there are 2 
 
 The first is the proper backend code and is based on a specific image to be sure that all use the same coding environment,
 The second is a PostGIS DB coherent with the production for MICADO: it will install itself with all the needed schemas and configurations.
-For more details please consult the "deployment repository"
+For more details please consult the "deployment repository" [remember to create the **prod.env** file with password data]
 
-To code you will have to run the following command on a first shellpreferred editor
+To code you will have to run the following command on a first shell
 
 ```bash
-docker-compose up backend
+(set -a; source prod.env; set +a; docker-compose -f docker-compose.yaml  up )
 ```
 On a second shell the following commands 
 ```bash
@@ -23,7 +23,7 @@ docker-compose exec  backend bash
 cd micado-backend/
 npm start
 ```
-The container will mount the application folder and it will be possibile to code with.
+The container will mount the application folder and it will be possibile to code with preferred editor.
 
 ### Funded by
 
