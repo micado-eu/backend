@@ -9,6 +9,7 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {CrudRestComponent} from '@loopback/rest-crud';
 
 export class MicadoBackendApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -38,5 +39,6 @@ export class MicadoBackendApplication extends BootMixin(
         nested: true,
       },
     };
+    this.component(CrudRestComponent);
   }
 }

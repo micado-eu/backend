@@ -1,0 +1,11 @@
+{
+  "name": "micadoDS",
+  "connector": "postgresql",
+  "url": "postgres://micadoapp:micadoapp@micado_db/micado",
+  "host": "micado_db",
+  "port": 5432,
+  "user": "micadoapp",
+  "password": "micadoapp",
+  "schema": "micadoapp",
+  "database": "micado"
+}
