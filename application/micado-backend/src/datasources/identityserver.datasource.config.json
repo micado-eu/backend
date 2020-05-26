@@ -1,0 +1,40 @@
+{
+  "name": "identityserver",
+  "connector": "rest",
+  "baseURL": "https://identity.micadoproject.eu",
+  "debug": true,
+  "options": {
+    "headers": {
+      "accept": "*/*",
+      "content-type": "application/json",
+      "Authorization": "Basic YWRtaW46bWljYWRvYWRtMjAyMA=="
+    },
+    "strictSSL": false
+  },
+  "crud": false,
+  "operations": [
+    {
+      "template": {
+        "method": "GET",
+        "url": "https://identity.micadoproject.eu/api/identity/consent-mgt/v1.0/consents",
+        "query": {
+          "limit": 10,
+          "offset": 0,
+          "spTenantDomain": "carbon.super",
+          "piiPrincipalId": "newgioppo",
+          "dummy": "{tenant}{principal}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "consent": [
+          "tenant",
+          "principal"
+        ]
+      }
+    }
+  ]
+}
