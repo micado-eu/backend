@@ -1,9 +1,9 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
 
 @model({
   settings: {
     idInjection: false,
-    postgresql: {schema: 'micadoapp', table: 'topic_translation'}
+    postgresql: { schema: 'micadoapp', table: 'topic_translation' }
   }
 })
 export class TopicTranslation extends Entity {
@@ -11,27 +11,28 @@ export class TopicTranslation extends Entity {
     type: 'number',
     required: true,
     scale: 0,
-    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    id: true,
+    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
 
   @property({
     type: 'string',
     length: 10,
-    postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   lang?: string;
 
   @property({
     type: 'string',
     length: 20,
-    postgresql: {columnName: 'topic', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'topic', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   topic?: string;
 
   @property({
     type: 'date',
-    postgresql: {columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   translationDate?: string;
 

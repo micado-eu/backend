@@ -1,42 +1,43 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
 
 @model({
   settings: {
     idInjection: false,
-    postgresql: {schema: 'micadoapp', table: 'features_flags_translated'}
+    postgresql: { schema: 'micadoapp', table: 'features_flags_translated' }
   }
 })
 export class FeaturesFlagsTranslated extends Entity {
   @property({
     type: 'number',
     scale: 0,
-    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+    id: true,
+    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES' },
   })
   id?: number;
 
   @property({
     type: 'string',
-    postgresql: {columnName: 'flag_key', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'flag_key', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   flagKey?: string;
 
   @property({
     type: 'boolean',
-    postgresql: {columnName: 'enabled', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'enabled', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   enabled?: boolean;
 
   @property({
     type: 'string',
     length: 10,
-    postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   lang?: string;
 
   @property({
     type: 'string',
     length: 30,
-    postgresql: {columnName: 'feature', dataType: 'character varying', dataLength: 30, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'feature', dataType: 'character varying', dataLength: 30, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   feature?: string;
 

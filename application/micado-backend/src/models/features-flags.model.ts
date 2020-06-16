@@ -1,28 +1,30 @@
-import {Entity, model, property} from '@loopback/repository';
+import { FeaturesFlagsTranslation } from './features-flags-translation.model';
+import { Entity, model, property, hasMany } from '@loopback/repository';
 
 @model({
-  settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'features_flags'}}
+  settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'features_flags' } }
 })
 export class FeaturesFlags extends Entity {
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
-    id: 1,
-    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    id: true,
+    generated: true,
+    //    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
 
   @property({
     type: 'string',
-    postgresql: {columnName: 'flag_key', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'flag_key', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   flagKey?: string;
 
   @property({
     type: 'boolean',
     required: true,
-    postgresql: {columnName: 'enabled', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
+    postgresql: { columnName: 'enabled', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO' },
   })
   enabled: boolean;
 
@@ -31,6 +33,9 @@ export class FeaturesFlags extends Entity {
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [prop: string]: any;
+
+  @hasMany(() => FeaturesFlagsTranslation, { keyTo: 'featureFlagId' })
+  translations?: FeaturesFlagsTranslation[];
 
   constructor(data?: Partial<FeaturesFlags>) {
     super(data);

@@ -1,48 +1,51 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
 
 @model({
-  settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'document_type'}}
+  settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'document_type' } }
 })
 export class DocumentType extends Entity {
   @property({
-    type: 'number',
-    required: true,
+    type: 'Number',
+    required: false,
     scale: 0,
-    id: 1,
-    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    id: true,
+    generated: true,
+    //    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
 
   @property({
     type: 'string',
-    postgresql: {columnName: 'icon', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    required: false,
+    postgresql: { columnName: 'icon', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   icon?: string;
 
   @property({
     type: 'string',
     length: 20,
-    postgresql: {columnName: 'issuer', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    required: false,
+    postgresql: { columnName: 'issuer', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   issuer?: string;
 
   @property({
     type: 'string',
-    postgresql: {columnName: 'model', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'model', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   model?: string;
 
   @property({
     type: 'boolean',
     required: true,
-    postgresql: {columnName: 'validable', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
+    postgresql: { columnName: 'validable', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO' },
   })
   validable: boolean;
 
   @property({
-    type: 'number',
+    type: 'Number',
     scale: 0,
-    postgresql: {columnName: 'validity_duration', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+    postgresql: { columnName: 'validity_duration', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES' },
   })
   validityDuration?: number;
 

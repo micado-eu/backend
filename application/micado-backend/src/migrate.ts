@@ -1,12 +1,12 @@
-import {MicadoBackendApplication} from './application';
+import { MicadoBackendApplication } from './application';
 
-export async function migrate(args: string[]) {
+export async function migrate (args: string[]) {
   const existingSchema = args.includes('--rebuild') ? 'drop' : 'alter';
   console.log('Migrating schemas (%s existing schema)', existingSchema);
 
   const app = new MicadoBackendApplication();
   await app.boot();
-  await app.migrateSchema({existingSchema, models: ['FeaturesFlags', 'Topic']});
+  await app.migrateSchema({ existingSchema, models: ['FeaturesFlags', 'Languages', 'FeaturesFlagsTranslation'] });
 
   // Connectors usually keep a pool of opened connections,
   // this keeps the process running even after all work is done.

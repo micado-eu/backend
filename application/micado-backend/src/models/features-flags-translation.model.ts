@@ -1,37 +1,62 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
 
 @model({
   settings: {
     idInjection: false,
-    postgresql: {schema: 'micadoapp', table: 'features_flags_translation'}
+    postgresql: { schema: 'micadoapp', table: 'features_flags_translation' },
+    foreignKeys: {
+      fk_fft_feature_flag_id: {
+        name: 'fk_fft_feature_flag_id',
+        entity: 'FeaturesFlags',
+        entityKey: 'id',
+        foreignKey: 'featureflagid',
+      },
+      fk_fft_lang_id: {
+        name: 'fk_fft_lang_id',
+        entity: 'Languages',
+        entityKey: 'lang',
+        foreignKey: 'lang',
+      },
+    }
   }
 })
 export class FeaturesFlagsTranslation extends Entity {
   @property({
-    type: 'number',
-    required: true,
+    type: 'Number',
+    required: false,
     scale: 0,
-    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    id: true,
+    generated: true,
+    //    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
 
   @property({
+    type: 'number',
+    required: true,
+    scale: 0,
+    postgresql: { columnName: 'featureflagid', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+  })
+  featureFlagId: number;
+
+  @property({
     type: 'string',
+    required: true,
     length: 10,
-    postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    //    postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO' },
   })
   lang?: string;
 
   @property({
     type: 'string',
     length: 30,
-    postgresql: {columnName: 'feature', dataType: 'character varying', dataLength: 30, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'feature', dataType: 'character varying', dataLength: 30, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   feature?: string;
 
   @property({
     type: 'date',
-    postgresql: {columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    //    postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   translationDate?: string;
 
