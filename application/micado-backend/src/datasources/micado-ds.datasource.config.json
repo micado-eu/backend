@@ -7,5 +7,6 @@
   "user": "micadoapp",
   "password": "micadoapp",
   "schema": "micadoapp",
+  "migrationCreateSchema": false,
   "database": "micado"
 }
