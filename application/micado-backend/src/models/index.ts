@@ -42,3 +42,4 @@ export * from './languages.model';
 export * from './event-category-translation.model';
 export * from './step-document.model';
 export * from './user-types-translation.model';
+export * from './user.model';
