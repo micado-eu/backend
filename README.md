@@ -15,7 +15,7 @@ For more details please consult the "deployment repository" [remember to create 
 To code you will have to run the following command on a first shell
 
 ```bash
-(set -a; source prod.env; set +a; docker-compose -f docker-compose.yaml  up )
+(set -a; source prod.env; set +a; docker-compose -f docker-compose.yaml  up backend micado_db)
 ```
 On a second shell the following commands 
 ```bash
