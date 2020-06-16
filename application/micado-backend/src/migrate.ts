@@ -6,7 +6,7 @@ export async function migrate(args: string[]) {
 
   const app = new MicadoBackendApplication();
   await app.boot();
-  await app.migrateSchema({existingSchema, models: ['FeaturesFlags', 'User']});
+  await app.migrateSchema({existingSchema, models: ['FeaturesFlags', 'Topic']});
 
   // Connectors usually keep a pool of opened connections,
   // this keeps the process running even after all work is done.

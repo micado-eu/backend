@@ -25,6 +25,32 @@ npm start
 ```
 The container will mount the application folder and it will be possibile to code with preferred editor.
 
+
+### To add a CRUD endpoint for a Model
+It is possible to expose directly a Model straightforward as a CRUD API the command is like the one that follows.
+This operation is needed to activate the table as managed by the model so that the migration will take it into consideration.
+
+```
+lb4 rest-crud --datasource micadoDS --model Topic
+```
+
+To control which tables are migrated and in what order there is an array to manage by hand in the 'src/migrate.ts'; the place is the models key.
+```
+  await app.migrateSchema({existingSchema, models: ['FeaturesFlags', 'Topic']});
+
+```
+
+
+### How to execute a migration of the DB
+We need to have an option to migrate the DB, at the moment we are using the command line, but there is a way to create an APi that will invoke the migration command.
+
+The way of using the cli is (the environment variable is to see the SQL code that the application is using to better understand errors):
+```
+npm run build
+DEBUG=loopback:connector:postgresql npm run migrate
+```
+
+
 ### Funded by
 
 ![EU Logo](https://github.com/micado-eu/MICADO/blob/master/img/Flag_of_Europe.svg_.png)This project has received funding from the European Union’s H2020 Innovation Action under Grant Agreement No 822717.
