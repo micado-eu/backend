@@ -85,6 +85,8 @@ psql -c "GRANT SELECT, REFERENCES ON $WSO2_SHARED_SCHEMA.um_user TO $MICADO_DB_U
 echo "\nCreated MICADO apps components, now adding tables\n"
 
 #psql -U $MICADO_DB_USER -d $POSTGRES_DB -a -q -f /docker-entrypoint-initdb.d/01_db.sql.txt
+
+#UNCOMMENT THIS IF YOU WANT TO HAVE THE DB WITH THE TABLES 
 #psql -U $MICADO_DB_USER -d $POSTGRES_DB -a -q -f /docker-entrypoint-initdb.d/Micado_DB_Schema.sql.txt
 
 
