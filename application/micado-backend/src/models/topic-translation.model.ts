@@ -11,7 +11,7 @@ export class TopicTranslation extends Entity {
     type: 'number',
     required: true,
     scale: 0,
-    id: true,
+    id: 1,
     postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
@@ -19,6 +19,8 @@ export class TopicTranslation extends Entity {
   @property({
     type: 'string',
     length: 10,
+    required: true,
+    id: 2,
     postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   lang?: string;
