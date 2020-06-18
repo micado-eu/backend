@@ -502,25 +502,6 @@ CREATE VIEW features_flags_translated AS
   WHERE (f.id = ft.id);
 
 
---
--- Name: features_flags_translation_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
---
-
-CREATE SEQUENCE features_flags_translation_id_seq
-    AS smallint
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: features_flags_translation_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
---
-
-ALTER SEQUENCE features_flags_translation_id_seq OWNED BY features_flags_translation.id;
-
 
 --
 -- Name: glossary; Type: TABLE; Schema: micadoapp; Owner: -
@@ -770,24 +751,6 @@ CREATE TABLE intervention_types_translation (
 );
 
 
---
--- Name: intervention_types_translation_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
---
-
-CREATE SEQUENCE intervention_types_translation_id_seq
-    AS smallint
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: intervention_types_translation_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
---
-
-ALTER SEQUENCE intervention_types_translation_id_seq OWNED BY intervention_types_translation.id;
 
 
 --
@@ -1375,11 +1338,6 @@ ALTER TABLE ONLY event_translation ALTER COLUMN id SET DEFAULT nextval('event_tr
 ALTER TABLE ONLY features_flags ALTER COLUMN id SET DEFAULT nextval('features_flags_id_seq'::regclass);
 
 
---
--- Name: features_flags_translation id; Type: DEFAULT; Schema: micadoapp; Owner: -
---
-
-ALTER TABLE ONLY features_flags_translation ALTER COLUMN id SET DEFAULT nextval('features_flags_translation_id_seq'::regclass);
 
 
 --
@@ -1438,11 +1396,6 @@ ALTER TABLE ONLY intervention_types ALTER COLUMN id SET DEFAULT nextval('interve
 ALTER TABLE ONLY intervention_types ALTER COLUMN category_type SET DEFAULT nextval('intervention_types_category_type_seq'::regclass);
 
 
---
--- Name: intervention_types_translation id; Type: DEFAULT; Schema: micadoapp; Owner: -
---
-
-ALTER TABLE ONLY intervention_types_translation ALTER COLUMN id SET DEFAULT nextval('intervention_types_translation_id_seq'::regclass);
 
 
 --
@@ -1925,12 +1878,6 @@ SELECT pg_catalog.setval('event_translation_id_seq', 1, false);
 SELECT pg_catalog.setval('features_flags_id_seq', 1, false);
 
 
---
--- Name: features_flags_translation_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
---
-
-SELECT pg_catalog.setval('features_flags_translation_id_seq', 1, false);
-
 
 --
 -- Name: glossary_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
@@ -1988,11 +1935,6 @@ SELECT pg_catalog.setval('intervention_types_category_type_seq', 1, false);
 SELECT pg_catalog.setval('intervention_types_id_seq', 1, false);
 
 
---
--- Name: intervention_types_translation_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
---
-
-SELECT pg_catalog.setval('intervention_types_translation_id_seq', 1, false);
 
 
 --
@@ -2105,6 +2047,10 @@ ALTER TABLE ONLY document
 
 ALTER TABLE ONLY document_type
     ADD CONSTRAINT document_type_pkey PRIMARY KEY (id);
+
+
+ALTER TABLE ONLY document_type_translation
+    ADD CONSTRAINT document_type_translation_pkey PRIMARY KEY (id, lang);
 
 
 --

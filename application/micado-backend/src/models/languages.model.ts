@@ -5,11 +5,10 @@ import { Entity, model, property } from '@loopback/repository';
 })
 export class Languages extends Entity {
   @property({
-    type: 'string',
+    type: 'String',
     required: true,
     length: 10,
     id: true,
-    generated: false,
     //    postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   lang: string;

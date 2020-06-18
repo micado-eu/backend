@@ -23,27 +23,22 @@ import { Entity, model, property } from '@loopback/repository';
 export class FeaturesFlagsTranslation extends Entity {
   @property({
     type: 'Number',
-    required: false,
+    required: true,
     scale: 0,
-    id: true,
-    generated: true,
-    //    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    id: 1,
+    generated: false,
+//    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
 
-  @property({
-    type: 'number',
-    required: true,
-    scale: 0,
-    postgresql: { columnName: 'featureflagid', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
-  })
-  featureFlagId: number;
 
   @property({
     type: 'string',
     required: true,
     length: 10,
-    //    postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO' },
+    id: 2,
+    generated: false,
+ //   postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO' },
   })
   lang?: string;
 
