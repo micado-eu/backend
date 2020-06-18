@@ -1,0 +1,3 @@
+select * from topic t inner join topic_translation tt on t.id=tt.id and tt.lang='de'
+union
+select * from topic t inner join topic_translation tt on t.id=tt.id and tt.lang='en' and t.id not in (select t.id from topic t inner join topic_translation tt on t.id=tt.id and tt.lang='de')
