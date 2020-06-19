@@ -1,13 +1,5 @@
---
--- PostgreSQL database dump
---
 
--- Dumped from database version 11.2
--- Dumped by pg_dump version 11.2
-
-
-
-
+SET default_with_oids = false;
 
 --
 -- Name: features_flags; Type: TABLE; Schema: micadoapp; Owner: -
@@ -124,7 +116,8 @@ ALTER SEQUENCE document_id_seq OWNED BY document.id;
 CREATE TABLE document_pictures (
     id smallint NOT NULL,
     picture text,
-    doc_id smallint NOT NULL
+    doc_id smallint NOT NULL,
+    "order" smallint
 );
 
 
@@ -138,7 +131,9 @@ CREATE TABLE document_type (
     issuer character varying(20),
     model text,
     validable boolean DEFAULT false NOT NULL,
-    validity_duration smallint
+    validity_duration smallint,
+    published boolean DEFAULT false NOT NULL,
+    publication_date date
 );
 
 
@@ -164,12 +159,44 @@ COMMENT ON COLUMN document_type.validity_duration IS 'the duration of the docume
 
 
 --
+-- Name: document_type_picture; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE document_type_picture (
+    id smallint NOT NULL,
+    image text,
+    document_type_id smallint NOT NULL,
+    "order" integer
+);
+
+
+--
+-- Name: document_type_picture_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE document_type_picture_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: document_type_picture_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE document_type_picture_id_seq OWNED BY document_type_picture.id;
+
+
+--
 -- Name: document_type_translation; Type: TABLE; Schema: micadoapp; Owner: -
 --
 
 CREATE TABLE document_type_translation (
     id smallint NOT NULL,
-    lang character varying(10),
+    lang character varying(10) NOT NULL,
     document character varying(50),
     description text,
     translation_date timestamp without time zone,
@@ -502,7 +529,6 @@ CREATE VIEW features_flags_translated AS
   WHERE (f.id = ft.id);
 
 
-
 --
 -- Name: glossary; Type: TABLE; Schema: micadoapp; Owner: -
 --
@@ -512,7 +538,9 @@ CREATE TABLE glossary (
     lang character varying(10) NOT NULL,
     title character varying(20),
     description text,
-    translation_date timestamp without time zone
+    translation_date timestamp without time zone,
+    published boolean DEFAULT false NOT NULL,
+    publication_date date
 );
 
 
@@ -583,7 +611,9 @@ CREATE TABLE individual_intervention_plan_interventions (
     completed boolean,
     validating_user_id integer,
     validating_user_tenant integer,
-    assignment_date timestamp without time zone
+    assignment_date timestamp without time zone,
+    id smallint NOT NULL,
+    validationrequestdate date
 );
 
 
@@ -605,6 +635,26 @@ CREATE SEQUENCE individual_intervention_plan_intervention_intervention_type_seq
 --
 
 ALTER SEQUENCE individual_intervention_plan_intervention_intervention_type_seq OWNED BY individual_intervention_plan_interventions.intervention_type;
+
+
+--
+-- Name: individual_intervention_plan_interventions_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE individual_intervention_plan_interventions_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: individual_intervention_plan_interventions_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE individual_intervention_plan_interventions_id_seq OWNED BY individual_intervention_plan_interventions.id;
 
 
 --
@@ -689,12 +739,24 @@ ALTER SEQUENCE intervention_processes_process_id_seq OWNED BY intervention_proce
 
 
 --
+-- Name: intervention_type_validator; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE intervention_type_validator (
+    tanant_id integer NOT NULL,
+    intervention_type_id smallint NOT NULL
+);
+
+
+--
 -- Name: intervention_types; Type: TABLE; Schema: micadoapp; Owner: -
 --
 
 CREATE TABLE intervention_types (
     id smallint NOT NULL,
-    category_type smallint NOT NULL
+    category_type smallint NOT NULL,
+    published boolean DEFAULT false NOT NULL,
+    publication_date date
 );
 
 
@@ -751,8 +813,6 @@ CREATE TABLE intervention_types_translation (
 );
 
 
-
-
 --
 -- Name: languages; Type: TABLE; Schema: micadoapp; Owner: -
 --
@@ -761,7 +821,8 @@ CREATE TABLE languages (
     lang character varying(10) NOT NULL,
     iso_code character varying(10),
     name character varying(25),
-    active boolean DEFAULT false NOT NULL
+    active boolean DEFAULT false NOT NULL,
+    is_default boolean DEFAULT false NOT NULL
 );
 
 
@@ -1067,7 +1128,6 @@ CREATE TABLE settings (
 
 CREATE TABLE step (
     id smallint NOT NULL,
-    previous smallint NOT NULL,
     cost money,
     location_specific boolean,
     location character varying(100),
@@ -1090,6 +1150,48 @@ CREATE TABLE step_document (
 
 
 --
+-- Name: step_link; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE step_link (
+    id smallint NOT NULL,
+    "from" smallint NOT NULL,
+    "to" smallint NOT NULL
+);
+
+
+--
+-- Name: step_link_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE step_link_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: step_link_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE step_link_id_seq OWNED BY step_link.id;
+
+
+--
+-- Name: step_link_translation; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE step_link_translation (
+    id smallint NOT NULL,
+    lang character varying(10) NOT NULL,
+    description character varying(25)
+);
+
+
+--
 -- Name: step_translation; Type: TABLE; Schema: micadoapp; Owner: -
 --
 
@@ -1108,7 +1210,6 @@ CREATE TABLE step_translation (
 
 CREATE VIEW step_translated AS
  SELECT s.id,
-    s.previous,
     s.cost,
     s.location_specific,
     s.location,
@@ -1129,7 +1230,9 @@ CREATE VIEW step_translated AS
 
 CREATE TABLE topic (
     id smallint NOT NULL,
-    icon text
+    icon text,
+    published boolean DEFAULT false NOT NULL,
+    publication_date date
 );
 
 
@@ -1159,7 +1262,7 @@ ALTER SEQUENCE topic_id_seq OWNED BY topic.id;
 
 CREATE TABLE topic_translation (
     id smallint NOT NULL,
-    lang character varying(10),
+    lang character varying(10) NOT NULL,
     topic character varying(20),
     translation_date timestamp without time zone
 );
@@ -1204,7 +1307,10 @@ ALTER SEQUENCE topic_translation_id_seq OWNED BY topic_translation.id;
 --
 
 CREATE TABLE user_types (
-    id smallint NOT NULL
+    id smallint NOT NULL,
+    icon text,
+    published boolean DEFAULT false NOT NULL,
+    publication_date date
 );
 
 
@@ -1276,6 +1382,13 @@ ALTER TABLE ONLY document ALTER COLUMN document_type SET DEFAULT nextval('docume
 
 
 --
+-- Name: document_type_picture id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY document_type_picture ALTER COLUMN id SET DEFAULT nextval('document_type_picture_id_seq'::regclass);
+
+
+--
 -- Name: event id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
@@ -1338,8 +1451,6 @@ ALTER TABLE ONLY event_translation ALTER COLUMN id SET DEFAULT nextval('event_tr
 ALTER TABLE ONLY features_flags ALTER COLUMN id SET DEFAULT nextval('features_flags_id_seq'::regclass);
 
 
-
-
 --
 -- Name: glossary id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
@@ -1369,6 +1480,13 @@ ALTER TABLE ONLY individual_intervention_plan_interventions ALTER COLUMN interve
 
 
 --
+-- Name: individual_intervention_plan_interventions id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY individual_intervention_plan_interventions ALTER COLUMN id SET DEFAULT nextval('individual_intervention_plan_interventions_id_seq'::regclass);
+
+
+--
 -- Name: intervention_processes intervention_type; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
@@ -1394,8 +1512,6 @@ ALTER TABLE ONLY intervention_types ALTER COLUMN id SET DEFAULT nextval('interve
 --
 
 ALTER TABLE ONLY intervention_types ALTER COLUMN category_type SET DEFAULT nextval('intervention_types_category_type_seq'::regclass);
-
-
 
 
 --
@@ -1455,6 +1571,13 @@ ALTER TABLE ONLY ratings ALTER COLUMN content_id SET DEFAULT nextval('ratings_co
 
 
 --
+-- Name: step_link id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_link ALTER COLUMN id SET DEFAULT nextval('step_link_id_seq'::regclass);
+
+
+--
 -- Name: topic id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
@@ -1482,323 +1605,280 @@ ALTER TABLE ONLY user_types ALTER COLUMN id SET DEFAULT nextval('user_types_id_s
 ALTER TABLE ONLY user_types_translation ALTER COLUMN id SET DEFAULT nextval('user_types_translation_id_seq'::regclass);
 
 
-
 --
 -- Data for Name: document; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY document (id, document_type, user_id, user_tenant, ask_validate_by_tenant, validated, validation_date, validated_by_tenant, validated_by_user, uploaded_by_me, expiration_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: document_pictures; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY document_pictures (id, picture, doc_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: document_type; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY document_type (id, icon, issuer, model, validable, validity_duration) FROM stdin;
-1	data:image/png;base64,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	\N	\N	f	-1
-2	\N	\N	\N	f	-1
-3	\N	\N	\N	f	-1
-4	\N	\N	\N	f	-1
-5	\N	\N	\N	f	-1
-\.
+INSERT INTO document_type VALUES (1, 'data:image/png;base64,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', NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES (2, NULL, NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES (3, NULL, NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES (4, NULL, NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES (5, NULL, NULL, NULL, false, -1, false, NULL);
+
+
+--
+-- Data for Name: document_type_picture; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
 
 
 --
 -- Data for Name: document_type_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY document_type_translation (id, lang, document, description, translation_date, template_image) FROM stdin;
-1	it	permesso di soggiorno	bla bla	2020-04-14 16:17:39.35	\N
-1	en	residence permit	bla bla	2020-04-14 16:17:39.35	\N
-2	en	module	bla bla	2020-04-14 16:17:39.35	\N
-3	en	payment order	bla bla	2020-04-14 16:17:39.35	\N
-4	en	application module	bla bla	2020-04-14 16:17:39.35	\N
-5	en	stamp duty	bla bla	2020-04-14 16:17:39.35	\N
-\.
+INSERT INTO document_type_translation VALUES (1, 'it', 'permesso di soggiorno', 'bla bla', '2020-04-14 16:17:39.35', NULL);
+INSERT INTO document_type_translation VALUES (1, 'en', 'residence permit', 'bla bla', '2020-04-14 16:17:39.35', NULL);
+INSERT INTO document_type_translation VALUES (2, 'en', 'module', 'bla bla', '2020-04-14 16:17:39.35', NULL);
+INSERT INTO document_type_translation VALUES (3, 'en', 'payment order', 'bla bla', '2020-04-14 16:17:39.35', NULL);
+INSERT INTO document_type_translation VALUES (4, 'en', 'application module', 'bla bla', '2020-04-14 16:17:39.35', NULL);
+INSERT INTO document_type_translation VALUES (5, 'en', 'stamp duty', 'bla bla', '2020-04-14 16:17:39.35', NULL);
 
 
 --
 -- Data for Name: document_type_validator; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY document_type_validator (document_type_id, validable_by_tenant) FROM stdin;
-\.
 
 
 --
 -- Data for Name: event; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY event (id, link, published, publication_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: event_category; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY event_category (id, icon) FROM stdin;
-\.
 
 
 --
 -- Data for Name: event_category_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY event_category_translation (id, lang, event_category, translation_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: event_event_category; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY event_event_category (id_event, id_event_category) FROM stdin;
-\.
 
 
 --
 -- Data for Name: event_topic; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY event_topic (id_event, id_topic) FROM stdin;
-\.
 
 
 --
 -- Data for Name: event_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY event_translation (id, lang, event, description, translation_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: features_flags; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY features_flags (id, flag_key, enabled) FROM stdin;
-1	FEAT_DOCUMENTS	f
-2	FEAT_GLOSSARY	t
-3	FEAT_ASSISTANT	t
-\.
+INSERT INTO features_flags VALUES (1, 'FEAT_DOCUMENTS', false);
+INSERT INTO features_flags VALUES (2, 'FEAT_GLOSSARY', true);
+INSERT INTO features_flags VALUES (3, 'FEAT_ASSISTANT', true);
 
 
 --
 -- Data for Name: features_flags_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY features_flags_translation (id, lang, feature, translation_date) FROM stdin;
-1	it	Portafoglio documenti	2020-04-14 17:54:28.436
-1	en	Document wallet	2020-04-14 17:54:28.436
-\.
+INSERT INTO features_flags_translation VALUES (1, 'it', 'Portafoglio documenti', '2020-04-14 17:54:28.436');
+INSERT INTO features_flags_translation VALUES (1, 'en', 'Document wallet', '2020-04-14 17:54:28.436');
 
 
 --
 -- Data for Name: glossary; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY glossary (id, lang, title, description, translation_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: individual_intervention_plan; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY individual_intervention_plan (id, title, creation_date, end_date, case_manager, user_id, user_tenant, completed) FROM stdin;
-\.
 
 
 --
 -- Data for Name: individual_intervention_plan_interventions; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY individual_intervention_plan_interventions (list_id, intervention_type, validation_date, completed, validating_user_id, validating_user_tenant, assignment_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: intervention_category; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY intervention_category (id, title, lang) FROM stdin;
-\.
 
 
 --
 -- Data for Name: intervention_processes; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY intervention_processes (intervention_type, process_id) FROM stdin;
-\.
+
+
+--
+-- Data for Name: intervention_type_validator; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
 
 
 --
 -- Data for Name: intervention_types; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY intervention_types (id, category_type) FROM stdin;
-\.
 
 
 --
 -- Data for Name: intervention_types_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY intervention_types_translation (id, lang, intervention_title, description, translation_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: languages; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY languages (lang, iso_code, name, active) FROM stdin;
-it	it-it	italiano	t
-en	en-us	english	t
-de	de-de	deutch	t
-\.
+INSERT INTO languages VALUES ('it', 'it-it', 'italiano', true, false);
+INSERT INTO languages VALUES ('de', 'de-de', 'deutch', true, false);
+INSERT INTO languages VALUES ('es', NULL, 'espagnol', false, false);
+INSERT INTO languages VALUES ('en', 'en-us', 'english', true, true);
 
 
 --
 -- Data for Name: migrant_app_config; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY migrant_app_config (id, features) FROM stdin;
-1	["FEAT_DOCUMENTS","FEAT_GLOSSARY","FEAT_ASSISTANT","FEAT_SERVICES","FEAT_TASKS","FEAT_DEFAULT"]
-\.
+INSERT INTO migrant_app_config VALUES (1, '["FEAT_DOCUMENTS","FEAT_GLOSSARY","FEAT_ASSISTANT","FEAT_SERVICES","FEAT_TASKS","FEAT_DEFAULT"]');
 
 
 --
 -- Data for Name: picture_hotspot; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY picture_hotspot (id, x, y, picture_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: picture_hotspot_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY picture_hotspot_translation (pht_id, lang, title, message) FROM stdin;
-\.
 
 
 --
 -- Data for Name: process; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY process (id, link, published, publication_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: process_topic; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY process_topic (id_process, id_topic) FROM stdin;
-\.
 
 
 --
 -- Data for Name: process_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY process_translation (id, lang, process, description, translation_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: process_users; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY process_users (id_process, id_user_types) FROM stdin;
-\.
 
 
 --
 -- Data for Name: ratings; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY ratings (user_id, user_tenant, content_id, content_type, value) FROM stdin;
-\.
 
 
 --
 -- Data for Name: settings; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY settings (key, value) FROM stdin;
-default_language	it
-api_token	eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlpqUm1ZVE13TlRKak9XVTVNbUl6TWpnek5ESTNZMkl5TW1JeVkyRXpNamRoWmpWaU1qYzBaZz09In0.eyJhdWQiOiJodHRwOlwvXC9vcmcud3NvMi5hcGltZ3RcL2dhdGV3YXkiLCJzdWIiOiJhZG1pbkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6ImFkbWluIiwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJNaWdyYW50QXBwbGljYXRpb24iLCJpZCI6MSwidXVpZCI6bnVsbH0sInNjb3BlIjoiYW1fYXBwbGljYXRpb25fc2NvcGUgZGVmYXVsdCIsImlzcyI6Imh0dHBzOlwvXC9nYXRld2F5Lm1pY2Fkb3Byb2plY3QuZXU6NDQzXC9vYXV0aDJcL3Rva2VuIiwidGllckluZm8iOnsiQnJvbnplIjp7InN0b3BPblF1b3RhUmVhY2giOnRydWUsInNwaWtlQXJyZXN0TGltaXQiOjAsInNwaWtlQXJyZXN0VW5pdCI6bnVsbH19LCJrZXl0eXBlIjoiUFJPRFVDVElPTiIsInN1YnNjcmliZWRBUElzIjpbeyJzdWJzY3JpYmVyVGVuYW50RG9tYWluIjoiY2FyYm9uLnN1cGVyIiwibmFtZSI6IlBvc3RnUkVTVEFQSSIsImNvbnRleHQiOiJcL2RiXC92MDEiLCJwdWJsaXNoZXIiOiJhZG1pbiIsInZlcnNpb24iOiJ2MDEiLCJzdWJzY3JpcHRpb25UaWVyIjoiQnJvbnplIn1dLCJjb25zdW1lcktleSI6InZabFNMbTFnYzVOMzIxbnRIN2Ztd2tONTNvVWEiLCJleHAiOjM3MzAyOTc0MzgsImlhdCI6MTU4MjgxMzc5MSwianRpIjoiYmYyMjBiYjMtNjY3MC00OTA5LWI4OTctOTY2ZDVhZDdhN2M0In0.GORnM7Hfflrv8iNFbBOZoLg7475tnLaXwY2f88My_qVCAupJxqPihM901E5GNQUsL2I7PW9_ymbCPJki0FuaIhdXk4ovso11ghjWDkVH9fUoMm_FElNynOlWp7gPDwtXbS5sNI2nZHflvUmc9IYG70XJG6tWhg4hI8bW0sNr03gkQOjQzbUqSqHb__J_oLJye1IGi657oJUtXnVLSDfRHOKl7w8SATrSiR_K57SkT4xGmpLqYGmbXsoWFJT-FHe1-WVrGBvwk2kqZfjgjDUoUedrDR0F9T_YrVIuPtruGqR4gJGWBuXPciOSHYsGu12Oxg3zC1FwoptN0NA2AZ-oTg
-\.
+INSERT INTO settings VALUES ('default_language', 'it');
+INSERT INTO settings VALUES ('api_token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlpqUm1ZVE13TlRKak9XVTVNbUl6TWpnek5ESTNZMkl5TW1JeVkyRXpNamRoWmpWaU1qYzBaZz09In0.eyJhdWQiOiJodHRwOlwvXC9vcmcud3NvMi5hcGltZ3RcL2dhdGV3YXkiLCJzdWIiOiJhZG1pbkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6ImFkbWluIiwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJNaWdyYW50QXBwbGljYXRpb24iLCJpZCI6MSwidXVpZCI6bnVsbH0sInNjb3BlIjoiYW1fYXBwbGljYXRpb25fc2NvcGUgZGVmYXVsdCIsImlzcyI6Imh0dHBzOlwvXC9nYXRld2F5Lm1pY2Fkb3Byb2plY3QuZXU6NDQzXC9vYXV0aDJcL3Rva2VuIiwidGllckluZm8iOnsiQnJvbnplIjp7InN0b3BPblF1b3RhUmVhY2giOnRydWUsInNwaWtlQXJyZXN0TGltaXQiOjAsInNwaWtlQXJyZXN0VW5pdCI6bnVsbH19LCJrZXl0eXBlIjoiUFJPRFVDVElPTiIsInN1YnNjcmliZWRBUElzIjpbeyJzdWJzY3JpYmVyVGVuYW50RG9tYWluIjoiY2FyYm9uLnN1cGVyIiwibmFtZSI6IlBvc3RnUkVTVEFQSSIsImNvbnRleHQiOiJcL2RiXC92MDEiLCJwdWJsaXNoZXIiOiJhZG1pbiIsInZlcnNpb24iOiJ2MDEiLCJzdWJzY3JpcHRpb25UaWVyIjoiQnJvbnplIn1dLCJjb25zdW1lcktleSI6InZabFNMbTFnYzVOMzIxbnRIN2Ztd2tONTNvVWEiLCJleHAiOjM3MzAyOTc0MzgsImlhdCI6MTU4MjgxMzc5MSwianRpIjoiYmYyMjBiYjMtNjY3MC00OTA5LWI4OTctOTY2ZDVhZDdhN2M0In0.GORnM7Hfflrv8iNFbBOZoLg7475tnLaXwY2f88My_qVCAupJxqPihM901E5GNQUsL2I7PW9_ymbCPJki0FuaIhdXk4ovso11ghjWDkVH9fUoMm_FElNynOlWp7gPDwtXbS5sNI2nZHflvUmc9IYG70XJG6tWhg4hI8bW0sNr03gkQOjQzbUqSqHb__J_oLJye1IGi657oJUtXnVLSDfRHOKl7w8SATrSiR_K57SkT4xGmpLqYGmbXsoWFJT-FHe1-WVrGBvwk2kqZfjgjDUoUedrDR0F9T_YrVIuPtruGqR4gJGWBuXPciOSHYsGu12Oxg3zC1FwoptN0NA2AZ-oTg');
 
 
 --
 -- Data for Name: step; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY step (id, previous, cost, location_specific, location, location_lon, location_lat, id_process) FROM stdin;
-\.
 
 
 --
 -- Data for Name: step_document; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY step_document (id_step, id_document, is_out, cost) FROM stdin;
-\.
+
+
+--
+-- Data for Name: step_link; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+
+
+--
+-- Data for Name: step_link_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
 
 
 --
 -- Data for Name: step_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY step_translation (id, lang, step, description, translation_date) FROM stdin;
-\.
 
 
 --
 -- Data for Name: topic; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY topic (id, icon) FROM stdin;
-\.
+INSERT INTO topic VALUES (1, 'string', false, NULL);
+INSERT INTO topic VALUES (2, 'string', true, NULL);
 
 
 --
 -- Data for Name: topic_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY topic_translation (id, lang, topic, translation_date) FROM stdin;
-\.
+INSERT INTO topic_translation VALUES (1, 'it', 'Casa', '2020-06-18 14:31:27.89');
+INSERT INTO topic_translation VALUES (1, 'en', 'House', NULL);
+INSERT INTO topic_translation VALUES (2, 'en', 'Job', NULL);
+INSERT INTO topic_translation VALUES (2, 'de', 'Werk', NULL);
+INSERT INTO topic_translation VALUES (2, 'it', 'Lavoro', '2020-06-18 17:42:09.469');
 
 
 --
 -- Data for Name: user_types; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY user_types (id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: user_types_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-COPY user_types_translation (id, lang, user_type, description, translation_date) FROM stdin;
-\.
 
 
 --
@@ -1813,6 +1893,13 @@ SELECT pg_catalog.setval('document_document_type_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('document_id_seq', 1, false);
+
+
+--
+-- Name: document_type_picture_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('document_type_picture_id_seq', 1, false);
 
 
 --
@@ -1878,7 +1965,6 @@ SELECT pg_catalog.setval('event_translation_id_seq', 1, false);
 SELECT pg_catalog.setval('features_flags_id_seq', 1, false);
 
 
-
 --
 -- Name: glossary_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
@@ -1898,6 +1984,13 @@ SELECT pg_catalog.setval('individual_intervention_plan_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('individual_intervention_plan_intervention_intervention_type_seq', 1, false);
+
+
+--
+-- Name: individual_intervention_plan_interventions_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('individual_intervention_plan_interventions_id_seq', 1, false);
 
 
 --
@@ -1933,8 +2026,6 @@ SELECT pg_catalog.setval('intervention_types_category_type_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('intervention_types_id_seq', 1, false);
-
-
 
 
 --
@@ -1994,10 +2085,17 @@ SELECT pg_catalog.setval('ratings_content_id_seq', 1, false);
 
 
 --
+-- Name: step_link_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('step_link_id_seq', 1, false);
+
+
+--
 -- Name: topic_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
-SELECT pg_catalog.setval('topic_id_seq', 1, false);
+SELECT pg_catalog.setval('topic_id_seq', 1, true);
 
 
 --
@@ -2021,10 +2119,6 @@ SELECT pg_catalog.setval('user_types_id_seq', 1, false);
 SELECT pg_catalog.setval('user_types_translation_id_seq', 1, false);
 
 
-
-
-
-
 --
 -- Name: document_pictures document_pictures_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
@@ -2042,12 +2136,24 @@ ALTER TABLE ONLY document
 
 
 --
+-- Name: document_type_picture document_type_picture_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY document_type_picture
+    ADD CONSTRAINT document_type_picture_pk PRIMARY KEY (id);
+
+
+--
 -- Name: document_type document_type_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY document_type
     ADD CONSTRAINT document_type_pkey PRIMARY KEY (id);
 
+
+--
+-- Name: document_type_translation document_type_translation_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
 
 ALTER TABLE ONLY document_type_translation
     ADD CONSTRAINT document_type_translation_pkey PRIMARY KEY (id, lang);
@@ -2086,6 +2192,14 @@ ALTER TABLE ONLY glossary
 
 
 --
+-- Name: individual_intervention_plan_interventions individual_intervention_plan_interventions_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY individual_intervention_plan_interventions
+    ADD CONSTRAINT individual_intervention_plan_interventions_pk PRIMARY KEY (id);
+
+
+--
 -- Name: individual_intervention_plan individual_intervention_plan_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
@@ -2099,6 +2213,14 @@ ALTER TABLE ONLY individual_intervention_plan
 
 ALTER TABLE ONLY intervention_category
     ADD CONSTRAINT intervention_category_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: intervention_type_validator intervention_type_validator_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_type_validator
+    ADD CONSTRAINT intervention_type_validator_pk PRIMARY KEY (tanant_id, intervention_type_id);
 
 
 --
@@ -2150,6 +2272,22 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: step_link step_link_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_link
+    ADD CONSTRAINT step_link_pk PRIMARY KEY (id);
+
+
+--
+-- Name: step_link_translation step_link_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_link_translation
+    ADD CONSTRAINT step_link_translation_pk PRIMARY KEY (id, lang);
+
+
+--
 -- Name: step step_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
@@ -2166,13 +2304,19 @@ ALTER TABLE ONLY topic
 
 
 --
+-- Name: topic_translation topic_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY topic_translation
+    ADD CONSTRAINT topic_translation_pk PRIMARY KEY (id, lang);
+
+
+--
 -- Name: user_types user_types_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY user_types
     ADD CONSTRAINT user_types_pkey PRIMARY KEY (id);
-
-
 
 
 --
@@ -2187,7 +2331,6 @@ CREATE UNIQUE INDEX id_glossary_title ON glossary USING btree (title);
 --
 
 CREATE UNIQUE INDEX intervention_category_pk ON intervention_category USING btree (id);
-
 
 
 --
@@ -2212,6 +2355,14 @@ ALTER TABLE ONLY document
 
 ALTER TABLE ONLY document_pictures
     ADD CONSTRAINT document_pictures_fk FOREIGN KEY (doc_id) REFERENCES document(id) ON DELETE CASCADE;
+
+
+--
+-- Name: document_type_picture document_type_picture_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY document_type_picture
+    ADD CONSTRAINT document_type_picture_fk FOREIGN KEY (document_type_id) REFERENCES document_type(id);
 
 
 --
@@ -2247,15 +2398,15 @@ ALTER TABLE ONLY document_type_validator
 
 
 --
--- Name: document document_user_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: document document_um_user_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
-
 
 ALTER TABLE ONLY document
     ADD CONSTRAINT document_um_user_id_fkey FOREIGN KEY (user_id, user_tenant) REFERENCES wso2_shared.um_user(um_id, um_tenant_id);
 
+
 --
--- Name: document document_validated_by_tenant_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: document document_validated_um_user_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY document
@@ -2350,7 +2501,6 @@ ALTER TABLE ONLY glossary
     ADD CONSTRAINT glossary_lang_fkey FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
-
 --
 -- Name: individual_intervention_plan_interventions individual_intervention_plan_interventions_intervention_type_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
@@ -2367,10 +2517,17 @@ ALTER TABLE ONLY individual_intervention_plan_interventions
     ADD CONSTRAINT individual_intervention_plan_interventions_list_id_fkey FOREIGN KEY (list_id) REFERENCES individual_intervention_plan(id);
 
 
+--
+-- Name: individual_intervention_plan_interventions individual_intervention_plan_interventions_um_user_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
 ALTER TABLE ONLY individual_intervention_plan_interventions
     ADD CONSTRAINT individual_intervention_plan_interventions_um_user_id_fkey FOREIGN KEY (validating_user_id, validating_user_tenant) REFERENCES wso2_shared.um_user(um_id, um_tenant_id);
 
 
+--
+-- Name: individual_intervention_plan individual_intervention_plan_um_user_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
 
 ALTER TABLE ONLY individual_intervention_plan
     ADD CONSTRAINT individual_intervention_plan_um_user_id_fkey FOREIGN KEY (user_id, user_tenant) REFERENCES wso2_shared.um_user(um_id, um_tenant_id);
@@ -2390,6 +2547,14 @@ ALTER TABLE ONLY intervention_processes
 
 ALTER TABLE ONLY intervention_processes
     ADD CONSTRAINT intervention_processes_process_id_fkey FOREIGN KEY (process_id) REFERENCES process(id);
+
+
+--
+-- Name: intervention_type_validator intervention_type_validator_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_type_validator
+    ADD CONSTRAINT intervention_type_validator_fk FOREIGN KEY (intervention_type_id) REFERENCES intervention_types(id);
 
 
 --
@@ -2421,7 +2586,7 @@ ALTER TABLE ONLY intervention_types_translation
 --
 
 ALTER TABLE ONLY picture_hotspot
-    ADD CONSTRAINT picture_hotspot_fk FOREIGN KEY (picture_id) REFERENCES document_pictures(id) ON DELETE CASCADE;
+    ADD CONSTRAINT picture_hotspot_fk FOREIGN KEY (picture_id) REFERENCES document_type_picture(id);
 
 
 --
@@ -2489,11 +2654,12 @@ ALTER TABLE ONLY process_users
 
 
 --
--- Name: ratings ratings_user_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: ratings ratings_um_user_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY ratings
     ADD CONSTRAINT ratings_um_user_id_fkey FOREIGN KEY (user_id, user_tenant) REFERENCES wso2_shared.um_user(um_id, um_tenant_id);
+
 
 --
 -- Name: step_document step_document_id_document_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
@@ -2520,11 +2686,35 @@ ALTER TABLE ONLY step
 
 
 --
--- Name: step step_previous_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: step_link step_link_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY step
-    ADD CONSTRAINT step_previous_fkey FOREIGN KEY (previous) REFERENCES step(id);
+ALTER TABLE ONLY step_link
+    ADD CONSTRAINT step_link_fk FOREIGN KEY ("from") REFERENCES step(id);
+
+
+--
+-- Name: step_link step_link_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_link
+    ADD CONSTRAINT step_link_fk_1 FOREIGN KEY ("to") REFERENCES step(id);
+
+
+--
+-- Name: step_link_translation step_link_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_link_translation
+    ADD CONSTRAINT step_link_translation_fk FOREIGN KEY (lang) REFERENCES languages(lang);
+
+
+--
+-- Name: step_link_translation step_link_translation_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_link_translation
+    ADD CONSTRAINT step_link_translation_fk_1 FOREIGN KEY (id) REFERENCES step_link(id);
 
 
 --
