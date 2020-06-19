@@ -1,4 +1,5 @@
-import { Entity, model, property } from '@loopback/repository';
+import { Entity, model, property, hasMany } from '@loopback/repository';
+import { DocumentTypeTranslation } from './document-type-translation.model'
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'document_type' } }
@@ -53,7 +54,10 @@ export class DocumentType extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //  [prop: string]: any;
+
+  @hasMany(() => DocumentTypeTranslation, { keyFrom: 'id', keyTo: 'id' })
+  translations?: DocumentTypeTranslation[];
 
   constructor(data?: Partial<DocumentType>) {
     super(data);

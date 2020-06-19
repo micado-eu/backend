@@ -1,7 +1,8 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property, hasMany } from '@loopback/repository';
+import { TopicTranslation } from './topic-translation.model'
 
 @model({
-  settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'topic'}}
+  settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'topic' } }
 })
 export class Topic extends Entity {
   @property({
@@ -10,21 +11,37 @@ export class Topic extends Entity {
     scale: 0,
     id: true,
     generated: true,
-//    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    //    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
 
   @property({
     type: 'string',
-    postgresql: {columnName: 'icon', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    //   postgresql: { columnName: 'icon', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   icon?: string;
+
+  @property({
+    type: 'boolean',
+    //   postgresql: { columnName: 'icon', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  published?: boolean;
+
+  @property({
+    type: 'date',
+    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  publicationDate?: string;
+
 
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //  [prop: string]: any;
+  @hasMany(() => TopicTranslation, { keyFrom: 'id', keyTo: 'topicid' })
+  translations?: TopicTranslation[];
+
 
   constructor(data?: Partial<Topic>) {
     super(data);

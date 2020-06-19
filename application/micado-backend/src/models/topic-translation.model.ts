@@ -3,7 +3,23 @@ import { Entity, model, property } from '@loopback/repository';
 @model({
   settings: {
     idInjection: false,
-    postgresql: { schema: 'micadoapp', table: 'topic_translation' }
+    postgresql: { schema: 'micadoapp', table: 'topic_translation' },
+    /*
+    foreignKeys: {
+      topic_translation_id_fkey: {
+        name: 'topic_translation_id_fkey',
+        entity: 'Topic',
+        entityKey: 'id',
+        foreignKey: 'id',
+      },
+      topic_translation_lang_fkey: {
+        name: 'topic_translation_lang_fkey',
+        entity: 'Languages',
+        entityKey: 'lang',
+        foreignKey: 'lang',
+      },
+    }
+    */
   }
 })
 export class TopicTranslation extends Entity {
@@ -12,7 +28,7 @@ export class TopicTranslation extends Entity {
     required: true,
     scale: 0,
     id: 1,
-    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+    //   postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
 
@@ -20,8 +36,8 @@ export class TopicTranslation extends Entity {
     type: 'string',
     length: 10,
     required: true,
-    id: 2,
-    postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    //    id: 2,
+    //   postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   lang?: string;
 
@@ -37,6 +53,14 @@ export class TopicTranslation extends Entity {
     postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   translationDate?: string;
+
+  @property({
+    type: 'number',
+    required: true,
+    scale: 0,
+    postgresql: { columnName: 'topic_id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+  })
+  topicid: number;
 
   // Define well-known properties here
 

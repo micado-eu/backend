@@ -9,7 +9,7 @@ import { Entity, model, property } from '@loopback/repository';
         name: 'fk_fft_feature_flag_id',
         entity: 'FeaturesFlags',
         entityKey: 'id',
-        foreignKey: 'featureflagid',
+        foreignKey: 'id',
       },
       fk_fft_lang_id: {
         name: 'fk_fft_lang_id',
@@ -27,7 +27,7 @@ export class FeaturesFlagsTranslation extends Entity {
     scale: 0,
     id: 1,
     generated: false,
-//    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    //    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
 
@@ -38,7 +38,7 @@ export class FeaturesFlagsTranslation extends Entity {
     length: 10,
     id: 2,
     generated: false,
- //   postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO' },
+    //   postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO' },
   })
   lang?: string;
 
@@ -51,7 +51,7 @@ export class FeaturesFlagsTranslation extends Entity {
 
   @property({
     type: 'date',
-    //    postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   translationDate?: string;
 
@@ -59,7 +59,7 @@ export class FeaturesFlagsTranslation extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //  [prop: string]: any;
 
   constructor(data?: Partial<FeaturesFlagsTranslation>) {
     super(data);
