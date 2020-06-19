@@ -33,15 +33,17 @@ export class Topic extends Entity {
   })
   publicationDate?: string;
 
-
+  @hasMany(() => TopicTranslation, {keyTo: 'topicid'})
+  translations: TopicTranslation[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   //  [prop: string]: any;
+  /*
   @hasMany(() => TopicTranslation, { keyFrom: 'id', keyTo: 'topicid' })
   translations?: TopicTranslation[];
-
+*/
 
   constructor(data?: Partial<Topic>) {
     super(data);
