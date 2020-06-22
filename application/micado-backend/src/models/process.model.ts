@@ -1,4 +1,7 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {ProcessTranslation} from './process-translation.model';
+import {ProcessUsers} from './process-users.model';
+import {ProcessTopic} from './process-topic.model';
 
 @model({
   settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'process'}}
@@ -33,11 +36,19 @@ export class Process extends Entity {
   })
   publicationDate?: string;
 
+  @hasMany(() => ProcessTranslation, {keyTo: 'id'})
+  translations: ProcessTranslation[];
+
+  @hasMany(() => ProcessUsers, {keyTo: 'idProcess'})
+  applicableUsers: ProcessUsers[];
+
+  @hasMany(() => ProcessTopic, {keyTo: 'idProcess'})
+  processTopics: ProcessTopic[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+//  [prop: string]: any;
 
   constructor(data?: Partial<Process>) {
     super(data);

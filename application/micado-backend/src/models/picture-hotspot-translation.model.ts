@@ -10,6 +10,7 @@ export class PictureHotspotTranslation extends Entity {
   @property({
     type: 'number',
     scale: 0,
+    id: true,
     postgresql: {columnName: 'pht_id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
   phtId?: number;
@@ -38,7 +39,7 @@ export class PictureHotspotTranslation extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+ // [prop: string]: any;
 
   constructor(data?: Partial<PictureHotspotTranslation>) {
     super(data);

@@ -67,17 +67,13 @@ export class DocumentTypeTranslated extends Entity {
   })
   description?: string;
 
-  @property({
-    type: 'string',
-    postgresql: { columnName: 'template_image', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  templateImage?: string;
+  
 
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<DocumentTypeTranslated>) {
     super(data);

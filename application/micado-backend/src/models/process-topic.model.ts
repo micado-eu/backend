@@ -8,6 +8,7 @@ export class ProcessTopic extends Entity {
     type: 'number',
     required: true,
     scale: 0,
+    id: true,
     postgresql: {columnName: 'id_process', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   idProcess: number;
@@ -24,7 +25,7 @@ export class ProcessTopic extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+//  [prop: string]: any;
 
   constructor(data?: Partial<ProcessTopic>) {
     super(data);
