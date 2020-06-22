@@ -60,12 +60,13 @@ export class TopicTopicTranslationController {
         'application/json': {
           schema: getModelSchemaRef(TopicTranslation, {
             title: 'NewTopicTranslationInTopic',
-            exclude: ['id'],
-            optional: ['topicid']
+//            exclude: ['id'],
+            optional: ['id']
           }),
         },
       },
-    }) topicTranslation: Omit<TopicTranslation, 'id'>,
+    }) topicTranslation: TopicTranslation,
+//  }) topicTranslation: Omit<TopicTranslation, 'id'>,
   ): Promise<TopicTranslation> {
     return this.topicRepository.translations(id).create(topicTranslation);
   }

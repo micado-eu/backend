@@ -22,8 +22,7 @@ export class Topic extends Entity {
   icon?: string;
 
   @property({
-    type: 'boolean',
-    //   postgresql: { columnName: 'icon', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    type: 'boolean'
   })
   published?: boolean;
 
@@ -33,7 +32,7 @@ export class Topic extends Entity {
   })
   publicationDate?: string;
 
-  @hasMany(() => TopicTranslation, {keyTo: 'topicid'})
+  @hasMany(() => TopicTranslation, {keyTo: 'id'})
   translations: TopicTranslation[];
   // Define well-known properties here
 

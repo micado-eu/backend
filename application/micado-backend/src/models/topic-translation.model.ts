@@ -54,6 +54,7 @@ export class TopicTranslation extends Entity {
   })
   translationDate?: string;
 
+  /*
   @property({
     type: 'number',
     required: true,
@@ -61,7 +62,7 @@ export class TopicTranslation extends Entity {
     postgresql: { columnName: 'topic_id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   topicid: number;
-
+*/
   // Define well-known properties here
 
   // Indexer property to allow additional data

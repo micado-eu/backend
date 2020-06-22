@@ -27,15 +27,26 @@ export class InterventionCategory extends Entity {
     type: 'string',
     required: true,
     length: 10,
+    id: 2,
     postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   lang: string;
 
+  @property({
+    type: 'boolean',
+  })
+  published?: boolean;
+
+  @property({
+    type: 'date',
+    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  publicationDate?: string;
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+ // [prop: string]: any;
 
   constructor(data?: Partial<InterventionCategory>) {
     super(data);
