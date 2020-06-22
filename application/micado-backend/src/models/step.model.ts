@@ -5,21 +5,12 @@ import {Entity, model, property} from '@loopback/repository';
 })
 export class Step extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
-    scale: 0,
     id: 1,
-    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+  //  postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
-  id: number;
-
-  @property({
-    type: 'number',
-    required: true,
-    scale: 0,
-    postgresql: {columnName: 'previous', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
-  })
-  previous: number;
+  id: string;
 
   @property({
     type: 'string',
@@ -66,7 +57,7 @@ export class Step extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+//  [prop: string]: any;
 
   constructor(data?: Partial<Step>) {
     super(data);

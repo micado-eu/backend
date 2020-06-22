@@ -16,3 +16,5 @@ export * from './user-types.repository';
 export * from './user-types-translation.repository';
 export * from './process-users.repository';
 export * from './process-topic.repository';
+export * from './step.repository';
+export * from './step-link.repository';

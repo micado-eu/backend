@@ -18,3 +18,5 @@ export * from './process-process-translation.controller';
 export * from './user-types-user-types-translation.controller';
 export * from './process-process-users.controller';
 export * from './process-process-topic.controller';
+export * from './step.controller';
+export * from './step-link.controller';
