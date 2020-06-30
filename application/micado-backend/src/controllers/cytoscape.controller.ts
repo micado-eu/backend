@@ -51,7 +51,6 @@ export class CytoscapeController {
     @param.query.number('processid') processid = 0,
     @param.query.string('lang') lang = 'en'
   ): Promise<any> {
-    //  let cyto = JSON.parse("[]")
     let cyto = { elements: JSON.parse("[]") }
     let steps = await this.stepRepository.find({
       where: {
@@ -79,8 +78,6 @@ export class CytoscapeController {
         }
       ]
     });
-
-    //   await this.cycleSteps(steps, lang, cyto)
 
     const start = async () => {
       await this.asyncForEach(steps, async (astep: any) => {
@@ -136,8 +133,6 @@ export class CytoscapeController {
 
     await start();
 
-    //    console.log(steps)
-
 
     steplinks.forEach(asteplink => {
       console.log(asteplink)
@@ -156,7 +151,6 @@ export class CytoscapeController {
 
     console.log(cyto)
 
-    //    return JSON.stringify(cyto)
     return cyto
   }
 

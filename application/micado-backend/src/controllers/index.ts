@@ -25,3 +25,4 @@ export * from './step-step-translation.controller';
 export * from './step-link-step-link-translation.controller';
 export * from './cytoscape.controller';
 export * from './step-step-document.controller';
+export * from './topic-exporter.controller';
