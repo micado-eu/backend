@@ -18,3 +18,7 @@ export * from './process-users.repository';
 export * from './process-topic.repository';
 export * from './step.repository';
 export * from './step-link.repository';
+export * from './glossary.repository';
+export * from './step-translation.repository';
+export * from './step-link-translation.repository';
+export * from './step-document.repository';

@@ -1,28 +1,29 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property, hasMany} from '@loopback/repository';
+import {StepLinkTranslation} from './step-link-translation.model';
 
 @model({
-  settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'step_link'}}
+  settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'step_link' } }
 })
 export class StepLink extends Entity {
   @property({
     type: 'string',
     required: true,
     id: 1,
-    postgresql: {columnName: 'id', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
+    //    postgresql: {columnName: 'id', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   id: string;
 
   @property({
     type: 'string',
     required: true,
-    postgresql: {columnName: 'from_step', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
+    postgresql: { columnName: 'from_step', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO' },
   })
   fromStep: string;
 
   @property({
     type: 'string',
     required: true,
-    postgresql: {columnName: 'to_step', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
+    postgresql: { columnName: 'to_step', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO' },
   })
   toStep: string;
 
@@ -30,15 +31,17 @@ export class StepLink extends Entity {
     type: 'number',
     required: true,
     scale: 0,
-    postgresql: {columnName: 'id_process', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    postgresql: { columnName: 'id_process', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   idProcess: number;
 
+  @hasMany(() => StepLinkTranslation, {keyTo: 'id'})
+  translations: StepLinkTranslation[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//  [prop: string]: any;
+  //  [prop: string]: any;
 
   constructor(data?: Partial<StepLink>) {
     super(data);
