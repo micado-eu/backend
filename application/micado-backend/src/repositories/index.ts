@@ -18,3 +18,5 @@ export * from './process-users.repository';
 export * from './process-topic.repository';
 export * from './step.repository';
 export * from './step-link.repository';
+export * from './event.repository';
+export * from './event-translation.repository';
