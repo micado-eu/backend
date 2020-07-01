@@ -12,19 +12,33 @@ The first is the proper backend code and is based on a specific image to be sure
 The second is a PostGIS DB coherent with the production for MICADO: it will install itself with all the needed schemas and configurations.
 For more details please consult the "deployment repository" [remember to create the **prod.env** file with password data]
 
+
+Prepare the backend repo on your local system:
+
+```bash
+git clone https://github.com/micado-eu/backend.git
+cd backend
+cp .env prod.env
+mkdir db_data 
+```
+
 To code you will have to run the following command on a first shell
 
 ```bash
 (set -a; source prod.env; set +a; docker-compose -f docker-compose.yaml  up backend micado_db)
 ```
+
+Wait until you see `database system is ready to accept connections`
+
 On a second shell the following commands 
 ```bash
 docker-compose exec  backend bash
 cd micado-backend/
+npm install
 npm start
 ```
 The container will mount the application folder and it will be possibile to code with preferred editor.
-
+Wait until you see `Server is running at http://[::1]:3000`
 
 ### To add a CRUD endpoint for a Model
 It is possible to expose directly a Model straightforward as a CRUD API the command is like the one that follows.
