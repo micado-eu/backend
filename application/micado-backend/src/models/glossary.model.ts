@@ -6,11 +6,11 @@ import { Entity, model, property } from '@loopback/repository';
 export class Glossary extends Entity {
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
     id: true,
     generated: true,
-    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+    //    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
 
@@ -18,7 +18,7 @@ export class Glossary extends Entity {
     type: 'string',
     required: true,
     length: 10,
-    id: 2,
+    //  id: 2,
     postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO' },
   })
   lang: string;
@@ -46,7 +46,7 @@ export class Glossary extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  // [prop: string]: any;
 
   constructor(data?: Partial<Glossary>) {
     super(data);

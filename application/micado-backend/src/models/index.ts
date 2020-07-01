@@ -45,3 +45,4 @@ export * from './user-types-translation.model';
 export * from './user.model';
 export * from './document-type-picture.model';
 export * from './step-link.model';
+export * from './step-link-translation.model';

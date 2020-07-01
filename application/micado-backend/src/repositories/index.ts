@@ -20,3 +20,7 @@ export * from './step.repository';
 export * from './step-link.repository';
 export * from './event.repository';
 export * from './event-translation.repository';
+export * from './glossary.repository';
+export * from './step-translation.repository';
+export * from './step-link-translation.repository';
+export * from './step-document.repository';
