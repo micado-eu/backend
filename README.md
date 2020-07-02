@@ -12,19 +12,57 @@ The first is the proper backend code and is based on a specific image to be sure
 The second is a PostGIS DB coherent with the production for MICADO: it will install itself with all the needed schemas and configurations.
 For more details please consult the "deployment repository" [remember to create the **prod.env** file with password data]
 
+
+Prepare the backend repo on your local system:
+
+```bash
+git clone https://github.com/micado-eu/backend.git
+cd backend
+mkdir db_data 
+```
+Create a prod.env file with this content:
+
+```
+WSO2_API_ADMIN_PWD=secretpassword1
+WSO2_IDENTITY_ADMIN_PWD=secretpassword2
+WSO2_IDENTITY_PWD=secretpassword3
+WSO2_SHARED_PWD=secretpassword4
+WSO2_API_PWD=secretpassword5
+MICADO_DB_PWD=secretpassword6
+
+PGADMIN_DEFAULT_PASSWORD=secretpassword7
+
+# -------- DATABASE PART --------
+POSTGRES_PASSWORD=secretpassword8
+
+# -------- WEBLATE PART ----------
+# Weblate setup
+WEBLATE_ADMIN_PASSWORD=secretpassword9
+
+# PostgreSQL setup
+WEBLATE_POSTGRES_PASSWORD=secretpassword10
+WEBLATE_EMAIL_HOST_PASSWORD=secretpassword11
+GITEA_DB_PWD=secretpassword12
+```
+
+
 To code you will have to run the following command on a first shell
 
 ```bash
 (set -a; source prod.env; set +a; docker-compose -f docker-compose.yaml  up backend micado_db)
 ```
+
+Wait until you see `database system is ready to accept connections`
+
 On a second shell the following commands 
 ```bash
 docker-compose exec  backend bash
 cd micado-backend/
+npm install
 npm start
 ```
 The container will mount the application folder and it will be possibile to code with preferred editor.
-
+Wait until you see `Server is running at http://[::1]:3000`
 
 ### To add a CRUD endpoint for a Model
 It is possible to expose directly a Model straightforward as a CRUD API the command is like the one that follows.

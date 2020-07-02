@@ -498,7 +498,7 @@ ALTER SEQUENCE features_flags_id_seq OWNED BY features_flags.id;
 
 CREATE TABLE features_flags_translation (
     id smallint NOT NULL,
-    lang character varying(10),
+    lang character varying(10) NOT NULL,
     feature character varying(30),
     translation_date timestamp without time zone
 );
@@ -525,10 +525,6 @@ CREATE VIEW features_flags_translated AS
 
 CREATE TABLE glossary (
     id smallint NOT NULL,
-    lang character varying(10) NOT NULL,
-    title character varying(20),
-    description text,
-    translation_date timestamp without time zone,
     published boolean DEFAULT false NOT NULL,
     publication_date date
 );
@@ -552,6 +548,19 @@ CREATE SEQUENCE glossary_id_seq
 --
 
 ALTER SEQUENCE glossary_id_seq OWNED BY glossary.id;
+
+
+--
+-- Name: glossary_translation; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE glossary_translation (
+    id smallint NOT NULL,
+    lang character varying(10) NOT NULL,
+    title character varying(25),
+    description text,
+    translation_date timestamp without time zone
+);
 
 
 --
@@ -799,7 +808,7 @@ ALTER SEQUENCE intervention_types_id_seq OWNED BY intervention_types.id;
 
 CREATE TABLE intervention_types_translation (
     id smallint NOT NULL,
-    lang character varying(10),
+    lang character varying(10) NOT NULL,
     intervention_title character varying(20),
     description text,
     translation_date timestamp without time zone
@@ -978,8 +987,8 @@ ALTER SEQUENCE process_topic_id_topic_seq OWNED BY process_topic.id_topic;
 
 CREATE TABLE process_translation (
     id smallint NOT NULL,
-    lang character varying(10),
-    process character varying(20),
+    lang character varying(10) NOT NULL,
+    process character varying(30),
     description text,
     translation_date timestamp without time zone
 );
@@ -1135,10 +1144,10 @@ CREATE TABLE step (
 --
 
 CREATE TABLE step_document (
-    id_step smallint NOT NULL,
     id_document smallint NOT NULL,
     is_out boolean NOT NULL,
-    cost money
+    cost money,
+    id_step uuid NOT NULL
 );
 
 
@@ -1568,11 +1577,11 @@ ALTER TABLE ONLY user_types_translation ALTER COLUMN id SET DEFAULT nextval('use
 -- Data for Name: document_type; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO document_type VALUES (1, 'data:image/png;base64,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', NULL, NULL, false, -1, false, NULL);
-INSERT INTO document_type VALUES (2, NULL, NULL, NULL, false, -1, false, NULL);
-INSERT INTO document_type VALUES (3, NULL, NULL, NULL, false, -1, false, NULL);
-INSERT INTO document_type VALUES (4, NULL, NULL, NULL, false, -1, false, NULL);
-INSERT INTO document_type VALUES (5, NULL, NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES ('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAADnZJREFUeNrsnQlYU8cWgG9WQlYIS1hFoILIjqAiVdCiKIo+q33udelibV8LWLE+kKIWtb5abdXWaq22LrWIiqC41l0UEBAVRWVVNCgQIAlZyPrO1FitS1shUMA533c+7s2dTCbzz5lzzty5gaTX6wksHUfIuAswECwYCAaCBQPBQLBgIBgIFgwEA8GCgWDBQDAQLBgIBoIFA8FAsGAgGAgWDAQLBoKBYMFAOrtQjVnZ4s+/JsrKbwfQaJTRcNoTtDsorYv2nQz0jFqjzXdxckxLio/RGaNSkrE2yiUvXxOcceBorFqjCa1vaLTWaLRqeFnaRWGgTqNTKRQOn2+mMjUxKfLwcEtxtLdZsTA+VvePAlm07GvijrA6sbi45IPqmlpBQ4M4feM3yzc7d3cUwmWlofFdUSi3bt+1mjk77lULvtk7bDbLjkalpkVGDJ63MD6mtOWoAUhLNfGzL4mggVEL/IKH6y26+Z3Zu+9wxPncAjuNRtOqejuLarVaAr4vMz3ziJ9Vd//kvmGj9YEDRmYnLVnZo6V1tqpBo/791kxogBYak5GyZ78XauDLAOJJ1el0xK70A2xr54AZD6BEZSQs+qJ9gSxcusp+YMQbFQAjD8F4GUE8qalpmSYAJQmA6CP+9WZcuwIZMXb6l25+Yfrdew8MxjAe6e6MQ/aegeHnXh0ytgqmLsaLvp/csvB2NVssaRqv0+kPhg3odwFnD49kYP8+QuG9muXNzSqHs+cuTGqXxPB0Vm4/pbLZXlRfv1XaJFNgDI+EzWLqN6xZliuXK8pMTRnj2wUI05ThIZPLiXVfLS20trLUYAyPhMEwIYYOHiBXqdU5cOrdXksnfiqVqiJiSKgERgGm8GQKL1foSSRSExyathcQc/hAiUwmx8/D/Xnf6toLiBYvTHaCxcWOIBcvXyW2/LzHl8dlW8OpJaizYQkHLeXUgMqRww0bGFwbOXTQywtkx84M96vXb46l02nucHq7sVGyLmHeh0ILvlmr6867eJn4JTWDz+VyZly7XhqWm1fowWSaWkilTWZo9cDcjKfT6nT30foTsmyVSi0sunazOq/gcoFCoTwe3Cfg9KgRQ1QvDZAtP+/uvX7Tz4tr60ThVAqFjl6TK5QhtXX1HyTO/6jY7RXnFtd9If8SkZS8cuqN0vK3NRrtQA0IBBpnamrrDo4fF1XS3dGBsmlryjQzHscXnO0OqVR2E/yfx5Wr14MuFxVHsFim7xRcuppzoeDygaAAn58AjKzLAzly7PR7Yokk0oJvTjxcXTYz4w46fOxU1PSpb1QAEOWL1pmTV0ik7z/Svaz8Vmxl1d1Zeh3RPHxI2KLhEYPOweUSpVIpDO7Tu/lmaTmC70WlUnsFBwVkwvXtcJ2PprKCwive36zfMhgS3KmVlVUjcvIuRhQUFm3z9/VMHT1yaNcFwmIxUYcQjy/1QydAEsXyo1GpfMP8/peSlZ1PHD56Et7GDMy/eKVPbv6lSJiOQslk0s+vjx72edJ/o69wOOw/vOfK1WK0PlSpUDTTvL08zEePGIJerkcKx/kh/YJSyipu7Vi9bvMEUX3jm9tS0oKOnTrXB5q3ekzU0Kqu6kO0T4V3ZDLR0CiubVapZH/Dwojs3ALvS1euT4ZR7QHJVw8Gg9HD1saaCpDFOvAPkKj6bt62q7+yuRn5CZLhM4Vl5ZU14FvsKWQKcfZcbn8olw2vc0BFdBq1HOgSVXeEh6lUynUYHDVWlhYxEol07jfrf/QuKas4CuVuoHo0anWRq4uTavzYqM4PhE6jfQEd1wvlLw9hlFfcVs6f8/7+AF9P8d+wjLD1G7cl29oKQmxsrH+3NMNfKotpOu18TsE7J06ff/gWkiEHEJnQ6Y1gUXao7I2SskiIwtwMCZsE9B5y9DQaleCw2TIAy4VyaggIqI1iScSmLSmD4TqyEhH4pwo7W+vqu8L718BNnXbqZn+9LeC0OZA96QeJkrLKdBqNNgVO0dqOM1hGxeLEOTsYJows3d+4Y2nJNx/D43FDTEzov8NAUMUSKQEOmsXlsFloyQLpE8J5MD0+yM/odDoPtPezPuNhmYegob0E09SU1iSTuVha8F30el0Q+CJiw6btUo1WV2hpaZ6qVmvWTJkwxujZZBvCOERasXpD/L37td/CdIDi2xTQJAqFslmpbOZv3bF7Tewni+eL6hs4z6vj2Mks4lRWjiWM2sdfrgYYK6dNGvvuxHGjZgur76c2Ncn0CFJrBQATMI0S0Obzvj69ohcv+PgdsJYkYJQPESIEIzyOlaX5ALlcmbhzT6Z/p7GQ1LRM4qu1P8yDUZUIYSi6LzABXi5EOQiMaMF3G7cNgE5mlZZXqv+btLz2kznvb3N17tb8ZD0nTmfbgAMX2AisfusssViSS6ZQFkDnFEqbZLz6hkb11AljMjVabc6O1Iy5drYCm8dH+4vCAP+hc+/hmh71XvjHu9IP1NY3NtoBaLRZYxfoUtDRyEjB5yDLHIty0U5hIb+k7guSNjXFAAuGYZpB/gOlxtOgw4aBo2WhyMvWRkDblXZgfl1dfc9nRmhMU2eYiqxQHWAVwulT3pgfFRleApdW7t13ePehoyd3KZTKiYMGBH8/KjJ8O0BqcZuRZXj1cs+aOW18bJ2o3rmktDJ1zbc/7oKO/w4u24DOAb1pKI62Nzm0xQJYmwiXy34dOpz3V7ta0Gi2t7d5ZXtKmhuEn09db5LJGZBNc9DoBT0BnVaoVqljoN4p4Kx9BNZWgdtS9iYDiPDXRw3bJpPJ77S0zSqVSu7t6Z4W4OcpXrrimx8tLcyH8Xgcb2jjKLi8DBRtbVprKI6OazuTU3cg/ubyM4/LJdZt3Oo1OCwk3dXZ6Q9LGJFDw4qLrl4/kl94ZRYA0GzemsoDH+7KZjN/y2UQUDinwbTiXSdqOAu5RBOF0rJxBg6cLhI13G1uVnlBfuP4+NQHg8FRrVb7gpXeeGBNaib4FmGnAQIN3wfO2tSEbuICp46gKGN7/OYJ8hcNKPSEqa307ekT8308n561QoID733KiP787PkLQvBFl06cOt8AcJqYzD/eh4H8QhoU4KNYlBC7Cq61aCqBDpf0dHsF+SYUgKC5j/XQt4CV6sFaSt6dOQnlN59ptboma0uLXzsNkCnjx+x8LSzkDDhfJzh1MgCxA0WxKbp5U2fImIUSaVPJW2+OF/Gfs9DY29+7EnQxOoZOJ5KWfrW94OKVHhAUoBBWA5aRVisSHXV3c5WCbmht20+eybYEH/IVOO5YOGWqNZrbDrY2W+Oi370xcng4KvJpp0sMXx897Lfw1KDZxqrX39eLWJwwZ/+vJ87WgMMPRXDlCsW+kH5Bd4z1GS7O3eoSP/nof2wWswINIgBSCFPp8RHDBned5Xdjip9PL6S5cJjbFvV3c7Aj4mJmoUz+h/b+bviuXwcTDAQDwYKBdCJpM6d+5twF9v2aWjsKhYKWGIy5XYikUChIA0P6ljvY28qfV0hYfZ84cfq8AEJjAQqNjT2QIWmUQfJYMTi0f8cHknnouPWSL9bOuyus7kelUlHeoTNmZ0ilMmLYkNC0ebHvrffq5S56skDRtZvEiq/Xh2YePhHN5bDQDXtjb2AgQ6Yu8vH0WAlAjnR4IMU3StkqlaqPKYPhQiaTjb2ZjoTuclTdqXauvl/LfBYQsEzi9p27Lhw2K8CETqcTbfEUF4lkTqfT+sBRxwcyN/rdcitL/qzS8lt2NBqVZOwpSyyWkqZPGZfn7dmz4VkFXgsLIWxtrHdu/CmlyIzH4bfBlEXSaLQye1tBQafxIdMmjytGxvJPOcdePXvIVi5b0OkelcBR1ssSZRUUFjFF9Q3W4EOoxp6ylM3NmkB/77sCayv18wrV1IrQJjoLBsPEgnjGrpfWtgGiLAWXw7nbN8ivQwD5U79wOiuHnbBoRUzlrapg8CEMY0dZjWKJcurEsXvnfPj2TidH+6d2rYDvIlat/b7vL6n7ZvF4HNe2irJ8vTy+PrDnx6yOAAQ5ScrzLh4/dY4jlyvGcbkcXzKJZHTr47DZxPebd2hcnLsdjZ494ykgN0vKiYuXrvpbWvIn0Wk0kzaZWmhqJUSR1+HweUD0hoHbLkCq9Hr9a5B0PfMDF8bHVsN0EgMdgyzE2GEn8nvq4L69MyDKqnxWgciIQYS9nWDH2vVbJOZmXC/iwe53YwpFo9Xec7S32/AXs8iLzwwtedI0fOTkCe7+g/S70w/2UyiUZPz07R+1sVFs3sM39NjIcTPy2uUp3FeDA/MEVpaymbPjxkmk0jaZEjqrQMBBOnkm255Gow2E0/3tEvYmxceUWllZnLMRWEdlZec7YAyPRNoko82YHTeZzTQllMrmPe2Wh8jl8iVcDtPtvej4j3ZnHGTqCfy4IZLs3Iu9bQRWH+j0+uN9Av0utxuQ3v4+p/QEKdXZyfE/s6MTJu3ee5D6Mv9PRPTN0/cf8X7r/bhVFnxzzbAhgxYsSYprQUWtcF5JS1bZBg2MykI/uGLlFDB7V9oBu5ftB2jQ983JK6RnHjoeYu0ccCxwwEjdyHEz57S0vlZl6gvjY6oB6ZuZh09sdnF2/HZ2bMJwGp22BpK1criM8gMZ0TV/L0tvSBn4t6uEZtNmzQm34Jsl2tsKSCDJ3p7uK1u8BGCMaSYpeaXg4NGTX0JsHllf32hOJpMvQcPyUdJMPNhySepiQFB+gXbsh1DIZB82h2VtQqfn93RzXWRvZ7Mv+dO5xD8K5DdrWbKKKL9VFUqlUGbcgIRQJpebQ5bOM4wkfRe0EDk4bjHT1FTYw7X79m4Odls++3SuuLUVk9rCEScvX00vvlHmRKfTUJbMNPJa1j8tJMPa2C21WnPL1cWpZlFCrPEqx/8tumMJvh+CgWDBQDAQLBgIBoIFA8FAsGAgGAgWDAQLBoKBYMFAMBAsGAgGggUDwUCwYCBYMJBOIf8XYAArY0Bkcsrf+QAAAABJRU5ErkJggg==', NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES (NULL, NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES (NULL, NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES (NULL, NULL, NULL, false, -1, false, NULL);
+INSERT INTO document_type VALUES (NULL, NULL, NULL, false, -1, false, NULL);
 
 
 --
@@ -1640,9 +1649,9 @@ INSERT INTO document_type_translation VALUES (5, 'en', 'stamp duty', 'bla bla', 
 -- Data for Name: features_flags; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO features_flags VALUES (1, 'FEAT_DOCUMENTS', false);
-INSERT INTO features_flags VALUES (2, 'FEAT_GLOSSARY', true);
-INSERT INTO features_flags VALUES (3, 'FEAT_ASSISTANT', true);
+INSERT INTO features_flags VALUES ('FEAT_DOCUMENTS', false);
+INSERT INTO features_flags VALUES ('FEAT_GLOSSARY', true);
+INSERT INTO features_flags VALUES ('FEAT_ASSISTANT', true);
 
 
 --
@@ -1657,9 +1666,17 @@ INSERT INTO features_flags_translation VALUES (1, 'en', 'Document wallet', '2020
 -- Data for Name: glossary; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO glossary VALUES (1, 'it', 'Permesso di soggi', 'bla', '2020-06-23 09:27:01.1', false, '2020-06-23');
-INSERT INTO glossary VALUES (2, 'it', 'Contratto', 'bla', '2020-06-23 09:27:01.1', false, '2020-06-23');
-INSERT INTO glossary VALUES (2, 'en', 'Contract', 'bla', '2020-06-23 09:27:01.1', false, '2020-06-23');
+INSERT INTO glossary VALUES (false, NULL);
+INSERT INTO glossary VALUES (true, NULL);
+
+
+--
+-- Data for Name: glossary_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO glossary_translation VALUES (1, 'en', 'Residence permit', NULL, NULL);
+INSERT INTO glossary_translation VALUES (2, 'en', 'Identity Card', NULL, NULL);
+INSERT INTO glossary_translation VALUES (1, 'it', 'Permesso di soggiorno', NULL, NULL);
 
 
 --
@@ -1678,7 +1695,7 @@ INSERT INTO glossary VALUES (2, 'en', 'Contract', 'bla', '2020-06-23 09:27:01.1'
 -- Data for Name: intervention_category; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO intervention_category VALUES (1, 'ic1', 'en', false, NULL);
+INSERT INTO intervention_category VALUES ('ic1', 'en', false, NULL);
 
 
 --
@@ -1697,7 +1714,7 @@ INSERT INTO intervention_category VALUES (1, 'ic1', 'en', false, NULL);
 -- Data for Name: intervention_types; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO intervention_types VALUES (1, 1, false, NULL, NULL);
+INSERT INTO intervention_types VALUES (1, false, NULL, NULL);
 
 
 --
@@ -1741,7 +1758,8 @@ INSERT INTO migrant_app_config VALUES (1, '["FEAT_DOCUMENTS","FEAT_GLOSSARY","FE
 -- Data for Name: process; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO process VALUES (1, NULL, false, NULL);
+INSERT INTO process VALUES (NULL, false, NULL);
+INSERT INTO process VALUES ('string', true, '2020-06-30 10:27:26.476');
 
 
 --
@@ -1781,38 +1799,44 @@ INSERT INTO settings VALUES ('api_token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsI
 --
 
 INSERT INTO step VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 12, true, 'string', 0, 0, 1);
+INSERT INTO step VALUES ('7c0a6296-d88d-4af7-97d6-ec1a2919c53f', 0, true, 'string', 0, 0, 1);
 
 
 --
 -- Data for Name: step_document; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
+INSERT INTO step_document VALUES (1, true, '$0.00', '7c0a6296-d88d-4af7-97d6-ec1a2919c53f');
 
 
 --
 -- Data for Name: step_link; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
+INSERT INTO step_link VALUES ('b18cb964-ef52-4492-8d53-8e559745a2b1', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '7c0a6296-d88d-4af7-97d6-ec1a2919c53f', 1);
 
 
 --
 -- Data for Name: step_link_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
+INSERT INTO step_link_translation VALUES ('en', 'il link', 'b18cb964-ef52-4492-8d53-8e559745a2b1');
 
 
 --
 -- Data for Name: step_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
+INSERT INTO step_translation VALUES ('en', 'mio step', 'string', '2020-06-30 10:16:52.798', '7c0a6296-d88d-4af7-97d6-ec1a2919c53f');
+INSERT INTO step_translation VALUES ('en', 'pippo', 'string', '2020-06-30 11:53:49.781', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11');
 
 
 --
 -- Data for Name: topic; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO topic VALUES (1, 'string', false, NULL);
-INSERT INTO topic VALUES (2, 'string', true, NULL);
+INSERT INTO topic VALUES ('string', false, NULL);
+INSERT INTO topic VALUES ('string', true, NULL);
 
 
 --
@@ -1824,14 +1848,14 @@ INSERT INTO topic_translation VALUES (1, 'en', 'House', NULL);
 INSERT INTO topic_translation VALUES (2, 'en', 'Job', NULL);
 INSERT INTO topic_translation VALUES (2, 'de', 'Werk', NULL);
 INSERT INTO topic_translation VALUES (2, 'it', 'Lavoro', '2020-06-18 17:42:09.469');
-INSERT INTO topic_translation VALUES (1, 'de', 'pippo', '2020-06-22 09:50:02.642');
+INSERT INTO topic_translation VALUES (1, 'de', 'aggiornato', '2020-06-24 15:59:35.993');
 
 
 --
 -- Data for Name: user_types; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO user_types VALUES (1, NULL, false, NULL);
+INSERT INTO user_types VALUES (NULL, false, NULL);
 
 
 --
@@ -1929,7 +1953,7 @@ SELECT pg_catalog.setval('features_flags_id_seq', 1, false);
 -- Name: glossary_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
-SELECT pg_catalog.setval('glossary_id_seq', 1, false);
+SELECT pg_catalog.setval('glossary_id_seq', 3, true);
 
 
 --
@@ -1999,7 +2023,7 @@ SELECT pg_catalog.setval('picture_hotspot_id_seq', 1, false);
 -- Name: process_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
-SELECT pg_catalog.setval('process_id_seq', 1, false);
+SELECT pg_catalog.setval('process_id_seq', 2, true);
 
 
 --
@@ -2048,7 +2072,7 @@ SELECT pg_catalog.setval('ratings_content_id_seq', 1, false);
 -- Name: topic_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
-SELECT pg_catalog.setval('topic_id_seq', 1, true);
+SELECT pg_catalog.setval('topic_id_seq', 3, true);
 
 
 --
@@ -2137,11 +2161,27 @@ ALTER TABLE ONLY features_flags
 
 
 --
+-- Name: features_flags_translation features_flags_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY features_flags_translation
+    ADD CONSTRAINT features_flags_translation_pk PRIMARY KEY (id, lang);
+
+
+--
 -- Name: glossary glossary_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY glossary
-    ADD CONSTRAINT glossary_pk PRIMARY KEY (id, lang);
+    ADD CONSTRAINT glossary_pk PRIMARY KEY (id);
+
+
+--
+-- Name: glossary_translation glossary_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY glossary_translation
+    ADD CONSTRAINT glossary_translation_pk PRIMARY KEY (id, lang);
 
 
 --
@@ -2185,6 +2225,14 @@ ALTER TABLE ONLY intervention_types
 
 
 --
+-- Name: intervention_types_translation intervention_types_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_types_translation
+    ADD CONSTRAINT intervention_types_translation_pk PRIMARY KEY (id, lang);
+
+
+--
 -- Name: languages languages_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
@@ -2225,6 +2273,30 @@ ALTER TABLE ONLY process
 
 
 --
+-- Name: process_topic process_topic_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY process_topic
+    ADD CONSTRAINT process_topic_pk PRIMARY KEY (id_process, id_topic);
+
+
+--
+-- Name: process_translation process_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY process_translation
+    ADD CONSTRAINT process_translation_pk PRIMARY KEY (id, lang);
+
+
+--
+-- Name: process_users process_users_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY process_users
+    ADD CONSTRAINT process_users_pk PRIMARY KEY (id_process, id_user_types);
+
+
+--
 -- Name: settings settings_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
@@ -2233,11 +2305,27 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: step_document step_document_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_document
+    ADD CONSTRAINT step_document_pk PRIMARY KEY (id_document, id_step);
+
+
+--
 -- Name: step_link step_link_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY step_link
     ADD CONSTRAINT step_link_pk PRIMARY KEY (id);
+
+
+--
+-- Name: step_link_translation step_link_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_link_translation
+    ADD CONSTRAINT step_link_translation_pk PRIMARY KEY (lang, id);
 
 
 --
@@ -2281,10 +2369,11 @@ ALTER TABLE ONLY user_types
 
 
 --
--- Name: id_glossary_title; Type: INDEX; Schema: micadoapp; Owner: -
+-- Name: user_types_translation user_types_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-CREATE UNIQUE INDEX id_glossary_title ON glossary USING btree (title);
+ALTER TABLE ONLY user_types_translation
+    ADD CONSTRAINT user_types_translation_pk PRIMARY KEY (id, lang);
 
 
 --
@@ -2448,11 +2537,19 @@ ALTER TABLE ONLY features_flags_translation
 
 
 --
--- Name: glossary glossary_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: glossary_translation glossary_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY glossary
-    ADD CONSTRAINT glossary_lang_fkey FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY glossary_translation
+    ADD CONSTRAINT glossary_translation_fk FOREIGN KEY (id) REFERENCES glossary(id);
+
+
+--
+-- Name: glossary_translation glossary_translation_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY glossary_translation
+    ADD CONSTRAINT glossary_translation_fk_1 FOREIGN KEY (lang) REFERENCES languages(lang);
 
 
 --
@@ -2624,6 +2721,14 @@ ALTER TABLE ONLY ratings
 
 
 --
+-- Name: step_document step_document_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY step_document
+    ADD CONSTRAINT step_document_fk FOREIGN KEY (id_step) REFERENCES step(id);
+
+
+--
 -- Name: step_document step_document_id_document_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
@@ -2730,3 +2835,4 @@ ALTER TABLE ONLY user_types_translation
 --
 -- PostgreSQL database dump complete
 --
+
