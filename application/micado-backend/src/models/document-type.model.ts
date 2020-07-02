@@ -1,6 +1,6 @@
 import { Entity, model, property, hasMany } from '@loopback/repository';
 import { DocumentTypeTranslation } from './document-type-translation.model'
-import {DocumentTypePicture} from './document-type-picture.model';
+import { DocumentTypePicture } from './document-type-picture.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'document_type' } }
@@ -27,6 +27,7 @@ export class DocumentType extends Entity {
     type: 'string',
     length: 20,
     required: false,
+    jsonSchema: { nullable: true },
     postgresql: { columnName: 'issuer', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   issuer?: string;
@@ -63,7 +64,7 @@ export class DocumentType extends Entity {
   })
   publicationDate?: string;
 
-  @hasMany(() => DocumentTypeTranslation, {keyTo: 'id'})
+  @hasMany(() => DocumentTypeTranslation, { keyTo: 'id' })
   translations: DocumentTypeTranslation[];
 
   @hasMany(() => DocumentTypePicture)
@@ -74,7 +75,7 @@ export class DocumentType extends Entity {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   //  [prop: string]: any;
 
-  
+
 
   constructor(data?: Partial<DocumentType>) {
     super(data);
