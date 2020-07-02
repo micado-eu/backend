@@ -173,7 +173,7 @@ export class TopicController {
 
 
 
-  @get('/topics-fe', {
+  @get('/topics-migrant', {
     responses: {
       '200': {
         description: 'Topic GET for the frontend',
