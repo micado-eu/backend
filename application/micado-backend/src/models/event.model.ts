@@ -1,4 +1,5 @@
-import { Entity, model, property } from '@loopback/repository';
+import { Entity, model, property, hasMany } from '@loopback/repository';
+import { EventTranslation } from '.';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'event' } }
@@ -6,7 +7,7 @@ import { Entity, model, property } from '@loopback/repository';
 export class Event extends Entity {
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
     id: true,
     generated: true,
@@ -34,11 +35,14 @@ export class Event extends Entity {
   })
   publicationDate?: string;
 
+  @hasMany(() => EventTranslation, { keyTo: 'id' })
+  translations: EventTranslation[];
+
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  // [prop: string]: any;
 
   constructor(data?: Partial<Event>) {
     super(data);
