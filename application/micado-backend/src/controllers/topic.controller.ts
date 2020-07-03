@@ -170,4 +170,24 @@ export class TopicController {
   async deleteById (@param.path.number('id') id: number): Promise<void> {
     await this.topicRepository.deleteById(id);
   }
+
+
+
+  @get('/topics-migrant', {
+    responses: {
+      '200': {
+        description: 'Topic GET for the frontend',
+      },
+    },
+  })
+  async translatedunion (
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<Topic> {
+    return this.topicRepository.dataSource.execute("select * from topic t inner join topic_translation tt on t.id=tt.id and tt.lang='" +
+      currentlang + "' union select * from topic t inner join topic_translation tt on t.id = tt.id and tt.lang = '" +
+      defaultlang +
+      "' and t.id not in (select t.id from topic t inner join topic_translation tt on t.id = tt.id and tt.lang = '" +
+      currentlang + "')");
+  }
 }

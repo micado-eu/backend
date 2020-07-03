@@ -1,4 +1,5 @@
-import { Entity, model, property } from '@loopback/repository';
+import { Entity, model, property, hasMany} from '@loopback/repository';
+import {GlossaryTranslation} from './glossary-translation.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'glossary' } }
@@ -14,6 +15,7 @@ export class Glossary extends Entity {
   })
   id: number;
 
+  /*
   @property({
     type: 'string',
     required: true,
@@ -41,6 +43,20 @@ export class Glossary extends Entity {
     postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   translationDate?: string;
+*/
+
+  @property({
+    type: 'boolean'
+  })
+  published?: boolean;
+
+  @hasMany(() => GlossaryTranslation, {keyTo: 'id'})
+  translations: GlossaryTranslation[];
+  @property({
+    type: 'date',
+    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  publicationDate?: string;
 
   // Define well-known properties here
 
