@@ -23,3 +23,4 @@ export * from './step-translation.repository';
 export * from './step-link-translation.repository';
 export * from './step-document.repository';
 export * from './glossary-translation.repository';
+export * from './intervention-category-translation.repository';

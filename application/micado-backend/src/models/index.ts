@@ -47,3 +47,4 @@ export * from './document-type-picture.model';
 export * from './step-link.model';
 export * from './step-link-translation.model';
 export * from './glossary-translation.model';
+export * from './intervention-category-translation.model';

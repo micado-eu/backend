@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {InterventionCategoryTranslation} from './intervention-category-translation.model';
 
 @model({
   settings: {
@@ -42,6 +43,9 @@ export class InterventionCategory extends Entity {
     postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   publicationDate?: string;
+
+  @hasMany(() => InterventionCategoryTranslation, {keyTo: 'id'})
+  translations: InterventionCategoryTranslation[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

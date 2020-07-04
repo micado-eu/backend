@@ -702,10 +702,40 @@ ALTER SEQUENCE individual_intervention_plan_interventions_list_id_seq OWNED BY i
 
 CREATE TABLE intervention_category (
     id smallint NOT NULL,
-    title character varying(30),
-    lang character varying(10) NOT NULL,
     published boolean DEFAULT false NOT NULL,
     publication_date date
+);
+
+
+--
+-- Name: intervention_category_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE intervention_category_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: intervention_category_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE intervention_category_id_seq OWNED BY intervention_category.id;
+
+
+--
+-- Name: intervention_category_translation; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE intervention_category_translation (
+    id smallint NOT NULL,
+    lang character varying(10) NOT NULL,
+    title character varying(30),
+    translation_date timestamp without time zone
 );
 
 
@@ -764,7 +794,7 @@ ALTER SEQUENCE intervention_processes_process_id_seq OWNED BY intervention_proce
 --
 
 CREATE TABLE intervention_type_validator (
-    tanant_id integer NOT NULL,
+    tenant_id integer NOT NULL,
     intervention_type_id smallint NOT NULL
 );
 
@@ -775,31 +805,10 @@ CREATE TABLE intervention_type_validator (
 
 CREATE TABLE intervention_types (
     id smallint NOT NULL,
-    category_type_id smallint NOT NULL,
     published boolean DEFAULT false NOT NULL,
     publication_date date,
-    category_type_lang character varying(20)
+    category_type smallint
 );
-
-
---
--- Name: intervention_types_category_type_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
---
-
-CREATE SEQUENCE intervention_types_category_type_seq
-    AS smallint
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: intervention_types_category_type_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
---
-
-ALTER SEQUENCE intervention_types_category_type_seq OWNED BY intervention_types.category_type_id;
 
 
 --
@@ -1365,7 +1374,7 @@ ALTER TABLE ONLY document ALTER COLUMN document_type SET DEFAULT nextval('docume
 
 
 --
--- Name: document_type id2; Type: DEFAULT; Schema: micadoapp; Owner: -
+-- Name: document_type id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY document_type ALTER COLUMN id SET DEFAULT nextval('document_type_id_seq'::regclass);
@@ -1477,6 +1486,13 @@ ALTER TABLE ONLY individual_intervention_plan_interventions ALTER COLUMN id SET 
 
 
 --
+-- Name: intervention_category id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_category ALTER COLUMN id SET DEFAULT nextval('intervention_category_id_seq'::regclass);
+
+
+--
 -- Name: intervention_processes intervention_type; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
@@ -1495,13 +1511,6 @@ ALTER TABLE ONLY intervention_processes ALTER COLUMN process_id SET DEFAULT next
 --
 
 ALTER TABLE ONLY intervention_types ALTER COLUMN id SET DEFAULT nextval('intervention_types_id_seq'::regclass);
-
-
---
--- Name: intervention_types category_type_id; Type: DEFAULT; Schema: micadoapp; Owner: -
---
-
-ALTER TABLE ONLY intervention_types ALTER COLUMN category_type_id SET DEFAULT nextval('intervention_types_category_type_seq'::regclass);
 
 
 --
@@ -1722,7 +1731,14 @@ INSERT INTO glossary_translation VALUES (1, 'it', 'Permesso di soggiorno', NULL,
 -- Data for Name: intervention_category; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO intervention_category VALUES (1, 'ic1', 'en', false, NULL);
+INSERT INTO intervention_category VALUES (1, false, NULL);
+
+
+--
+-- Data for Name: intervention_category_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO intervention_category_translation VALUES (1, 'en', 'cat1', NULL);
 
 
 --
@@ -1741,7 +1757,7 @@ INSERT INTO intervention_category VALUES (1, 'ic1', 'en', false, NULL);
 -- Data for Name: intervention_types; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO intervention_types VALUES (1, 1, false, NULL, NULL);
+INSERT INTO intervention_types VALUES (1, false, NULL, NULL);
 
 
 --
@@ -2019,6 +2035,13 @@ SELECT pg_catalog.setval('individual_intervention_plan_interventions_list_id_seq
 
 
 --
+-- Name: intervention_category_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('intervention_category_id_seq', 1, true);
+
+
+--
 -- Name: intervention_processes_intervention_type_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
@@ -2030,13 +2053,6 @@ SELECT pg_catalog.setval('intervention_processes_intervention_type_seq', 1, fals
 --
 
 SELECT pg_catalog.setval('intervention_processes_process_id_seq', 1, false);
-
-
---
--- Name: intervention_types_category_type_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
---
-
-SELECT pg_catalog.setval('intervention_types_category_type_seq', 1, true);
 
 
 --
@@ -2239,7 +2255,15 @@ ALTER TABLE ONLY individual_intervention_plan
 --
 
 ALTER TABLE ONLY intervention_category
-    ADD CONSTRAINT intervention_category_pk PRIMARY KEY (id, lang);
+    ADD CONSTRAINT intervention_category_pk PRIMARY KEY (id);
+
+
+--
+-- Name: intervention_category_translation intervention_category_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_category_translation
+    ADD CONSTRAINT intervention_category_translation_pk PRIMARY KEY (id, lang);
 
 
 --
@@ -2247,7 +2271,7 @@ ALTER TABLE ONLY intervention_category
 --
 
 ALTER TABLE ONLY intervention_type_validator
-    ADD CONSTRAINT intervention_type_validator_pk PRIMARY KEY (tanant_id, intervention_type_id);
+    ADD CONSTRAINT intervention_type_validator_pk PRIMARY KEY (tenant_id, intervention_type_id);
 
 
 --
@@ -2619,11 +2643,19 @@ ALTER TABLE ONLY individual_intervention_plan
 
 
 --
--- Name: intervention_category intervention_category_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: intervention_category_translation intervention_category_id_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY intervention_category
-    ADD CONSTRAINT intervention_category_fk FOREIGN KEY (lang) REFERENCES languages(lang);
+ALTER TABLE ONLY intervention_category_translation
+    ADD CONSTRAINT intervention_category_id_translation_fk FOREIGN KEY (id) REFERENCES intervention_category(id);
+
+
+--
+-- Name: intervention_category_translation intervention_category_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_category_translation
+    ADD CONSTRAINT intervention_category_translation_fk FOREIGN KEY (lang) REFERENCES languages(lang);
 
 
 --
@@ -2655,7 +2687,7 @@ ALTER TABLE ONLY intervention_type_validator
 --
 
 ALTER TABLE ONLY intervention_types
-    ADD CONSTRAINT intervention_types_fk FOREIGN KEY (category_type_id, category_type_lang) REFERENCES intervention_category(id, lang);
+    ADD CONSTRAINT intervention_types_fk FOREIGN KEY (category_type) REFERENCES intervention_category(id);
 
 
 --
@@ -2869,4 +2901,3 @@ ALTER TABLE ONLY user_types_translation
 --
 -- PostgreSQL database dump complete
 --
-
