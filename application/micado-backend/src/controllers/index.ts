@@ -28,3 +28,4 @@ export * from './step-step-document.controller';
 export * from './topic-exporter.controller';
 export * from './glossary-glossary-translation.controller';
 export * from './intervention-category-intervention-category-translation.controller';
+export * from './settings.controller';
