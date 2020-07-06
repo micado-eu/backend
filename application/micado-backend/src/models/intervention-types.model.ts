@@ -1,11 +1,11 @@
-import {Entity, model, property, hasMany, belongsTo} from '@loopback/repository';
-import {InterventionTypesTranslation} from './intervention-types-translation.model';
-import {InterventionCategory} from './intervention-category.model';
+import { Entity, model, property, hasMany, belongsTo } from '@loopback/repository';
+import { InterventionTypesTranslation } from './intervention-types-translation.model';
+import { InterventionCategory } from './intervention-category.model';
 
 @model({
   settings: {
     idInjection: false,
-    postgresql: {schema: 'micadoapp', table: 'intervention_types'}
+    postgresql: { schema: 'micadoapp', table: 'intervention_types' }
   }
 })
 export class InterventionTypes extends Entity {
@@ -23,7 +23,7 @@ export class InterventionTypes extends Entity {
     type: 'number',
     required: true,
     scale: 0,
-    postgresql: {columnName: 'category_type_id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    postgresql: { columnName: 'category_type_id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   categoryTypeId: number;
 
@@ -31,7 +31,7 @@ export class InterventionTypes extends Entity {
     type: 'string',
     required: true,
     scale: 0,
-    postgresql: {columnName: 'category_type_lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'category_type_lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   categoryTypeLang: string;
 
@@ -42,14 +42,15 @@ export class InterventionTypes extends Entity {
 
   @property({
     type: 'date',
-    postgresql: {columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   publicationDate?: string;
 
-  @hasMany(() => InterventionTypesTranslation, {keyTo: 'id'})
+  @hasMany(() => InterventionTypesTranslation, { keyTo: 'id' })
   translations: InterventionTypesTranslation[];
 
-  
+
   // Define well-known properties here
 
   // Indexer property to allow additional data
