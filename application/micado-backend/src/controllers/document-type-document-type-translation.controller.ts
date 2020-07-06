@@ -19,7 +19,7 @@ import {
   DocumentType,
   DocumentTypeTranslation,
 } from '../models';
-import {DocumentTypeRepository} from '../repositories';
+import { DocumentTypeRepository } from '../repositories';
 
 export class DocumentTypeDocumentTypeTranslationController {
   constructor(
@@ -32,13 +32,13 @@ export class DocumentTypeDocumentTypeTranslationController {
         description: 'Array of DocumentType has many DocumentTypeTranslation',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(DocumentTypeTranslation)},
+            schema: { type: 'array', items: getModelSchemaRef(DocumentTypeTranslation) },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<DocumentTypeTranslation>,
   ): Promise<DocumentTypeTranslation[]> {
@@ -49,23 +49,24 @@ export class DocumentTypeDocumentTypeTranslationController {
     responses: {
       '200': {
         description: 'DocumentType model instance',
-        content: {'application/json': {schema: getModelSchemaRef(DocumentTypeTranslation)}},
+        content: { 'application/json': { schema: getModelSchemaRef(DocumentTypeTranslation) } },
       },
     },
   })
-  async create(
+  async create (
     @param.path.number('id') id: typeof DocumentType.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(DocumentTypeTranslation, {
             title: 'NewDocumentTypeTranslationInDocumentType',
-            exclude: ['id'],
+            //            exclude: ['id'],
             optional: ['id']
           }),
         },
       },
-    }) documentTypeTranslation: Omit<DocumentTypeTranslation, 'id'>,
+    }) documentTypeTranslation: DocumentTypeTranslation,
+    //   }) documentTypeTranslation: Omit < DocumentTypeTranslation, 'id' >,
   ): Promise<DocumentTypeTranslation> {
     return this.documentTypeRepository.translations(id).create(documentTypeTranslation);
   }
@@ -74,16 +75,16 @@ export class DocumentTypeDocumentTypeTranslationController {
     responses: {
       '200': {
         description: 'DocumentType.DocumentTypeTranslation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async patch(
+  async patch (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(DocumentTypeTranslation, {partial: true}),
+          schema: getModelSchemaRef(DocumentTypeTranslation, { partial: true }),
         },
       },
     })
@@ -97,11 +98,11 @@ export class DocumentTypeDocumentTypeTranslationController {
     responses: {
       '200': {
         description: 'DocumentType.DocumentTypeTranslation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async delete(
+  async delete (
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(DocumentTypeTranslation)) where?: Where<DocumentTypeTranslation>,
   ): Promise<Count> {

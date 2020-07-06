@@ -19,7 +19,7 @@ import {
   InterventionCategory,
   InterventionCategoryTranslation,
 } from '../models';
-import {InterventionCategoryRepository} from '../repositories';
+import { InterventionCategoryRepository } from '../repositories';
 
 export class InterventionCategoryInterventionCategoryTranslationController {
   constructor(
@@ -32,13 +32,13 @@ export class InterventionCategoryInterventionCategoryTranslationController {
         description: 'Array of InterventionCategory has many InterventionCategoryTranslation',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(InterventionCategoryTranslation)},
+            schema: { type: 'array', items: getModelSchemaRef(InterventionCategoryTranslation) },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<InterventionCategoryTranslation>,
   ): Promise<InterventionCategoryTranslation[]> {
@@ -49,23 +49,24 @@ export class InterventionCategoryInterventionCategoryTranslationController {
     responses: {
       '200': {
         description: 'InterventionCategory model instance',
-        content: {'application/json': {schema: getModelSchemaRef(InterventionCategoryTranslation)}},
+        content: { 'application/json': { schema: getModelSchemaRef(InterventionCategoryTranslation) } },
       },
     },
   })
-  async create(
+  async create (
     @param.path.number('id') id: typeof InterventionCategory.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(InterventionCategoryTranslation, {
             title: 'NewInterventionCategoryTranslationInInterventionCategory',
-            exclude: ['id'],
+            //            exclude: ['id'],
             optional: ['id']
           }),
         },
       },
-    }) interventionCategoryTranslation: Omit<InterventionCategoryTranslation, 'id'>,
+    }) interventionCategoryTranslation: InterventionCategoryTranslation,
+    //    }) interventionCategoryTranslation: Omit < InterventionCategoryTranslation, 'id' >,
   ): Promise<InterventionCategoryTranslation> {
     return this.interventionCategoryRepository.translations(id).create(interventionCategoryTranslation);
   }
@@ -74,16 +75,16 @@ export class InterventionCategoryInterventionCategoryTranslationController {
     responses: {
       '200': {
         description: 'InterventionCategory.InterventionCategoryTranslation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async patch(
+  async patch (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(InterventionCategoryTranslation, {partial: true}),
+          schema: getModelSchemaRef(InterventionCategoryTranslation, { partial: true }),
         },
       },
     })
@@ -97,11 +98,11 @@ export class InterventionCategoryInterventionCategoryTranslationController {
     responses: {
       '200': {
         description: 'InterventionCategory.InterventionCategoryTranslation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async delete(
+  async delete (
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(InterventionCategoryTranslation)) where?: Where<InterventionCategoryTranslation>,
   ): Promise<Count> {

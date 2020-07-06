@@ -19,7 +19,7 @@ import {
   PictureHotspot,
   PictureHotspotTranslation,
 } from '../models';
-import {PictureHotspotRepository} from '../repositories';
+import { PictureHotspotRepository } from '../repositories';
 
 export class PictureHotspotPictureHotspotTranslationController {
   constructor(
@@ -32,13 +32,13 @@ export class PictureHotspotPictureHotspotTranslationController {
         description: 'Array of PictureHotspot has many PictureHotspotTranslation',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(PictureHotspotTranslation)},
+            schema: { type: 'array', items: getModelSchemaRef(PictureHotspotTranslation) },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<PictureHotspotTranslation>,
   ): Promise<PictureHotspotTranslation[]> {
@@ -49,23 +49,24 @@ export class PictureHotspotPictureHotspotTranslationController {
     responses: {
       '200': {
         description: 'PictureHotspot model instance',
-        content: {'application/json': {schema: getModelSchemaRef(PictureHotspotTranslation)}},
+        content: { 'application/json': { schema: getModelSchemaRef(PictureHotspotTranslation) } },
       },
     },
   })
-  async create(
+  async create (
     @param.path.number('id') id: typeof PictureHotspot.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(PictureHotspotTranslation, {
             title: 'NewPictureHotspotTranslationInPictureHotspot',
-            exclude: ['phtId'],
+            //           exclude: ['phtId'],
             optional: ['phtId']
           }),
         },
       },
-    }) pictureHotspotTranslation: Omit<PictureHotspotTranslation, 'phtId'>,
+    }) pictureHotspotTranslation: PictureHotspotTranslation,
+    //    }) pictureHotspotTranslation: Omit < PictureHotspotTranslation, 'phtId' >,
   ): Promise<PictureHotspotTranslation> {
     return this.pictureHotspotRepository.translations(id).create(pictureHotspotTranslation);
   }
@@ -74,16 +75,16 @@ export class PictureHotspotPictureHotspotTranslationController {
     responses: {
       '200': {
         description: 'PictureHotspot.PictureHotspotTranslation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async patch(
+  async patch (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(PictureHotspotTranslation, {partial: true}),
+          schema: getModelSchemaRef(PictureHotspotTranslation, { partial: true }),
         },
       },
     })
@@ -97,11 +98,11 @@ export class PictureHotspotPictureHotspotTranslationController {
     responses: {
       '200': {
         description: 'PictureHotspot.PictureHotspotTranslation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async delete(
+  async delete (
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(PictureHotspotTranslation)) where?: Where<PictureHotspotTranslation>,
   ): Promise<Count> {
