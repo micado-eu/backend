@@ -16,24 +16,24 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Process} from '../models';
-import {ProcessRepository} from '../repositories';
+import { Process } from '../models';
+import { ProcessRepository } from '../repositories';
 
 export class ProcessController {
   constructor(
     @repository(ProcessRepository)
-    public processRepository : ProcessRepository,
-  ) {}
+    public processRepository: ProcessRepository,
+  ) { }
 
   @post('/processes', {
     responses: {
       '200': {
         description: 'Process model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Process)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Process) } },
       },
     },
   })
-  async create(
+  async create (
     @requestBody({
       content: {
         'application/json': {
@@ -53,11 +53,11 @@ export class ProcessController {
     responses: {
       '200': {
         description: 'Process model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async count(
+  async count (
     @param.where(Process) where?: Where<Process>,
   ): Promise<Count> {
     return this.processRepository.count(where);
@@ -71,14 +71,14 @@ export class ProcessController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Process, {includeRelations: true}),
+              items: getModelSchemaRef(Process, { includeRelations: true }),
             },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.filter(Process) filter?: Filter<Process>,
   ): Promise<Process[]> {
     return this.processRepository.find(filter);
@@ -88,15 +88,15 @@ export class ProcessController {
     responses: {
       '200': {
         description: 'Process PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async updateAll(
+  async updateAll (
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Process, {partial: true}),
+          schema: getModelSchemaRef(Process, { partial: true }),
         },
       },
     })
@@ -112,15 +112,15 @@ export class ProcessController {
         description: 'Process model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Process, {includeRelations: true}),
+            schema: getModelSchemaRef(Process, { includeRelations: true }),
           },
         },
       },
     },
   })
-  async findById(
+  async findById (
     @param.path.number('id') id: number,
-    @param.filter(Process, {exclude: 'where'}) filter?: FilterExcludingWhere<Process>
+    @param.filter(Process, { exclude: 'where' }) filter?: FilterExcludingWhere<Process>
   ): Promise<Process> {
     return this.processRepository.findById(id, filter);
   }
@@ -132,12 +132,12 @@ export class ProcessController {
       },
     },
   })
-  async updateById(
+  async updateById (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Process, {partial: true}),
+          schema: getModelSchemaRef(Process, { partial: true }),
         },
       },
     })
@@ -153,7 +153,7 @@ export class ProcessController {
       },
     },
   })
-  async replaceById(
+  async replaceById (
     @param.path.number('id') id: number,
     @requestBody() process: Process,
   ): Promise<void> {
@@ -167,7 +167,25 @@ export class ProcessController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById (@param.path.number('id') id: number): Promise<void> {
     await this.processRepository.deleteById(id);
+  }
+
+  @get('/processes-migrant', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async translatedunion (
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.processRepository.dataSource.execute("select * from process t inner join process_translation tt on t.id=tt.id and tt.lang='" +
+      currentlang + "' union select * from process t inner join process_translation tt on t.id = tt.id and tt.lang = '" +
+      defaultlang +
+      "' and t.id not in (select t.id from process t inner join process_translation tt on t.id = tt.id and tt.lang = '" +
+      currentlang + "')");
   }
 }

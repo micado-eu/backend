@@ -17,21 +17,7 @@ export class InterventionCategory extends Entity {
   })
   id: number;
 
-  @property({
-    type: 'string',
-    length: 30,
-    postgresql: { columnName: 'title', dataType: 'character varying', dataLength: 30, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  title?: string;
 
-  @property({
-    type: 'string',
-    required: true,
-    length: 10,
-    id: 2,
-    postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO' },
-  })
-  lang: string;
 
   @property({
     type: 'boolean',
