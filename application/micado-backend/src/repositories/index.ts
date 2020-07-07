@@ -25,3 +25,4 @@ export * from './step-document.repository';
 export * from './glossary-translation.repository';
 export * from './intervention-category-translation.repository';
 export * from './settings.repository';
+export * from './charts.repository';
