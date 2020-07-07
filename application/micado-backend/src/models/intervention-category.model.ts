@@ -14,7 +14,7 @@ export class InterventionCategory extends Entity {
     scale: 0,
     id: 1,
     generated:true,
-   // postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
 

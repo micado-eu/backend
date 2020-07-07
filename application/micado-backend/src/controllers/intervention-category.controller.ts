@@ -39,12 +39,12 @@ export class InterventionCategoryController {
         'application/json': {
           schema: getModelSchemaRef(InterventionCategory, {
             title: 'NewInterventionCategory',
-
+            exclude: ['id'],
           }),
         },
       },
     })
-    interventionCategory: InterventionCategory,
+    interventionCategory: Omit<InterventionCategory, 'id'>,
   ): Promise<InterventionCategory> {
     return this.interventionCategoryRepository.create(interventionCategory);
   }
