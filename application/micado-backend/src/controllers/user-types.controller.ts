@@ -16,24 +16,24 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {UserTypes} from '../models';
-import {UserTypesRepository} from '../repositories';
+import { UserTypes } from '../models';
+import { UserTypesRepository } from '../repositories';
 
 export class UserTypesController {
   constructor(
     @repository(UserTypesRepository)
-    public userTypesRepository : UserTypesRepository,
-  ) {}
+    public userTypesRepository: UserTypesRepository,
+  ) { }
 
   @post('/user-types', {
     responses: {
       '200': {
         description: 'UserTypes model instance',
-        content: {'application/json': {schema: getModelSchemaRef(UserTypes)}},
+        content: { 'application/json': { schema: getModelSchemaRef(UserTypes) } },
       },
     },
   })
-  async create(
+  async create (
     @requestBody({
       content: {
         'application/json': {
@@ -53,11 +53,11 @@ export class UserTypesController {
     responses: {
       '200': {
         description: 'UserTypes model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async count(
+  async count (
     @param.where(UserTypes) where?: Where<UserTypes>,
   ): Promise<Count> {
     return this.userTypesRepository.count(where);
@@ -71,14 +71,14 @@ export class UserTypesController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(UserTypes, {includeRelations: true}),
+              items: getModelSchemaRef(UserTypes, { includeRelations: true }),
             },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.filter(UserTypes) filter?: Filter<UserTypes>,
   ): Promise<UserTypes[]> {
     return this.userTypesRepository.find(filter);
@@ -88,15 +88,15 @@ export class UserTypesController {
     responses: {
       '200': {
         description: 'UserTypes PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async updateAll(
+  async updateAll (
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(UserTypes, {partial: true}),
+          schema: getModelSchemaRef(UserTypes, { partial: true }),
         },
       },
     })
@@ -112,15 +112,15 @@ export class UserTypesController {
         description: 'UserTypes model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(UserTypes, {includeRelations: true}),
+            schema: getModelSchemaRef(UserTypes, { includeRelations: true }),
           },
         },
       },
     },
   })
-  async findById(
+  async findById (
     @param.path.number('id') id: number,
-    @param.filter(UserTypes, {exclude: 'where'}) filter?: FilterExcludingWhere<UserTypes>
+    @param.filter(UserTypes, { exclude: 'where' }) filter?: FilterExcludingWhere<UserTypes>
   ): Promise<UserTypes> {
     return this.userTypesRepository.findById(id, filter);
   }
@@ -132,12 +132,12 @@ export class UserTypesController {
       },
     },
   })
-  async updateById(
+  async updateById (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(UserTypes, {partial: true}),
+          schema: getModelSchemaRef(UserTypes, { partial: true }),
         },
       },
     })
@@ -153,7 +153,7 @@ export class UserTypesController {
       },
     },
   })
-  async replaceById(
+  async replaceById (
     @param.path.number('id') id: number,
     @requestBody() userTypes: UserTypes,
   ): Promise<void> {
@@ -167,7 +167,25 @@ export class UserTypesController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById (@param.path.number('id') id: number): Promise<void> {
     await this.userTypesRepository.deleteById(id);
+  }
+
+  @get('/user-types-migrant', {
+    responses: {
+      '200': {
+        description: 'user-types GET for the frontend',
+      },
+    },
+  })
+  async translatedunion (
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.userTypesRepository.dataSource.execute("select * from user_types t inner join user_types_translation tt on t.id=tt.id and tt.lang='" +
+      currentlang + "' union select * from user_types t inner join user_types_translation tt on t.id = tt.id and tt.lang = '" +
+      defaultlang +
+      "' and t.id not in (select t.id from user_types t inner join user_types_translation tt on t.id = tt.id and tt.lang = '" +
+      currentlang + "')");
   }
 }
