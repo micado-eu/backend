@@ -23,6 +23,7 @@ export class InterventionTypes extends Entity {
     type: 'number',
     required: true,
     scale: 0,
+    jsonSchema: { nullable: true },
     postgresql: { columnName: 'category_type', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   categoryType: number;
