@@ -24,6 +24,7 @@ export * from './glossary.controller';
 export * from './step-step-translation.controller';
 export * from './step-link-step-link-translation.controller';
 export * from './cytoscape.controller';
+export * from './mermaid.controller';
 export * from './step-step-document.controller';
 export * from './topic-exporter.controller';
 export * from './glossary-glossary-translation.controller';
