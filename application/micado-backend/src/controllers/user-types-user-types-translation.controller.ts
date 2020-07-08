@@ -19,7 +19,7 @@ import {
   UserTypes,
   UserTypesTranslation,
 } from '../models';
-import {UserTypesRepository} from '../repositories';
+import { UserTypesRepository } from '../repositories';
 
 export class UserTypesUserTypesTranslationController {
   constructor(
@@ -32,13 +32,13 @@ export class UserTypesUserTypesTranslationController {
         description: 'Array of UserTypes has many UserTypesTranslation',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(UserTypesTranslation)},
+            schema: { type: 'array', items: getModelSchemaRef(UserTypesTranslation) },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<UserTypesTranslation>,
   ): Promise<UserTypesTranslation[]> {
@@ -49,23 +49,24 @@ export class UserTypesUserTypesTranslationController {
     responses: {
       '200': {
         description: 'UserTypes model instance',
-        content: {'application/json': {schema: getModelSchemaRef(UserTypesTranslation)}},
+        content: { 'application/json': { schema: getModelSchemaRef(UserTypesTranslation) } },
       },
     },
   })
-  async create(
+  async create (
     @param.path.number('id') id: typeof UserTypes.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(UserTypesTranslation, {
             title: 'NewUserTypesTranslationInUserTypes',
-            exclude: ['id'],
+            //            exclude: ['id'],
             optional: ['id']
           }),
         },
       },
-    }) userTypesTranslation: Omit<UserTypesTranslation, 'id'>,
+    }) userTypesTranslation: UserTypesTranslation,
+    //   }) userTypesTranslation: Omit < UserTypesTranslation, 'id' >,
   ): Promise<UserTypesTranslation> {
     return this.userTypesRepository.translations(id).create(userTypesTranslation);
   }
@@ -74,16 +75,16 @@ export class UserTypesUserTypesTranslationController {
     responses: {
       '200': {
         description: 'UserTypes.UserTypesTranslation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async patch(
+  async patch (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(UserTypesTranslation, {partial: true}),
+          schema: getModelSchemaRef(UserTypesTranslation, { partial: true }),
         },
       },
     })
@@ -97,11 +98,11 @@ export class UserTypesUserTypesTranslationController {
     responses: {
       '200': {
         description: 'UserTypes.UserTypesTranslation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async delete(
+  async delete (
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(UserTypesTranslation)) where?: Where<UserTypesTranslation>,
   ): Promise<Count> {

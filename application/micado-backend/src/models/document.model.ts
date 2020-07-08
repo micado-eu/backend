@@ -51,6 +51,7 @@ export class Document extends Entity {
 
   @property({
     type: 'date',
+    jsonSchema: { nullable: true },
     postgresql: {columnName: 'validation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   validationDate?: string;

@@ -51,6 +51,7 @@ export class FeaturesFlagsTranslation extends Entity {
 
   @property({
     type: 'date',
+    jsonSchema: { nullable: true },
     postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   translationDate?: string;

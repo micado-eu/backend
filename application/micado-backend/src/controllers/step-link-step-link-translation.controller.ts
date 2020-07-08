@@ -19,7 +19,7 @@ import {
   StepLink,
   StepLinkTranslation,
 } from '../models';
-import {StepLinkRepository} from '../repositories';
+import { StepLinkRepository } from '../repositories';
 
 export class StepLinkStepLinkTranslationController {
   constructor(
@@ -32,13 +32,13 @@ export class StepLinkStepLinkTranslationController {
         description: 'Array of StepLink has many StepLinkTranslation',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(StepLinkTranslation)},
+            schema: { type: 'array', items: getModelSchemaRef(StepLinkTranslation) },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<StepLinkTranslation>,
   ): Promise<StepLinkTranslation[]> {
@@ -49,23 +49,24 @@ export class StepLinkStepLinkTranslationController {
     responses: {
       '200': {
         description: 'StepLink model instance',
-        content: {'application/json': {schema: getModelSchemaRef(StepLinkTranslation)}},
+        content: { 'application/json': { schema: getModelSchemaRef(StepLinkTranslation) } },
       },
     },
   })
-  async create(
+  async create (
     @param.path.string('id') id: typeof StepLink.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(StepLinkTranslation, {
             title: 'NewStepLinkTranslationInStepLink',
-            exclude: ['id'],
+            //           exclude: ['id'],
             optional: ['id']
           }),
         },
       },
-    }) stepLinkTranslation: Omit<StepLinkTranslation, 'id'>,
+    }) stepLinkTranslation: StepLinkTranslation,
+    //    }) stepLinkTranslation: Omit < StepLinkTranslation, 'id' >,
   ): Promise<StepLinkTranslation> {
     return this.stepLinkRepository.translations(id).create(stepLinkTranslation);
   }
@@ -74,16 +75,16 @@ export class StepLinkStepLinkTranslationController {
     responses: {
       '200': {
         description: 'StepLink.StepLinkTranslation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async patch(
+  async patch (
     @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(StepLinkTranslation, {partial: true}),
+          schema: getModelSchemaRef(StepLinkTranslation, { partial: true }),
         },
       },
     })
@@ -97,11 +98,11 @@ export class StepLinkStepLinkTranslationController {
     responses: {
       '200': {
         description: 'StepLink.StepLinkTranslation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async delete(
+  async delete (
     @param.path.string('id') id: string,
     @param.query.object('where', getWhereSchemaFor(StepLinkTranslation)) where?: Where<StepLinkTranslation>,
   ): Promise<Count> {

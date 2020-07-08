@@ -702,10 +702,40 @@ ALTER SEQUENCE individual_intervention_plan_interventions_list_id_seq OWNED BY i
 
 CREATE TABLE intervention_category (
     id smallint NOT NULL,
-    title character varying(30),
-    lang character varying(10) NOT NULL,
     published boolean DEFAULT false NOT NULL,
     publication_date date
+);
+
+
+--
+-- Name: intervention_category_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE intervention_category_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: intervention_category_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE intervention_category_id_seq OWNED BY intervention_category.id;
+
+
+--
+-- Name: intervention_category_translation; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE intervention_category_translation (
+    id smallint NOT NULL,
+    lang character varying(10) NOT NULL,
+    title character varying(30),
+    translation_date timestamp without time zone
 );
 
 
@@ -764,7 +794,7 @@ ALTER SEQUENCE intervention_processes_process_id_seq OWNED BY intervention_proce
 --
 
 CREATE TABLE intervention_type_validator (
-    tanant_id integer NOT NULL,
+    tenant_id integer NOT NULL,
     intervention_type_id smallint NOT NULL
 );
 
@@ -775,31 +805,10 @@ CREATE TABLE intervention_type_validator (
 
 CREATE TABLE intervention_types (
     id smallint NOT NULL,
-    category_type_id smallint NOT NULL,
     published boolean DEFAULT false NOT NULL,
     publication_date date,
-    category_type_lang character varying(20)
+    category_type smallint
 );
-
-
---
--- Name: intervention_types_category_type_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
---
-
-CREATE SEQUENCE intervention_types_category_type_seq
-    AS smallint
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: intervention_types_category_type_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
---
-
-ALTER SEQUENCE intervention_types_category_type_seq OWNED BY intervention_types.category_type_id;
 
 
 --
@@ -1365,7 +1374,7 @@ ALTER TABLE ONLY document ALTER COLUMN document_type SET DEFAULT nextval('docume
 
 
 --
--- Name: document_type id2; Type: DEFAULT; Schema: micadoapp; Owner: -
+-- Name: document_type id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY document_type ALTER COLUMN id SET DEFAULT nextval('document_type_id_seq'::regclass);
@@ -1477,6 +1486,13 @@ ALTER TABLE ONLY individual_intervention_plan_interventions ALTER COLUMN id SET 
 
 
 --
+-- Name: intervention_category id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_category ALTER COLUMN id SET DEFAULT nextval('intervention_category_id_seq'::regclass);
+
+
+--
 -- Name: intervention_processes intervention_type; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
@@ -1495,13 +1511,6 @@ ALTER TABLE ONLY intervention_processes ALTER COLUMN process_id SET DEFAULT next
 --
 
 ALTER TABLE ONLY intervention_types ALTER COLUMN id SET DEFAULT nextval('intervention_types_id_seq'::regclass);
-
-
---
--- Name: intervention_types category_type_id; Type: DEFAULT; Schema: micadoapp; Owner: -
---
-
-ALTER TABLE ONLY intervention_types ALTER COLUMN category_type_id SET DEFAULT nextval('intervention_types_category_type_seq'::regclass);
 
 
 --
@@ -1722,7 +1731,14 @@ INSERT INTO glossary_translation VALUES (1, 'it', 'Permesso di soggiorno', NULL,
 -- Data for Name: intervention_category; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO intervention_category VALUES (1, 'ic1', 'en', false, NULL);
+INSERT INTO intervention_category VALUES (1, false, NULL);
+
+
+--
+-- Data for Name: intervention_category_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO intervention_category_translation VALUES (1, 'en', 'cat1', NULL);
 
 
 --
@@ -1741,7 +1757,7 @@ INSERT INTO intervention_category VALUES (1, 'ic1', 'en', false, NULL);
 -- Data for Name: intervention_types; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO intervention_types VALUES (1, 1, false, NULL, NULL);
+INSERT INTO intervention_types VALUES (1, false, NULL, NULL);
 
 
 --
@@ -1862,20 +1878,32 @@ INSERT INTO step_translation VALUES ('en', 'pippo', 'string', '2020-06-30 11:53:
 -- Data for Name: topic; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO topic VALUES (1, 'string', false, NULL);
-INSERT INTO topic VALUES (2, 'string', true, NULL);
+INSERT INTO topic VALUES (1, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkiIGhlaWdodD0iMTkiIHZpZXdCb3g9IjAgMCAxOSAxOSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE0LjgyOTMgOC40NDQzMlYtMC4wMDAxMjIwN0g0LjIyMjIyVjQuMjIyMUgwVjE4Ljk5OTlIOC40NDQ0NFYxNC43Nzc3SDEwLjU1NTZWMTguOTk5OUgxOVY4LjQ0NDMySDE0LjgyOTNaTTQuMjIyMjIgMTYuOTQwM0gyLjExMTExVjE0LjgyOTFINC4yMjIyMlYxNi45NDAzWk00LjIyMjIyIDEyLjcxOEgyLjExMTExVjEwLjYwNjlINC4yMjIyMlYxMi43MThaTTQuMjIyMjIgOC40NDQzMkgyLjExMTExVjYuMzMzMjFINC4yMjIyMlY4LjQ0NDMyWk04LjQ0NDQ0IDEyLjcxOEg2LjMzMzMzVjEwLjYwNjlIOC40NDQ0NFYxMi43MThaTTguNDQ0NDQgOC40NDQzMkg2LjMzMzMzVjYuMzMzMjFIOC40NDQ0NFY4LjQ0NDMyWk04LjQ0NDQ0IDQuMjIyMUg2LjMzMzMzVjIuMTEwOTlIOC40NDQ0NFY0LjIyMjFaTTEyLjcxODIgMTIuNzE4SDEwLjYwN1YxMC42MDY5SDEyLjcxODJWMTIuNzE4Wk0xMi43MTgyIDguNDQ0MzJIMTAuNjA3VjYuMzMzMjFIMTIuNzE4MlY4LjQ0NDMyWk0xMi43MTgyIDQuMjIyMUgxMC42MDdWMi4xMTA5OUgxMi43MTgyVjQuMjIyMVpNMTYuOTQwNCAxNi45NDAzSDE0LjgyOTNWMTQuODI5MUgxNi45NDA0VjE2Ljk0MDNaTTE2Ljk0MDQgMTIuNzE4SDE0LjgyOTNWMTAuNjA2OUgxNi45NDA0VjEyLjcxOFoiIGZpbGw9IiM2N0RGNkQiLz4KPC9zdmc+Cg==', false, NULL);
+INSERT INTO topic VALUES (2, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyLjU2NDIgMTQuOTI4NkgxMS4yNzQ2QzEwLjYyOTkgMTQuOTI4NiAxMC4xNDYzIDE0LjQ0NSAxMC4wOTI1IDEzLjg1MzlMMyAxMi43NzkzVjE4LjM2NzRDMyAxOS40OTU3IDMuOTEzNDMgMjAuMzU1NCA0Ljk4ODA2IDIwLjM1NTRIMTguOTU4MkMyMC4wODY2IDIwLjM1NTQgMjAuOTQ2MyAxOS40NDIgMjAuOTQ2MyAxOC4zNjc0VjEyLjc3OTNMMTMuNzQ2MyAxMy44NTM5QzEzLjY5MjUgMTQuNDk4NyAxMy4yMDkgMTQuOTI4NiAxMi41NjQyIDE0LjkyODZaIiBmaWxsPSIjMjY0MTVBIi8+CjxwYXRoIGQ9Ik0xOC45NTgyIDcuMDgzNThIMTUuOTQ5M1Y1Ljc5NDAzQzE1Ljk0OTMgNC4yMzU4MiAxNC43MTM0IDMgMTMuMTU1MiAzSDEwLjczNzNDOS4xNzkxMSAzIDcuOTQzMjggNC4yMzU4MiA3Ljk0MzI4IDUuNzk0MDNWNy4wODM1OEg0Ljk4ODA2QzMuODU5NyA3LjA4MzU4IDMgNy45OTcwMiAzIDkuMDcxNjRWMTEuOTczMUwxMC4zMDc1IDEzLjA0NzhDMTAuNTIyNCAxMi43MjU0IDEwLjg5ODUgMTIuNTEwNCAxMS4zMjg0IDEyLjUxMDRIMTIuNjE3OUMxMy4wNDc4IDEyLjUxMDQgMTMuNDIzOSAxMi43MjU0IDEzLjYzODggMTMuMTAxNUwyMSAxMS45NzMxVjkuMDcxNjRDMjAuOTQ2MyA3Ljk5NzAyIDIwLjAzMjggNy4wODM1OCAxOC45NTgyIDcuMDgzNThaTTkuNTAxNDkgNS43OTQwM0M5LjUwMTQ5IDUuMTQ5MjUgMTAuMDM4OCA0LjYxMTk0IDEwLjY4MzYgNC42MTE5NEgxMy4xMDE1QzEzLjc0NjMgNC42MTE5NCAxNC4yODM2IDUuMTQ5MjUgMTQuMjgzNiA1Ljc5NDAzVjcuMDgzNThIOS40NDc3NlY1Ljc5NDAzSDkuNTAxNDlaIiBmaWxsPSIjMjY0MTVBIi8+Cjwvc3ZnPgo=', true,NULL);
+INSERT INTO topic VALUES (3, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNC42OTk3IDQuNUMxNC42OTk3IDQuMjIzODYgMTQuNDc1OCA0IDE0LjE5OTcgNEgxMC4xNDcxQzkuODcwOTIgNCA5LjY0NzA2IDQuMjIzODYgOS42NDcwNiA0LjVWOC45NzM1OEM5LjY0NzA2IDkuMjQ5NzIgOS40MjMyIDkuNDczNTggOS4xNDcwNiA5LjQ3MzU4SDQuNUM0LjIyMzg2IDkuNDczNTggNCA5LjY5NzQzIDQgOS45NzM1OFYxNC4wMjYyQzQgMTQuMzAyMyA0LjIyMzg2IDE0LjUyNjIgNC41IDE0LjUyNjJIOS4xNDcwNkM5LjQyMzIgMTQuNTI2MiA5LjY0NzA2IDE0Ljc1MDEgOS42NDcwNiAxNS4wMjYyVjE5LjVDOS42NDcwNiAxOS43NzYxIDkuODcwOTIgMjAgMTAuMTQ3MSAyMEgxNC4xOTk3QzE0LjQ3NTggMjAgMTQuNjk5NyAxOS43NzYxIDE0LjY5OTcgMTkuNVYxNS4wMjYyQzE0LjY5OTcgMTQuNzUwMSAxNC45MjM1IDE0LjUyNjIgMTUuMTk5NyAxNC41MjYySDE5LjVDMTkuNzc2MSAxNC41MjYyIDIwIDE0LjMwMjMgMjAgMTQuMDI2MlY5Ljk3MzU4QzIwIDkuNjk3NDMgMTkuNzc2MSA5LjQ3MzU4IDE5LjUgOS40NzM1OEgxNS4xOTk3QzE0LjkyMzUgOS40NzM1OCAxNC42OTk3IDkuMjQ5NzIgMTQuNjk5NyA4Ljk3MzU4VjQuNVoiIGZpbGw9IiMyRUMwRUUiLz4KPC9zdmc+Cg==', false, NULL);
+INSERT INTO topic VALUES (4, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikljb24gLSBFZHVjYXRpb24iPgo8cGF0aCBpZD0iaWNvbi9zb2NpYWwvc2Nob29sXzI0cHgiIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMS42NDQxOSA5LjM1MTExQzEuMzY2MTQgOS4xOTk1NyAxLjM2NjA3IDguODAwMzYgMS42NDQwNyA4LjY0ODczTDExLjgwODUgMy4xMDQ1MUMxMS45Mjc5IDMuMDM5MzggMTIuMDcyMiAzLjAzOTM4IDEyLjE5MTUgMy4xMDQ1MUwyMi43OTE2IDguODg2MzJDMjIuOTIwMSA4Ljk1NjQyIDIzIDkuMDkxMSAyMyA5LjIzNzQ4VjE2LjZDMjMgMTYuODIwOSAyMi44MjA5IDE3IDIyLjYgMTdIMjEuNEMyMS4xNzkxIDE3IDIxIDE2LjgyMDkgMjEgMTYuNlYxMC43NjM2QzIxIDEwLjQ2IDIwLjY3NTEgMTAuMjY3MSAyMC40MDg2IDEwLjQxMjRMMTkuMjA4NiAxMS4wNjY0QzE5LjA4IDExLjEzNjQgMTkgMTEuMjcxMSAxOSAxMS40MTc2VjE2Ljk0MjZDMTkgMTcuMDg5IDE4LjkyMDEgMTcuMjIzNiAxOC43OTE2IDE3LjI5MzdMMTIuMTkxNiAyMC44OTU1QzEyLjA3MjIgMjAuOTYwNiAxMS45Mjc4IDIwLjk2MDYgMTEuODA4NCAyMC44OTU1TDUuMjA4NCAxNy4yOTM3QzUuMDc5OTMgMTcuMjIzNiA1LjAwMDAxIDE3LjA4OSA1LjAwMDAxIDE2Ljk0MjZWMTEuNDE3NkM1LjAwMDAxIDExLjI3MTEgNC45MiAxMS4xMzY0IDQuNzkxNDMgMTEuMDY2NEwxLjY0NDE5IDkuMzUxMTFaTTExLjgwODMgMTguNjE1NEMxMS45Mjc4IDE4LjY4MDYgMTIuMDcyMiAxOC42ODA2IDEyLjE5MTcgMTguNjE1NEwxNi43OTE3IDE2LjEwMzhDMTYuOTIwMSAxNi4wMzM2IDE3IDE1Ljg5OSAxNyAxNS43NTI3VjEyLjk0NDJDMTcgMTIuNjQwNSAxNi42NzQ5IDEyLjQ0NzYgMTYuNDA4MyAxMi41OTMxTDEyLjE5MTcgMTQuODk1NEMxMi4wNzIyIDE0Ljk2MDYgMTEuOTI3OCAxNC45NjA2IDExLjgwODMgMTQuODk1NEw3LjU5MTcgMTIuNTkzMUM3LjMyNTE0IDEyLjQ0NzYgNy4wMDAwMSAxMi42NDA1IDcuMDAwMDEgMTIuOTQ0MlYxNS43NTI3QzcuMDAwMDEgMTUuODk5IDcuMDc5OSAxNi4wMzM2IDcuMjA4MzIgMTYuMTAzOEwxMS44MDgzIDE4LjYxNTRaIiBmaWxsPSIjMEU1MThFIi8+CjwvZz4KPC9zdmc+Cg==', false, NULL);
 
 
 --
 -- Data for Name: topic_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO topic_translation VALUES (1, 'it', 'Casa', '2020-06-18 14:31:27.89');
+INSERT INTO topic_translation VALUES (1, 'it', 'Casa', '2020-06-18 16:31:27.89');
+INSERT INTO topic_translation VALUES (1, 'de', 'aggiornato', '2020-06-24 17:59:35.993');
 INSERT INTO topic_translation VALUES (1, 'en', 'House', NULL);
-INSERT INTO topic_translation VALUES (2, 'en', 'Job', NULL);
+INSERT INTO topic_translation VALUES (2, 'en', 'Employment', NULL);
 INSERT INTO topic_translation VALUES (2, 'de', 'Werk', NULL);
-INSERT INTO topic_translation VALUES (2, 'it', 'Lavoro', '2020-06-18 17:42:09.469');
-INSERT INTO topic_translation VALUES (1, 'de', 'aggiornato', '2020-06-24 15:59:35.993');
+INSERT INTO topic_translation VALUES (2, 'it', 'Lavoro', '2020-06-18 19:42:09.469');
+INSERT INTO topic_translation VALUES (3, 'de', '', NULL);
+INSERT INTO topic_translation VALUES (3, 'es', '', NULL);
+INSERT INTO topic_translation VALUES (3, 'nl', '', NULL);
+INSERT INTO topic_translation VALUES (3, 'it', '', NULL);
+INSERT INTO topic_translation VALUES (3, 'en', 'Health', NULL);
+INSERT INTO topic_translation VALUES (4, 'de', '', NULL);
+INSERT INTO topic_translation VALUES (4, 'es', '', NULL);
+INSERT INTO topic_translation VALUES (4, 'it', '', NULL);
+INSERT INTO topic_translation VALUES (4, 'en', 'Education', NULL);
+INSERT INTO topic_translation VALUES (4, 'nl', '', NULL);
 
 
 --
@@ -2019,6 +2047,13 @@ SELECT pg_catalog.setval('individual_intervention_plan_interventions_list_id_seq
 
 
 --
+-- Name: intervention_category_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('intervention_category_id_seq', 1, true);
+
+
+--
 -- Name: intervention_processes_intervention_type_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
@@ -2030,13 +2065,6 @@ SELECT pg_catalog.setval('intervention_processes_intervention_type_seq', 1, fals
 --
 
 SELECT pg_catalog.setval('intervention_processes_process_id_seq', 1, false);
-
-
---
--- Name: intervention_types_category_type_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
---
-
-SELECT pg_catalog.setval('intervention_types_category_type_seq', 1, true);
 
 
 --
@@ -2239,7 +2267,15 @@ ALTER TABLE ONLY individual_intervention_plan
 --
 
 ALTER TABLE ONLY intervention_category
-    ADD CONSTRAINT intervention_category_pk PRIMARY KEY (id, lang);
+    ADD CONSTRAINT intervention_category_pk PRIMARY KEY (id);
+
+
+--
+-- Name: intervention_category_translation intervention_category_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_category_translation
+    ADD CONSTRAINT intervention_category_translation_pk PRIMARY KEY (id, lang);
 
 
 --
@@ -2247,7 +2283,7 @@ ALTER TABLE ONLY intervention_category
 --
 
 ALTER TABLE ONLY intervention_type_validator
-    ADD CONSTRAINT intervention_type_validator_pk PRIMARY KEY (tanant_id, intervention_type_id);
+    ADD CONSTRAINT intervention_type_validator_pk PRIMARY KEY (tenant_id, intervention_type_id);
 
 
 --
@@ -2619,11 +2655,19 @@ ALTER TABLE ONLY individual_intervention_plan
 
 
 --
--- Name: intervention_category intervention_category_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: intervention_category_translation intervention_category_id_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY intervention_category
-    ADD CONSTRAINT intervention_category_fk FOREIGN KEY (lang) REFERENCES languages(lang);
+ALTER TABLE ONLY intervention_category_translation
+    ADD CONSTRAINT intervention_category_id_translation_fk FOREIGN KEY (id) REFERENCES intervention_category(id);
+
+
+--
+-- Name: intervention_category_translation intervention_category_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY intervention_category_translation
+    ADD CONSTRAINT intervention_category_translation_fk FOREIGN KEY (lang) REFERENCES languages(lang);
 
 
 --
@@ -2655,7 +2699,7 @@ ALTER TABLE ONLY intervention_type_validator
 --
 
 ALTER TABLE ONLY intervention_types
-    ADD CONSTRAINT intervention_types_fk FOREIGN KEY (category_type_id, category_type_lang) REFERENCES intervention_category(id, lang);
+    ADD CONSTRAINT intervention_types_fk FOREIGN KEY (category_type) REFERENCES intervention_category(id);
 
 
 --
@@ -2869,4 +2913,3 @@ ALTER TABLE ONLY user_types_translation
 --
 -- PostgreSQL database dump complete
 --
-

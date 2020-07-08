@@ -19,7 +19,7 @@ import {
   InterventionTypes,
   InterventionTypesTranslation,
 } from '../models';
-import {InterventionTypesRepository} from '../repositories';
+import { InterventionTypesRepository } from '../repositories';
 
 export class InterventionTypesInterventionTypesTranslationController {
   constructor(
@@ -32,13 +32,13 @@ export class InterventionTypesInterventionTypesTranslationController {
         description: 'Array of InterventionTypes has many InterventionTypesTranslation',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(InterventionTypesTranslation)},
+            schema: { type: 'array', items: getModelSchemaRef(InterventionTypesTranslation) },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<InterventionTypesTranslation>,
   ): Promise<InterventionTypesTranslation[]> {
@@ -49,23 +49,24 @@ export class InterventionTypesInterventionTypesTranslationController {
     responses: {
       '200': {
         description: 'InterventionTypes model instance',
-        content: {'application/json': {schema: getModelSchemaRef(InterventionTypesTranslation)}},
+        content: { 'application/json': { schema: getModelSchemaRef(InterventionTypesTranslation) } },
       },
     },
   })
-  async create(
+  async create (
     @param.path.number('id') id: typeof InterventionTypes.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(InterventionTypesTranslation, {
             title: 'NewInterventionTypesTranslationInInterventionTypes',
-            exclude: ['id'],
+            //           exclude: ['id'],
             optional: ['id']
           }),
         },
       },
-    }) interventionTypesTranslation: Omit<InterventionTypesTranslation, 'id'>,
+    }) interventionTypesTranslation: InterventionTypesTranslation,
+    //   }) interventionTypesTranslation: Omit < InterventionTypesTranslation, 'id' >,
   ): Promise<InterventionTypesTranslation> {
     return this.interventionTypesRepository.translations(id).create(interventionTypesTranslation);
   }
@@ -74,16 +75,16 @@ export class InterventionTypesInterventionTypesTranslationController {
     responses: {
       '200': {
         description: 'InterventionTypes.InterventionTypesTranslation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async patch(
+  async patch (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(InterventionTypesTranslation, {partial: true}),
+          schema: getModelSchemaRef(InterventionTypesTranslation, { partial: true }),
         },
       },
     })
@@ -97,11 +98,11 @@ export class InterventionTypesInterventionTypesTranslationController {
     responses: {
       '200': {
         description: 'InterventionTypes.InterventionTypesTranslation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async delete(
+  async delete (
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(InterventionTypesTranslation)) where?: Where<InterventionTypesTranslation>,
   ): Promise<Count> {

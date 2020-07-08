@@ -19,7 +19,7 @@ import {
   Glossary,
   GlossaryTranslation,
 } from '../models';
-import {GlossaryRepository} from '../repositories';
+import { GlossaryRepository } from '../repositories';
 
 export class GlossaryGlossaryTranslationController {
   constructor(
@@ -32,13 +32,13 @@ export class GlossaryGlossaryTranslationController {
         description: 'Array of Glossary has many GlossaryTranslation',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(GlossaryTranslation)},
+            schema: { type: 'array', items: getModelSchemaRef(GlossaryTranslation) },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<GlossaryTranslation>,
   ): Promise<GlossaryTranslation[]> {
@@ -49,23 +49,24 @@ export class GlossaryGlossaryTranslationController {
     responses: {
       '200': {
         description: 'Glossary model instance',
-        content: {'application/json': {schema: getModelSchemaRef(GlossaryTranslation)}},
+        content: { 'application/json': { schema: getModelSchemaRef(GlossaryTranslation) } },
       },
     },
   })
-  async create(
+  async create (
     @param.path.number('id') id: typeof Glossary.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(GlossaryTranslation, {
             title: 'NewGlossaryTranslationInGlossary',
-            exclude: ['id'],
+            //           exclude: ['id'],
             optional: ['id']
           }),
         },
       },
-    }) glossaryTranslation: Omit<GlossaryTranslation, 'id'>,
+    }) glossaryTranslation: GlossaryTranslation,
+    //    }) glossaryTranslation: Omit < GlossaryTranslation, 'id' >,
   ): Promise<GlossaryTranslation> {
     return this.glossaryRepository.translations(id).create(glossaryTranslation);
   }
@@ -74,16 +75,16 @@ export class GlossaryGlossaryTranslationController {
     responses: {
       '200': {
         description: 'Glossary.GlossaryTranslation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async patch(
+  async patch (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(GlossaryTranslation, {partial: true}),
+          schema: getModelSchemaRef(GlossaryTranslation, { partial: true }),
         },
       },
     })
@@ -97,11 +98,11 @@ export class GlossaryGlossaryTranslationController {
     responses: {
       '200': {
         description: 'Glossary.GlossaryTranslation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async delete(
+  async delete (
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(GlossaryTranslation)) where?: Where<GlossaryTranslation>,
   ): Promise<Count> {

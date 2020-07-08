@@ -3,10 +3,10 @@ import { Entity, model, property } from '@loopback/repository';
 @model({
   settings: {
     idInjection: false,
-    postgresql: { schema: 'micadoapp', table: 'glossary_translation' }
+    postgresql: { schema: 'micadoapp', table: 'intervention_category_translation' }
   }
 })
-export class GlossaryTranslation extends Entity {
+export class InterventionCategoryTranslation extends Entity {
   @property({
     type: 'number',
     required: true,
@@ -27,16 +27,10 @@ export class GlossaryTranslation extends Entity {
 
   @property({
     type: 'string',
-    length: 25,
-    postgresql: { columnName: 'title', dataType: 'character varying', dataLength: 25, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    length: 30,
+    postgresql: { columnName: 'title', dataType: 'character varying', dataLength: 30, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   title?: string;
-
-  @property({
-    type: 'string',
-    postgresql: { columnName: 'description', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  description?: string;
 
   @property({
     type: 'date',
@@ -51,13 +45,13 @@ export class GlossaryTranslation extends Entity {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   //  [prop: string]: any;
 
-  constructor(data?: Partial<GlossaryTranslation>) {
+  constructor(data?: Partial<InterventionCategoryTranslation>) {
     super(data);
   }
 }
 
-export interface GlossaryTranslationRelations {
+export interface InterventionCategoryTranslationRelations {
   // describe navigational properties here
 }
 
-export type GlossaryTranslationWithRelations = GlossaryTranslation & GlossaryTranslationRelations;
+export type InterventionCategoryTranslationWithRelations = InterventionCategoryTranslation & InterventionCategoryTranslationRelations;
