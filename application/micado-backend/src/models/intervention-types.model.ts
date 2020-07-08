@@ -21,7 +21,7 @@ export class InterventionTypes extends Entity {
 
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
     jsonSchema: { nullable: true },
     postgresql: { columnName: 'category_type', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
