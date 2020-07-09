@@ -20,6 +20,7 @@ export class Process extends Entity {
   @property({
     type: 'string',
     length: 70,
+    jsonSchema: { nullable: true },
     postgresql: { columnName: 'link', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   link?: string;

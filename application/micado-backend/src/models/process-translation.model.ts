@@ -27,12 +27,14 @@ export class ProcessTranslation extends Entity {
   @property({
     type: 'string',
     length: 20,
+    jsonSchema: { nullable: true },
     postgresql: { columnName: 'process', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   process?: string;
 
   @property({
     type: 'string',
+    jsonSchema: { nullable: true },
     postgresql: { columnName: 'description', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   description?: string;
