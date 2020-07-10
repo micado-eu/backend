@@ -21,7 +21,7 @@ export * from './process-process-topic.controller';
 export * from './step.controller';
 export * from './step-link.controller';
 export * from './event.controller';
-export * from './event-translation.controller';
+export * from './event-event-translation.controller';
 export * from './glossary.controller';
 export * from './step-step-translation.controller';
 export * from './step-link-step-link-translation.controller';
