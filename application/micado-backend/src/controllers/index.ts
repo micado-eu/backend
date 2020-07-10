@@ -35,3 +35,6 @@ export * from './settings.controller';
 export * from './user-types.controller';
 export * from './charts.controller';
 export * from './document-type.controller';
+export * from './process-process-comments.controller';
+export * from './comment-comment-translation.controller';
+export * from './comment.controller';

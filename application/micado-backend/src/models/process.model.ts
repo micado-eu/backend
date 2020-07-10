@@ -2,6 +2,7 @@ import { Entity, model, property, hasMany } from '@loopback/repository';
 import { ProcessTranslation } from './process-translation.model';
 import { ProcessUsers } from './process-users.model';
 import { ProcessTopic } from './process-topic.model';
+import {ProcessComments} from './process-comments.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'process' } }
@@ -47,6 +48,9 @@ export class Process extends Entity {
 
   @hasMany(() => ProcessTopic, { keyTo: 'idProcess' })
   processTopics: ProcessTopic[];
+
+  @hasMany(() => ProcessComments, {keyTo: 'idprocess'})
+  comments: ProcessComments[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
