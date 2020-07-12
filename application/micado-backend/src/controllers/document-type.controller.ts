@@ -18,6 +18,7 @@ import {
 } from '@loopback/rest';
 import { DocumentType } from '../models';
 import { DocumentTypeRepository } from '../repositories';
+import { JSONArray } from '@loopback/core';
 
 export class DocumentTypeController {
   constructor(
@@ -187,5 +188,33 @@ export class DocumentTypeController {
       defaultlang +
       "' and t.id not in (select t.id from document_type t inner join document_type_translation tt on t.id = tt.id and tt.lang = '" +
       currentlang + "')");
+  }
+
+  @get('/document-types-rasa', {
+    responses: {
+      '200': {
+        description: 'document-types GET for the frontend',
+      },
+    },
+  })
+  async translatedunion_x_rasa (
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<JSONArray> {
+    let arrRet: JSONArray = []
+    await this.documentTypeRepository.dataSource.execute("select document from document_type t inner join document_type_translation tt on t.id=tt.id and tt.lang='" +
+      currentlang + "' union select document from document_type t inner join document_type_translation tt on t.id = tt.id and tt.lang = '" +
+      defaultlang +
+      "' and t.id not in (select t.id from document_type t inner join document_type_translation tt on t.id = tt.id and tt.lang = '" +
+      currentlang + "')")
+      .then(documents => {
+        console.log(documents)
+        documents.forEach((doc: any) => {
+          arrRet.push(doc.document)
+        });
+        //      arrRet = documents
+        //     return arrRet
+      })
+    return arrRet
   }
 }

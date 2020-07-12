@@ -38,3 +38,5 @@ export * from './document-type.controller';
 export * from './process-process-comments.controller';
 export * from './comment-comment-translation.controller';
 export * from './comment.controller';
+export * from './graph.controller';
+export * from './rasa.controller';
