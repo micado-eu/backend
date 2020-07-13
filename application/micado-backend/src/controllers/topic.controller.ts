@@ -183,7 +183,7 @@ export class TopicController {
   async translatedunion (
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
-  ): Promise<Topic> {
+  ): Promise<void> {
     return this.topicRepository.dataSource.execute("select * from topic t inner join topic_translation tt on t.id=tt.id and tt.lang='" +
       currentlang + "' union select * from topic t inner join topic_translation tt on t.id = tt.id and tt.lang = '" +
       defaultlang +

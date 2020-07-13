@@ -20,10 +20,13 @@ export * from './process-process-users.controller';
 export * from './process-process-topic.controller';
 export * from './step.controller';
 export * from './step-link.controller';
+export * from './event.controller';
+export * from './event-event-translation.controller';
 export * from './glossary.controller';
 export * from './step-step-translation.controller';
 export * from './step-link-step-link-translation.controller';
 export * from './cytoscape.controller';
+export * from './mermaid.controller';
 export * from './step-step-document.controller';
 export * from './topic-exporter.controller';
 export * from './glossary-glossary-translation.controller';
@@ -31,3 +34,10 @@ export * from './intervention-category-intervention-category-translation.control
 export * from './settings.controller';
 export * from './user-types.controller';
 export * from './charts.controller';
+export * from './document-type.controller';
+
+export * from './graph.controller';
+export * from './rasa.controller';
+export * from './process-process-comments.controller';
+export * from './comments-comments-translation.controller';
+export * from './comments.controller';

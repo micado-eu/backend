@@ -16,35 +16,35 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {InterventionCategory} from '../models';
-import {InterventionCategoryRepository} from '../repositories';
+import { InterventionCategory } from '../models';
+import { InterventionCategoryRepository } from '../repositories';
 
 export class InterventionCategoryController {
   constructor(
     @repository(InterventionCategoryRepository)
-    public interventionCategoryRepository : InterventionCategoryRepository,
-  ) {}
+    public interventionCategoryRepository: InterventionCategoryRepository,
+  ) { }
 
   @post('/intervention-categories', {
     responses: {
       '200': {
         description: 'InterventionCategory model instance',
-        content: {'application/json': {schema: getModelSchemaRef(InterventionCategory)}},
+        content: { 'application/json': { schema: getModelSchemaRef(InterventionCategory) } },
       },
     },
   })
-  async create(
+  async create (
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(InterventionCategory, {
             title: 'NewInterventionCategory',
-            
+            exclude: ['id'],
           }),
         },
       },
     })
-    interventionCategory: InterventionCategory,
+    interventionCategory: Omit<InterventionCategory, 'id'>,
   ): Promise<InterventionCategory> {
     return this.interventionCategoryRepository.create(interventionCategory);
   }
@@ -53,11 +53,11 @@ export class InterventionCategoryController {
     responses: {
       '200': {
         description: 'InterventionCategory model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async count(
+  async count (
     @param.where(InterventionCategory) where?: Where<InterventionCategory>,
   ): Promise<Count> {
     return this.interventionCategoryRepository.count(where);
@@ -71,14 +71,14 @@ export class InterventionCategoryController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(InterventionCategory, {includeRelations: true}),
+              items: getModelSchemaRef(InterventionCategory, { includeRelations: true }),
             },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.filter(InterventionCategory) filter?: Filter<InterventionCategory>,
   ): Promise<InterventionCategory[]> {
     return this.interventionCategoryRepository.find(filter);
@@ -88,15 +88,15 @@ export class InterventionCategoryController {
     responses: {
       '200': {
         description: 'InterventionCategory PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async updateAll(
+  async updateAll (
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(InterventionCategory, {partial: true}),
+          schema: getModelSchemaRef(InterventionCategory, { partial: true }),
         },
       },
     })
@@ -112,15 +112,15 @@ export class InterventionCategoryController {
         description: 'InterventionCategory model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(InterventionCategory, {includeRelations: true}),
+            schema: getModelSchemaRef(InterventionCategory, { includeRelations: true }),
           },
         },
       },
     },
   })
-  async findById(
+  async findById (
     @param.path.number('id') id: number,
-    @param.filter(InterventionCategory, {exclude: 'where'}) filter?: FilterExcludingWhere<InterventionCategory>
+    @param.filter(InterventionCategory, { exclude: 'where' }) filter?: FilterExcludingWhere<InterventionCategory>
   ): Promise<InterventionCategory> {
     return this.interventionCategoryRepository.findById(id, filter);
   }
@@ -132,12 +132,12 @@ export class InterventionCategoryController {
       },
     },
   })
-  async updateById(
+  async updateById (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(InterventionCategory, {partial: true}),
+          schema: getModelSchemaRef(InterventionCategory, { partial: true }),
         },
       },
     })
@@ -153,7 +153,7 @@ export class InterventionCategoryController {
       },
     },
   })
-  async replaceById(
+  async replaceById (
     @param.path.number('id') id: number,
     @requestBody() interventionCategory: InterventionCategory,
   ): Promise<void> {
@@ -167,7 +167,25 @@ export class InterventionCategoryController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById (@param.path.number('id') id: number): Promise<void> {
     await this.interventionCategoryRepository.deleteById(id);
+  }
+
+  @get('/intervention-categories-migrant', {
+    responses: {
+      '200': {
+        description: 'intervention-categories GET for the frontend',
+      },
+    },
+  })
+  async translatedunion (
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.interventionCategoryRepository.dataSource.execute("select * from intervention_category t inner join intervention_category_translation tt on t.id=tt.id and tt.lang='" +
+      currentlang + "' union select * from intervention_category t inner join intervention_category_translation tt on t.id = tt.id and tt.lang = '" +
+      defaultlang +
+      "' and t.id not in (select t.id from intervention_category t inner join intervention_category_translation tt on t.id = tt.id and tt.lang = '" +
+      currentlang + "')");
   }
 }

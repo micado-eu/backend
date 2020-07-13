@@ -21,19 +21,13 @@ export class InterventionTypes extends Entity {
 
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
-    postgresql: { columnName: 'category_type_id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'category_type', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
-  categoryTypeId: number;
+  categoryType: number;
 
-  @property({
-    type: 'string',
-    required: true,
-    scale: 0,
-    postgresql: { columnName: 'category_type_lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  categoryTypeLang: string;
 
   @property({
     type: 'boolean'

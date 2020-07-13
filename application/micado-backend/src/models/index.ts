@@ -49,3 +49,7 @@ export * from './step-link-translation.model';
 export * from './glossary-translation.model';
 export * from './intervention-category-translation.model';
 export * from './charts.model';
+export * from './comments.model';
+export * from './comments-translation.model';
+export * from './process-comments.model';
+
