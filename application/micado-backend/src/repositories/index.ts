@@ -28,6 +28,7 @@ export * from './glossary-translation.repository';
 export * from './intervention-category-translation.repository';
 export * from './settings.repository';
 export * from './charts.repository';
-export * from './comment.repository';
-export * from './comment-translation.repository';
+export * from './comments.repository';
+export * from './comments-translation.repository';
 export * from './process-comments.repository';
+
