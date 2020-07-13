@@ -60,12 +60,12 @@ export class ProcessProcessCommentsController {
         'application/json': {
           schema: getModelSchemaRef(ProcessComments, {
             title: 'NewProcessCommentsInProcess',
-            exclude: ['idcomment'],
+            //exclude: ['idcomment'],
             optional: ['idprocess']
           }),
         },
       },
-    }) processComments: Omit<ProcessComments, 'idcomment'>,
+    }) processComments: ProcessComments,
   ): Promise<ProcessComments> {
     return this.processRepository.comments(id).create(processComments);
   }
