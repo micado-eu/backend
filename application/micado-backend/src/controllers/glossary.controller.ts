@@ -16,20 +16,20 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Glossary} from '../models';
-import {GlossaryRepository} from '../repositories';
+import { Glossary } from '../models';
+import { GlossaryRepository } from '../repositories';
 
 export class GlossaryController {
   constructor(
     @repository(GlossaryRepository)
-    public glossaryRepository : GlossaryRepository,
-  ) {}
+    public glossaryRepository: GlossaryRepository,
+  ) { }
 
   @post('/glossaries', {
     responses: {
       '200': {
         description: 'Glossary model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Glossary)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Glossary) } },
       },
     },
   })
@@ -53,7 +53,7 @@ export class GlossaryController {
     responses: {
       '200': {
         description: 'Glossary model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -71,7 +71,7 @@ export class GlossaryController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Glossary, {includeRelations: true}),
+              items: getModelSchemaRef(Glossary, { includeRelations: true }),
             },
           },
         },
@@ -84,11 +84,32 @@ export class GlossaryController {
     return this.glossaryRepository.find(filter);
   }
 
+  @get('/glossaries/published', {
+    responses: {
+      '200': {
+        description: 'Array of Published Glossary model instances',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(Glossary, { includeRelations: true }),
+            },
+          },
+        },
+      },
+    },
+  })
+  async findPublished(
+    @param.filter(Glossary) filter?: Filter<Glossary>,
+  ): Promise<Glossary[]> {
+    return this.glossaryRepository.findPublished(filter);
+  }
+
   @patch('/glossaries', {
     responses: {
       '200': {
         description: 'Glossary PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -96,7 +117,7 @@ export class GlossaryController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Glossary, {partial: true}),
+          schema: getModelSchemaRef(Glossary, { partial: true }),
         },
       },
     })
@@ -112,7 +133,7 @@ export class GlossaryController {
         description: 'Glossary model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Glossary, {includeRelations: true}),
+            schema: getModelSchemaRef(Glossary, { includeRelations: true }),
           },
         },
       },
@@ -120,7 +141,7 @@ export class GlossaryController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Glossary, {exclude: 'where'}) filter?: FilterExcludingWhere<Glossary>
+    @param.filter(Glossary, { exclude: 'where' }) filter?: FilterExcludingWhere<Glossary>
   ): Promise<Glossary> {
     return this.glossaryRepository.findById(id, filter);
   }
@@ -137,7 +158,7 @@ export class GlossaryController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Glossary, {partial: true}),
+          schema: getModelSchemaRef(Glossary, { partial: true }),
         },
       },
     })

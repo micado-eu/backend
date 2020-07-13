@@ -16,20 +16,20 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Event} from '../models';
-import {EventRepository} from '../repositories';
+import { Event } from '../models';
+import { EventRepository } from '../repositories';
 
 export class EventController {
   constructor(
     @repository(EventRepository)
-    public eventRepository : EventRepository,
-  ) {}
+    public eventRepository: EventRepository,
+  ) { }
 
   @post('/events', {
     responses: {
       '200': {
         description: 'Event model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Event)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Event) } },
       },
     },
   })
@@ -53,7 +53,7 @@ export class EventController {
     responses: {
       '200': {
         description: 'Event model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -71,7 +71,7 @@ export class EventController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Event, {includeRelations: true}),
+              items: getModelSchemaRef(Event, { includeRelations: true }),
             },
           },
         },
@@ -84,11 +84,32 @@ export class EventController {
     return this.eventRepository.find(filter);
   }
 
+  @get('/events/published', {
+    responses: {
+      '200': {
+        description: 'Array of Published Event model instances',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(Event, { includeRelations: true }),
+            },
+          },
+        },
+      },
+    },
+  })
+  async findPublished(
+    @param.filter(Event) filter?: Filter<Event>,
+  ): Promise<Event[]> {
+    return this.eventRepository.findPublished(filter);
+  }
+
   @patch('/events', {
     responses: {
       '200': {
         description: 'Event PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -96,7 +117,7 @@ export class EventController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Event, {partial: true}),
+          schema: getModelSchemaRef(Event, { partial: true }),
         },
       },
     })
@@ -112,7 +133,7 @@ export class EventController {
         description: 'Event model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Event, {includeRelations: true}),
+            schema: getModelSchemaRef(Event, { includeRelations: true }),
           },
         },
       },
@@ -120,7 +141,7 @@ export class EventController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Event, {exclude: 'where'}) filter?: FilterExcludingWhere<Event>
+    @param.filter(Event, { exclude: 'where' }) filter?: FilterExcludingWhere<Event>
   ): Promise<Event> {
     return this.eventRepository.findById(id, filter);
   }
@@ -137,7 +158,7 @@ export class EventController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Event, {partial: true}),
+          schema: getModelSchemaRef(Event, { partial: true }),
         },
       },
     })
