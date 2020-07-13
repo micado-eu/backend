@@ -16,20 +16,20 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Languages} from '../models';
-import {LanguagesRepository} from '../repositories';
+import { Languages } from '../models';
+import { LanguagesRepository } from '../repositories';
 
 export class LanguagesController {
   constructor(
     @repository(LanguagesRepository)
-    public languagesRepository : LanguagesRepository,
-  ) {}
+    public languagesRepository: LanguagesRepository,
+  ) { }
 
   @post('/languages', {
     responses: {
       '200': {
         description: 'Languages model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Languages)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Languages) } },
       },
     },
   })
@@ -39,7 +39,7 @@ export class LanguagesController {
         'application/json': {
           schema: getModelSchemaRef(Languages, {
             title: 'NewLanguages',
-            
+
           }),
         },
       },
@@ -53,7 +53,7 @@ export class LanguagesController {
     responses: {
       '200': {
         description: 'Languages model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -71,7 +71,7 @@ export class LanguagesController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Languages, {includeRelations: true}),
+              items: getModelSchemaRef(Languages, { includeRelations: true }),
             },
           },
         },
@@ -84,11 +84,31 @@ export class LanguagesController {
     return this.languagesRepository.find(filter);
   }
 
+  @get('/languages/active', {
+    responses: {
+      '200': {
+        description: 'Array of Active Languages model instances',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(Languages, { includeRelations: true }),
+            },
+          },
+        },
+      },
+    },
+  })
+  async findActive(
+  ): Promise<Languages[]> {
+    return this.languagesRepository.findActive();
+  }
+
   @patch('/languages', {
     responses: {
       '200': {
         description: 'Languages PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -96,7 +116,7 @@ export class LanguagesController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Languages, {partial: true}),
+          schema: getModelSchemaRef(Languages, { partial: true }),
         },
       },
     })
@@ -112,7 +132,7 @@ export class LanguagesController {
         description: 'Languages model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Languages, {includeRelations: true}),
+            schema: getModelSchemaRef(Languages, { includeRelations: true }),
           },
         },
       },
@@ -120,7 +140,7 @@ export class LanguagesController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Languages, {exclude: 'where'}) filter?: FilterExcludingWhere<Languages>
+    @param.filter(Languages, { exclude: 'where' }) filter?: FilterExcludingWhere<Languages>
   ): Promise<Languages> {
     return this.languagesRepository.findById(id, filter);
   }
@@ -137,7 +157,7 @@ export class LanguagesController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Languages, {partial: true}),
+          schema: getModelSchemaRef(Languages, { partial: true }),
         },
       },
     })
@@ -170,4 +190,5 @@ export class LanguagesController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.languagesRepository.deleteById(id);
   }
+
 }
