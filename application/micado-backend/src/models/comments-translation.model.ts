@@ -24,6 +24,7 @@ export class CommentsTranslation extends Entity {
 
   @property({
     type: 'date',
+    jsonSchema: { nullable: true },
     postgresql: {columnName: 'translationdate', dataType: 'date', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   translationdate?: string;

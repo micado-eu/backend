@@ -13,6 +13,7 @@ export class Comments extends Entity {
 
   @property({
     type: 'date',
+    jsonSchema: { nullable: true },
     postgresql: {columnName: 'publicationdate', dataType: 'date', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   publicationdate?: string;
