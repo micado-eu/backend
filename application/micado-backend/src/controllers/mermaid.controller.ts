@@ -113,7 +113,7 @@ export class MermaidController {
               docarray.push({
                 id: adoc.idDocument,
                 type: docs[0].document,
-                title: docs[0].document,
+                text: docs[0].document,
                 emitter: docs[0].issuer,
                 price: adoc.cost,
                 image: docs[0].icon
