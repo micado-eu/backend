@@ -78,6 +78,30 @@ export class GraphController {
         await saveTranslations()
 
         // here we need also to save the documents of the step
+        const saveDocuments = async () => {
+          // have to delete all documents
+          await this.stepRepository.documents(nstep.id).delete({})
+          // then add all documents back
+          await this.asyncForEach(nstep.documents, async (doc: any) => {
+
+            let savingDoc = JSON.parse(JSON.stringify(doc, ['idDocument', 'cost', 'idStep']));
+            let trid = nstep.id
+            console.log(savingDoc)
+
+
+            this.stepRepository.documents(trid).create(savingDoc)
+              .then((trres) => {
+                console.log("saved translation")
+                console.log(trres)
+              }).catch(error => {
+                console.log(error)
+              })
+
+          });
+        }
+        await saveDocuments()
+
+
       });
     }
     await saveSteps()
@@ -122,6 +146,29 @@ export class GraphController {
         await editTranslations()
 
         // here we need also to save the documents of the step
+        // here we need also to save the documents of the step
+        const saveDocuments = async () => {
+          // have to delete all documents
+          await this.stepRepository.documents(cstep.id).delete({})
+          // then add all documents back
+          await this.asyncForEach(cstep.documents, async (doc: any) => {
+
+            let savingDoc = JSON.parse(JSON.stringify(doc, ['idDocument', 'cost', 'idStep']));
+            let trid = cstep.id
+            console.log(savingDoc)
+
+
+            this.stepRepository.documents(trid).create(savingDoc)
+              .then((trres) => {
+                console.log("saved translation")
+                console.log(trres)
+              }).catch(error => {
+                console.log(error)
+              })
+
+          });
+        }
+        await saveDocuments()
       });
     }
     await editSteps()
@@ -134,6 +181,24 @@ export class GraphController {
     // delete step links
 
     // delete step
+    let deleting_steps = data.steps.filter((step: any) => { return (step.to_delete != null && step.to_delete) })
+    console.log("deleting_steps")
+    console.log(deleting_steps)
+    const deleteSteps = async () => {
+      await this.asyncForEach(deleting_steps, async (dstep: any) => {
+        // delete documents
+        await this.stepRepository.documents(dstep.id).delete({})
+        // delete translations
+        await this.stepRepository.translations(dstep.id).delete({})
+
+        // delete step
+        await this.stepRepository.deleteById(dstep.id);
+
+
+      })
+    }
+    await deleteSteps()
+
 
     return result
   }
