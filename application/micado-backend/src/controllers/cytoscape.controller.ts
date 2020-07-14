@@ -93,6 +93,7 @@ export class CytoscapeController {
             await this.asyncForEach(astep.documents, async (adoc: any) => {
               console.log("nel secondo asynforeach")
               console.log(adoc)
+              /*
               let docs = await this.documentTypeTranslationRepository.find({
                 where: {
                   id: { eq: adoc.idDocument },
@@ -101,6 +102,8 @@ export class CytoscapeController {
               })
               console.log(docs)
               docarray.push(docs[0].document)
+              */
+              docarray.push(adoc.idDocument)
             })
             console.log('Dopo il secondo asyncforeach');
 
