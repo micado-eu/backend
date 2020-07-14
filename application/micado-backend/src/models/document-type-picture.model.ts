@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {PictureHotspot} from './picture-hotspot.model';
 
 @model({
   settings: {
@@ -38,6 +39,8 @@ export class DocumentTypePicture extends Entity {
   })
   order?: number;
 
+  @hasMany(() => PictureHotspot, {keyTo: 'pictureId'})
+  hotspots: PictureHotspot[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

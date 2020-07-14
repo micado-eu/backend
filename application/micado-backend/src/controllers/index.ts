@@ -41,3 +41,7 @@ export * from './rasa.controller';
 export * from './process-process-comments.controller';
 export * from './comments-comments-translation.controller';
 export * from './comments.controller';
+export * from './document.controller';
+export * from './document-document-pictures.controller';
+export * from './document-document-type.controller';
+export * from './document-type-picture-picture-hotspot.controller';

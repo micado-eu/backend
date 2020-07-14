@@ -9,9 +9,10 @@ import {Entity, model, property} from '@loopback/repository';
 export class DocumentPictures extends Entity {
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
     id: 1,
+    generated: true, 
     postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
@@ -30,11 +31,18 @@ export class DocumentPictures extends Entity {
   })
   docId: number;
 
+  @property({
+    type: 'number',
+    required: false,
+    scale: 0,
+    postgresql: {columnName: 'order', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+  })
+  order: number;
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<DocumentPictures>) {
     super(data);

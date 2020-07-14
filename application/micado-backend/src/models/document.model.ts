@@ -1,4 +1,6 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
+import {DocumentPictures} from './document-pictures.model';
+import {DocumentType} from './document-type.model';
 
 @model({
   settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'document'}}
@@ -6,21 +8,13 @@ import {Entity, model, property} from '@loopback/repository';
 export class Document extends Entity {
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
     id: 1,
+    generated:true,
     postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
-
-  @property({
-    type: 'number',
-    required: true,
-    scale: 0,
-    postgresql: {columnName: 'document_type', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
-  })
-  documentType: number;
-
   @property({
     type: 'number',
     scale: 0,
@@ -79,15 +73,21 @@ export class Document extends Entity {
 
   @property({
     type: 'date',
+    jsonSchema: { nullable: true },
     postgresql: {columnName: 'expiration_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   expirationDate?: string;
 
+  @hasMany(() => DocumentPictures, {keyTo: 'docId'})
+  pictures: DocumentPictures[];
+
+  @hasOne(() => DocumentType, {keyTo: 'id'})
+  documentType: DocumentType;
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<Document>) {
     super(data);

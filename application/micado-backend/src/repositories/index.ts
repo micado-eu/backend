@@ -32,3 +32,5 @@ export * from './comments.repository';
 export * from './comments-translation.repository';
 export * from './process-comments.repository';
 
+export * from './document.repository';
+export * from './document-pictures.repository';
