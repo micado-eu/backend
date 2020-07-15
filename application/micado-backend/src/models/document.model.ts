@@ -21,6 +21,13 @@ export class Document extends Entity {
     postgresql: {columnName: 'user_id', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
   userId?: number;
+  @property({
+    type: 'number',
+    required: true,
+    scale: 0,
+    postgresql: {columnName: 'document_type', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+  })
+  documentTypeId?: number;
 
   @property({
     type: 'number',
