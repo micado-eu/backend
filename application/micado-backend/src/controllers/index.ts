@@ -45,3 +45,5 @@ export * from './document.controller';
 export * from './document-document-pictures.controller';
 export * from './document-document-type.controller';
 export * from './document-type-picture-picture-hotspot.controller';
+export * from './event-category.controller';
+export * from './event-category-event-category-translation.controller'

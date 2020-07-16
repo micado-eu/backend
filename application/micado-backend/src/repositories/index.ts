@@ -34,3 +34,5 @@ export * from './process-comments.repository';
 
 export * from './document.repository';
 export * from './document-pictures.repository';
+export * from './event-category.repository';
+export * from './event-category-translation.repository';

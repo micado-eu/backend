@@ -1,9 +1,9 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
 
 @model({
   settings: {
     idInjection: false,
-    postgresql: {schema: 'micadoapp', table: 'event_category_translation'}
+    postgresql: { schema: 'micadoapp', table: 'event_category_translation' }
   }
 })
 export class EventCategoryTranslation extends Entity {
@@ -11,28 +11,28 @@ export class EventCategoryTranslation extends Entity {
     type: 'number',
     required: true,
     scale: 0,
-    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
 
   @property({
     type: 'string',
     length: 10,
-    postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   lang?: string;
 
   @property({
     type: 'string',
     length: 20,
-    postgresql: {columnName: 'event_category', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'event_category', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   eventCategory?: string;
 
   @property({
     type: 'date',
     jsonSchema: { nullable: true },
-    postgresql: {columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   translationDate?: string;
 
@@ -40,7 +40,7 @@ export class EventCategoryTranslation extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  // [prop: string]: any;
 
   constructor(data?: Partial<EventCategoryTranslation>) {
     super(data);
