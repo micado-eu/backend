@@ -137,7 +137,7 @@ export class MermaidController {
         console.log(curTransl)
         let node_element = {
           id: astep.id,
-          title: curTransl.step,
+          text: curTransl.step,
           description: curTransl.description,
           link: "---",
           editable: true,
