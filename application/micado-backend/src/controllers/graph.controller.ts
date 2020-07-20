@@ -21,11 +21,12 @@ import {
 } from '@loopback/rest';
 import { JSONObject } from '@loopback/core';
 import { StepStepDocumentController } from './step-step-document.controller';
-import { StepRepository } from '../repositories';
+import { StepRepository, StepLinkRepository } from '../repositories';
 
 export class GraphController {
   constructor(
     @repository(StepRepository) public stepRepository: StepRepository,
+    @repository(StepLinkRepository) public stepLinkRepository: StepLinkRepository,
   ) { }
   @post('/save-process-steps', {
     responses: {
@@ -175,11 +176,85 @@ export class GraphController {
 
 
     // add the new steplinks
+   /*let new_steps_links = data.steplinks.filter((steplink: any) => { return (steplink.is_new != null && steplink.is_new) })
+    console.log("new steplinks")
+    console.log(new_steps_links)
+    const saveStepsLinks = async () => {
+      await this.asyncForEach(new_steps_links, async (nstep_link: any) => {
 
+        // filter only needed data
+        let savingStepLink = JSON.parse(JSON.stringify(nstep_link, ['id', 'fromStep', 'toStep']));
+        // save new step
+        await this.stepLinkRepository.create(savingStepLink)
+          .then(
+            result => {
+              console.log("saved step")
+              console.log(result)
+            }
+          )
+        // save translations
+        const saveLinkTranslations = async () => {
+          await this.asyncForEach(nstep_link.translations, async (transl: any) => {
+
+            let savingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description']));
+            let trid = nstep_link.id
+            console.log(savingTranslation)
+
+            this.stepLinkRepository.translations(trid).create(savingTranslation)
+              .then((trres) => {
+                console.log("saved translation")
+                console.log(trres)
+              }).catch(error => {
+                console.log(error)
+              })
+
+          });
+        }
+        await saveLinkTranslations()
+      });
+    }
+    await saveStepsLinks()
     // edit steplinks
+    let changed_step_links = data.steplinks.filter((steplink: any) => { return (steplink.is_edited != null && (steplink.is_edited && !steplink.is_new)) })
+    console.log("changed_steplinks")
+    console.log(changed_steps)
+    const editLinkTranslations = async () => {
+      await this.asyncForEach(changed_step_links.translations, async (transl: any) => {
 
+        let editingLinkTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description']));
+        let trid = changed_step_links.id
+        console.log(editingLinkTranslation)
+        let where = {
+          id: { eq: editingLinkTranslation.id }, lang: { eq: editingLinkTranslation.lang }
+        }
+        this.stepLinkRepository.translations(trid).patch(editingLinkTranslation, where)
+          .then((trres) => {
+            console.log("saved translation")
+            console.log(trres)
+          }).catch(error => {
+            console.log(error)
+          })
+
+      });
+    }
+    await editLinkTranslations()*/
+    
     // delete step links
+    let deleting_step_links = data.steplinks.filter((steplink: any) => { return (steplink.to_delete != null && steplink.to_delete) })
+    console.log("deleting_steplinks")
+    console.log(deleting_step_links)
+    const deleteStepLinks = async () => {
+      await this.asyncForEach(deleting_step_links, async (dstep_link: any) => {
+        // delete translations
+        await this.stepLinkRepository.translations(dstep_link.id).delete({})
+       
+        // delete step
+        await this.stepLinkRepository.deleteById(dstep_link.id);
 
+
+      })
+    }
+    await deleteStepLinks()
     // delete step
     let deleting_steps = data.steps.filter((step: any) => { return (step.to_delete != null && step.to_delete) })
     console.log("deleting_steps")
@@ -190,7 +265,20 @@ export class GraphController {
         await this.stepRepository.documents(dstep.id).delete({})
         // delete translations
         await this.stepRepository.translations(dstep.id).delete({})
+       /* var deleting_links = []
+        var links_to_delete = data.steplinks.filter((a_link) => {
+         return a_link.fromStep == dstep.id || a_link.toStep == dstep.id
+       })
+       if(links_to_delete != null){
+        await this.asyncForEach(links_to_delete, async (deleting_a_link: any) =>{
+          deleting_links.push(deleting_a_link)
+        })
+       await this.asyncForEach(deleting_links, async (dlink: any) => {
+        await this.stepLinkRepository.translations(dlink.id).delete({})
+        await this.stepLinkRepository.deleteById(dlink.id);
 
+       })
+       }*/
         // delete step
         await this.stepRepository.deleteById(dstep.id);
 
