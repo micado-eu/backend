@@ -23,7 +23,8 @@ export class StepDocument extends Entity {
   @property({
     type: 'boolean',
     required: true,
-    postgresql: { columnName: 'is_out', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO' },
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'is_out', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   isOut: boolean;
 
