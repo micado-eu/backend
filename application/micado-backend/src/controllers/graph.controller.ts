@@ -271,7 +271,7 @@ export class GraphController {
         await this.stepRepository.documents(dstep.id).delete({})
         // delete translations
         await this.stepRepository.translations(dstep.id).delete({})
-       /* var deleting_links = []
+        var deleting_links = []
         var links_to_delete = data.steplinks.filter((a_link) => {
          return a_link.fromStep == dstep.id || a_link.toStep == dstep.id
        })
@@ -284,7 +284,7 @@ export class GraphController {
         await this.stepLinkRepository.deleteById(dlink.id);
 
        })
-       }*/
+       }
         // delete step
         await this.stepRepository.deleteById(dstep.id);
 
