@@ -79,13 +79,14 @@ export class GraphController {
         await saveTranslations()
 
         // here we need also to save the documents of the step
-       /* const saveDocuments = async () => {
+        const saveDocuments = async () => {
+          if(nstep.documents != null){
           // have to delete all documents
           await this.stepRepository.documents(nstep.id).delete({})
           // then add all documents back
           await this.asyncForEach(nstep.documents, async (doc: any) => {
 
-            let savingDoc = JSON.parse(JSON.stringify(doc, ['idDocument', 'cost', 'idStep']));
+            let savingDoc = JSON.parse(JSON.stringify(doc, ['idDocument', 'cost', 'idStep', 'isOut']));
             let trid = nstep.id
             console.log(savingDoc)
 
@@ -100,7 +101,8 @@ export class GraphController {
 
           });
         }
-        await saveDocuments()*/
+        }
+        await saveDocuments()
 
 
       });
@@ -149,12 +151,13 @@ export class GraphController {
         // here we need also to save the documents of the step
         // here we need also to save the documents of the step
         const saveDocuments = async () => {
+          if(cstep.documents != null){
           // have to delete all documents
           await this.stepRepository.documents(cstep.id).delete({})
           // then add all documents back
           await this.asyncForEach(cstep.documents, async (doc: any) => {
 
-            let savingDoc = JSON.parse(JSON.stringify(doc, ['idDocument', 'cost', 'idStep']));
+            let savingDoc = JSON.parse(JSON.stringify(doc, ['idDocument', 'cost', 'idStep', 'isOut']));
             let trid = cstep.id
             console.log(savingDoc)
 
@@ -169,6 +172,7 @@ export class GraphController {
 
           });
         }
+      }
         await saveDocuments()
       });
     }
