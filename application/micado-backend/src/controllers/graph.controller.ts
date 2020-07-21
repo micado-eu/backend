@@ -183,7 +183,7 @@ export class GraphController {
       await this.asyncForEach(new_steps_links, async (nstep_link: any) => {
 
         // filter only needed data
-        let savingStepLink = JSON.parse(JSON.stringify(nstep_link, ['id', 'fromStep', 'toStep']));
+        let savingStepLink = JSON.parse(JSON.stringify(nstep_link, ['id', 'fromStep', 'toStep', 'idProcess']));
         // save new step
         await this.stepLinkRepository.create(savingStepLink)
           .then(
