@@ -176,7 +176,7 @@ export class GraphController {
 
 
     // add the new steplinks
-   /*let new_steps_links = data.steplinks.filter((steplink: any) => { return (steplink.is_new != null && steplink.is_new) })
+   let new_steps_links = data.steplinks.filter((steplink: any) => { return (steplink.is_new != null && steplink.is_new) })
     console.log("new steplinks")
     console.log(new_steps_links)
     const saveStepsLinks = async () => {
@@ -237,7 +237,7 @@ export class GraphController {
 
       });
     }
-    await editLinkTranslations()*/
+    await editLinkTranslations()
     
     // delete step links
     let deleting_step_links = data.steplinks.filter((steplink: any) => { return (steplink.to_delete != null && steplink.to_delete) })
