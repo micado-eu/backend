@@ -79,7 +79,7 @@ export class GraphController {
         await saveTranslations()
 
         // here we need also to save the documents of the step
-        const saveDocuments = async () => {
+       /* const saveDocuments = async () => {
           // have to delete all documents
           await this.stepRepository.documents(nstep.id).delete({})
           // then add all documents back
@@ -100,7 +100,7 @@ export class GraphController {
 
           });
         }
-        await saveDocuments()
+        await saveDocuments()*/
 
 
       });
@@ -219,6 +219,7 @@ export class GraphController {
     console.log("changed_steplinks")
     console.log(changed_steps)
     const editLinkTranslations = async () => {
+      if(changed_step_links.length != 0){
       await this.asyncForEach(changed_step_links.translations, async (transl: any) => {
 
         let editingLinkTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description']));
@@ -237,6 +238,7 @@ export class GraphController {
 
       });
     }
+  }
     await editLinkTranslations()
     
     // delete step links
@@ -292,8 +294,10 @@ export class GraphController {
   }
 
   async asyncForEach (array: any, callback: any) {
+    
     for (let index = 0; index < array.length; index++) {
       await callback(array[index], index, array);
-    }
+    
   }
+}
 }
