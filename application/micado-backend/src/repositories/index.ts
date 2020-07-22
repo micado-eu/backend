@@ -36,3 +36,5 @@ export * from './document.repository';
 export * from './document-pictures.repository';
 export * from './event-category.repository';
 export * from './event-category-translation.repository';
+export * from './user.repository';
+export * from './user-attribute.repository';

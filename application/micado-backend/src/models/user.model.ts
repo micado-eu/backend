@@ -1,7 +1,8 @@
-import { Entity, model, property } from '@loopback/repository';
+import { Entity, model, property, hasMany} from '@loopback/repository';
+import {UserAttribute} from './user-attribute.model';
 
 @model({
-  settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'user' } }
+  settings: { idInjection: false, postgresql: { schema: 'wso2_shared', table: 'um_user' } }
 })
 export class User extends Entity {
   @property({
@@ -52,11 +53,13 @@ export class User extends Entity {
   })
   umTenantId?: number;
 
+  @hasMany(() => UserAttribute, {keyTo: 'umId'})
+  attributes: UserAttribute[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+ // [prop: string]: any;
 
   constructor(data?: Partial<User>) {
     super(data);
