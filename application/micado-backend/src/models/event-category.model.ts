@@ -1,4 +1,5 @@
-import { Entity, model, property } from '@loopback/repository';
+import { Entity, model, property, hasMany } from '@loopback/repository';
+import { EventCategoryTranslation } from '.';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'event_category' } }
@@ -20,6 +21,14 @@ export class EventCategory extends Entity {
   })
   icon?: string;
 
+  @property({
+    type: 'boolean',
+    postgresql: { columnName: 'link_integration_plan', dataType: 'bool', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  link_integration_plan?: string;
+
+  @hasMany(() => EventCategoryTranslation, { keyTo: 'id' })
+  translations: EventCategoryTranslation[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

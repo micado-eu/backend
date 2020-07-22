@@ -38,3 +38,5 @@ export * from './event-category.repository';
 export * from './event-category-translation.repository';
 export * from './user.repository';
 export * from './user-attribute.repository';
+export * from './event-tag.repository';
+export * from './event-tag-translation.repository';
