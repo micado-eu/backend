@@ -11,14 +11,16 @@ export class EventCategoryTranslation extends Entity {
     type: 'number',
     required: true,
     scale: 0,
-    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+    id: 1,
+    //postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
 
   @property({
     type: 'string',
     length: 10,
-    postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    required: true,
+    //postgresql: { columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   lang?: string;
 

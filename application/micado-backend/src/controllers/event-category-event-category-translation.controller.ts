@@ -26,7 +26,7 @@ export class EventCategoryEventCategoryTranslationController {
     @repository(EventCategoryRepository) protected eventCategoryRepository: EventCategoryRepository,
   ) { }
 
-  @get('/event-categories/{id}/eventCategory-translations', {
+  @get('/event-categories/{id}/event-category-translations', {
     responses: {
       '200': {
         description: 'Array of EventCategory has many EventCategoryTranslation',
@@ -71,7 +71,7 @@ export class EventCategoryEventCategoryTranslationController {
     return this.eventCategoryRepository.translations(id).create(eventCategoryTranslation);
   }
 
-  @patch('/event-categories/{id}/event-categories-translations', {
+  @patch('/event-categories/{id}/event-category-translations', {
     responses: {
       '200': {
         description: 'EventCategory.EventCategoryTranslation PATCH success count',
@@ -94,7 +94,7 @@ export class EventCategoryEventCategoryTranslationController {
     return this.eventCategoryRepository.translations(id).patch(eventCategoryTranslation, where);
   }
 
-  @del('/event-categories/{id}/event-categories-translations', {
+  @del('/event-categories/{id}/event-category-translations', {
     responses: {
       '200': {
         description: 'EventCategory.EventCategoryTranslation DELETE success count',
