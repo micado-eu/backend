@@ -12,7 +12,7 @@ export class IndividualInterventionPlanInterventions extends Entity {
     required: false,
     scale: 0,
     id: true,
-    generated: true;
+    generated: true,
     postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
