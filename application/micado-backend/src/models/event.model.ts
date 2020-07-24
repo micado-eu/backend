@@ -38,8 +38,13 @@ export class Event extends Entity {
   })
   publicationDate?: string;
 
-  @hasOne(() => EventCategory, { keyTo: 'id', keyFrom: "category" })
-  category?: EventCategory;
+  @property({
+    type: 'number',
+    required: false,
+    scale: 0,
+    postgresql: { columnName: 'category', dataType: 'int2', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES' },
+  })
+  category?: number;
 
   @hasMany(() => EventTag, { keyTo: 'id' })
   tags?: EventTag[];
