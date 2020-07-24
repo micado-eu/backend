@@ -9,6 +9,16 @@ import {Entity, model, property} from '@loopback/repository';
 export class IndividualInterventionPlanInterventions extends Entity {
   @property({
     type: 'number',
+    required: false,
+    scale: 0,
+    id: true,
+    generated: true;
+    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+  })
+  id: number;
+
+  @property({
+    type: 'number',
     required: true,
     scale: 0,
     postgresql: {columnName: 'list_id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
@@ -25,7 +35,7 @@ export class IndividualInterventionPlanInterventions extends Entity {
 
   @property({
     type: 'date',
-    jsonSchema: { nullable: true },
+    jsonSchema: {nullable: true},
     postgresql: {columnName: 'validation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   validationDate?: string;
@@ -56,6 +66,16 @@ export class IndividualInterventionPlanInterventions extends Entity {
   })
   assignmentDate?: string;
 
+  @property({
+    type: 'date',
+    postgresql: {columnName: 'validationrequestdate', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  validationRequestDate?: string;
+
+  @property({
+    type: 'number',
+  })
+  list_id?: number;
   // Define well-known properties here
 
   // Indexer property to allow additional data

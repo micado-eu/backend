@@ -52,3 +52,5 @@ export * from './event-category.controller';
 export * from './event-category-event-category-translation.controller'
 export * from './user.controller';
 export * from './user-user-attribute.controller';
+export * from './user-individual-intervention-plan.controller';
+export * from './individual-intervention-plan-individual-intervention-plan-interventions.controller';

@@ -39,4 +39,5 @@ export * from './event-category-translation.repository';
 export * from './user.repository';
 export * from './user-attribute.repository';
 export * from './event-tag.repository';
-export * from './event-tag-translation.repository';
+export * from './event-tag-translation.repository';export * from './individual-intervention-plan.repository';
+export * from './individual-intervention-plan-interventions.repository';

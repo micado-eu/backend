@@ -1,5 +1,6 @@
 import { Entity, model, property, hasMany} from '@loopback/repository';
 import {UserAttribute} from './user-attribute.model';
+import {IndividualInterventionPlan} from './individual-intervention-plan.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'wso2_shared', table: 'um_user' } }
@@ -55,6 +56,9 @@ export class User extends Entity {
 
   @hasMany(() => UserAttribute, {keyTo: 'umId'})
   attributes: UserAttribute[];
+
+  @hasMany(() => IndividualInterventionPlan)
+  interventionPlans: IndividualInterventionPlan[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

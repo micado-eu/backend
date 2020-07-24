@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {IndividualInterventionPlanInterventions} from './individual-intervention-plan-interventions.model';
 
 @model({
   settings: {
@@ -64,6 +65,8 @@ export class IndividualInterventionPlan extends Entity {
   })
   completed: boolean;
 
+  @hasMany(() => IndividualInterventionPlanInterventions, {keyTo: 'list_id'})
+  interventions: IndividualInterventionPlanInterventions[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
