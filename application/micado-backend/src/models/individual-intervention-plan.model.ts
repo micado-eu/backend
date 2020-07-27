@@ -10,9 +10,10 @@ import {IndividualInterventionPlanInterventions} from './individual-intervention
 export class IndividualInterventionPlan extends Entity {
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
     id: 1,
+    generated:true,
     postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
@@ -71,7 +72,7 @@ export class IndividualInterventionPlan extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<IndividualInterventionPlan>) {
     super(data);
