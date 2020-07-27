@@ -15,6 +15,14 @@ export class EventTag extends Entity {
     })
     id: number;
 
+    @property({
+        type: 'number',
+        required: false,
+        scale: 0,
+        postgresql: { columnName: 'event_id', dataType: 'int2', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+    })
+    eventId: number;
+
     @hasMany(() => EventTagTranslation, { keyTo: 'id' })
     translations: EventTagTranslation[];
 
