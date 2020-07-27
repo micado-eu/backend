@@ -72,10 +72,7 @@ export class IndividualInterventionPlanInterventions extends Entity {
   })
   validationRequestDate?: string;
 
-  @property({
-    type: 'number',
-  })
-  list_id?: number;
+  
   // Define well-known properties here
 
   // Indexer property to allow additional data

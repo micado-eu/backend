@@ -61,7 +61,7 @@ export class IndividualInterventionPlanIndividualInterventionPlanInterventionsCo
           schema: getModelSchemaRef(IndividualInterventionPlanInterventions, {
             title: 'NewIndividualInterventionPlanInterventionsInIndividualInterventionPlan',
             exclude: ['id'],
-            optional: ['list_id']
+            optional: ['listId']
           }),
         },
       },

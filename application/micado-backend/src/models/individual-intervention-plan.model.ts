@@ -66,7 +66,7 @@ export class IndividualInterventionPlan extends Entity {
   })
   completed: boolean;
 
-  @hasMany(() => IndividualInterventionPlanInterventions, {keyTo: 'list_id'})
+  @hasMany(() => IndividualInterventionPlanInterventions, {keyTo: 'listId'})
   interventions: IndividualInterventionPlanInterventions[];
   // Define well-known properties here
 
