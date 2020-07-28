@@ -41,9 +41,12 @@ export class EventEventTagController {
     })
     async find(
         @param.path.number('id') id: number,
-        @param.query.object('filter') filter?: Filter<EventTag>,
     ): Promise<EventTag[]> {
-        return this.eventRepository.tags(id).find(filter);
+        return this.eventTagRepository.find({
+            where: {
+                eventId: id
+            }
+        })
     }
 
     @post('/events/{id}/event-tags', {
@@ -62,38 +65,39 @@ export class EventEventTagController {
                     schema: getModelSchemaRef(EventTag, {
                         title: 'NewEventTagInEvent',
                         //           exclude: ['id'],
-                        optional: ['id']
+                        optional: ['id', 'eventId']
                     }),
                 },
             },
-        }) eventTranslation: EventTag,
+        }) eventTag: EventTag,
         //    }) eventTranslation: Omit < EventTag, 'id' >,
     ): Promise<EventTag> {
-        return this.eventRepository.tags(id).create(eventTranslation);
+        let instance = Object.assign(eventTag, { eventId: id })
+        return this.eventTagRepository.create(instance)
     }
 
-    @patch('/events/{id}/event-tags', {
-        responses: {
-            '200': {
-                description: 'Event.EventTag PATCH success count',
-                content: { 'application/json': { schema: CountSchema } },
-            },
-        },
-    })
-    async patch(
-        @param.path.number('id') id: number,
-        @requestBody({
-            content: {
-                'application/json': {
-                    schema: getModelSchemaRef(EventTag, { partial: true }),
-                },
-            },
-        })
-        eventTranslation: Partial<EventTag>,
-        @param.query.object('where', getWhereSchemaFor(EventTag)) where?: Where<EventTag>,
-    ): Promise<Count> {
-        return this.eventRepository.tags(id).patch(eventTranslation, where);
-    }
+    // @patch('/events/{id}/event-tags', {
+    //     responses: {
+    //         '200': {
+    //             description: 'Event.EventTag PATCH success count',
+    //             content: { 'application/json': { schema: CountSchema } },
+    //         },
+    //     },
+    // })
+    // async patch(
+    //     @param.path.number('id') id: number,
+    //     @requestBody({
+    //         content: {
+    //             'application/json': {
+    //                 schema: getModelSchemaRef(EventTag, { partial: true }),
+    //             },
+    //         },
+    //     })
+    //     eventTag: Partial<EventTag>,
+    //     @param.query.object('where', getWhereSchemaFor(EventTag)) where?: Where<EventTag>,
+    // ): Promise<Count> {
+    //     return this.eventRepository.tags(id).patch(eventTag, where);
+    // }
 
     @del('/events/{id}/event-tags', {
         responses: {
@@ -107,10 +111,19 @@ export class EventEventTagController {
         @param.path.number('id') id: number,
         @param.query.object('where', getWhereSchemaFor(EventTag)) where?: Where<EventTag>,
     ): Promise<Count> {
-        let tags = await this.eventRepository.tags(id).find()
+        let tags = await this.eventTagRepository.find({
+            where: {
+                eventId: id
+            }
+        })
+        let count = 0
         for (let tag of tags) {
             await this.eventTagRepository.translations(tag.id).delete()
+            await this.eventTagRepository.delete(tag)
+            count++
         }
-        return this.eventRepository.tags(id).delete(where);
+        return Promise.resolve({
+            count
+        });
     }
 }

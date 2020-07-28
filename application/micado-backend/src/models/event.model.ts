@@ -1,7 +1,5 @@
 import { Entity, model, property, hasMany, hasOne } from '@loopback/repository';
 import { EventTranslation } from '.';
-import { EventCategory } from './event-category.model';
-import { EventTag } from './event-tags.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'event' } }
@@ -45,9 +43,6 @@ export class Event extends Entity {
     postgresql: { columnName: 'category', dataType: 'int2', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES' },
   })
   category?: number;
-
-  @hasMany(() => EventTag, { keyTo: 'id' })
-  tags?: EventTag[];
 
   @hasMany(() => EventTranslation, { keyTo: 'id' })
   translations: EventTranslation[];
