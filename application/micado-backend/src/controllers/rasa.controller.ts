@@ -22,11 +22,14 @@ import {
 } from '@loopback/rest';
 import fs from 'fs';
 import { DocumentTypeRepository } from '../repositories';
-
+import { DocumentTypeTranslationRepository } from '../repositories';
+import { ProcessRepository } from '../repositories';
 
 export class RasaController {
   constructor(
     @repository(DocumentTypeRepository) protected documentTypeRepository: DocumentTypeRepository,
+    @repository(DocumentTypeTranslationRepository) protected documentTypeTranslationRepository: DocumentTypeTranslationRepository,
+    @repository(ProcessRepository) protected processRepository: ProcessRepository,
   ) { }
 
 
@@ -92,4 +95,76 @@ export class RasaController {
 
     return "gioppo";
   }
+
+  @get('/process_x_doc', {
+    responses: {
+      '200': {
+        description: 'Topic export',
+        content: { 'application/json': { schema: AnyType } },
+      },
+    },
+  })
+  async process_x_doc (
+    @param.query.string('document') document = "",
+    @param.query.string('lang') lang = 'en'
+
+  ): Promise<any> {
+
+    let filter = {
+      "where": {
+        "document": { "eq": document }
+      }
+    };
+
+    let found_processes: any = []
+
+
+
+    await this.documentTypeTranslationRepository.find(filter)
+      .then(async (docs) => {
+        console.log(docs)
+        let docs_id: any = []
+        docs.forEach((doc) => {
+          docs_id.push(doc.id)
+        })
+
+        console.log(docs_id)
+
+        let process_filter = {
+          "where": {
+            "produced_document": { "inq": docs_id }
+          },
+          include: [
+            {
+              relation: 'translations',
+              scope: {
+                where: {
+                  lang: { "eq": lang }
+                }
+              }
+            },
+          ],
+        };
+
+        const search = async () => {
+
+          await this.processRepository.find(process_filter)
+            .then(processes => {
+              console.log(processes)
+              processes.forEach((proc) => {
+                let a_process = { id: proc.id, process: proc.translations[0].process }
+                console.log(a_process)
+                found_processes.push(a_process)
+              })
+            })
+        }
+        await search()
+
+      })
+
+    console.log("found processes:")
+    console.log(found_processes)
+    return found_processes
+  }
+
 }

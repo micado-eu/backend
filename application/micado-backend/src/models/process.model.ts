@@ -1,11 +1,12 @@
-import { Entity, model, property, hasMany } from '@loopback/repository';
+import { Entity, model, property, hasMany, belongsTo} from '@loopback/repository';
 import { ProcessTranslation } from './process-translation.model';
 import { ProcessUsers } from './process-users.model';
 import { ProcessTopic } from './process-topic.model';
-import {ProcessComments} from './process-comments.model';
+import { ProcessComments } from './process-comments.model';
+import {DocumentType} from './document-type.model';
 
 @model({
-  settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'process' } }
+  settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'process'}}
 })
 export class Process extends Entity {
   @property({
@@ -14,43 +15,45 @@ export class Process extends Entity {
     scale: 0,
     id: 1,
     generated: true,
-    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
 
   @property({
     type: 'string',
     length: 70,
-    jsonSchema: { nullable: true },
-    postgresql: { columnName: 'link', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    jsonSchema: {nullable: true},
+    postgresql: {columnName: 'link', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   link?: string;
 
   @property({
     type: 'boolean',
     required: true,
-    postgresql: { columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO' },
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   published: boolean;
 
   @property({
     type: 'date',
-    jsonSchema: { nullable: true },
-    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    jsonSchema: {nullable: true},
+    postgresql: {columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   publicationDate?: string;
-
-  @hasMany(() => ProcessTranslation, { keyTo: 'id' })
+  @hasMany(() => ProcessTranslation, {keyTo: 'id'})
   translations: ProcessTranslation[];
 
-  @hasMany(() => ProcessUsers, { keyTo: 'idProcess' })
+  @hasMany(() => ProcessUsers, {keyTo: 'idProcess'})
   applicableUsers: ProcessUsers[];
 
-  @hasMany(() => ProcessTopic, { keyTo: 'idProcess' })
+  @hasMany(() => ProcessTopic, {keyTo: 'idProcess'})
   processTopics: ProcessTopic[];
 
   @hasMany(() => ProcessComments, {keyTo: 'idprocess'})
   comments: ProcessComments[];
+
+  @belongsTo(() => DocumentType, {name: 'process_document'})
+  produced_document: number;
   // Define well-known properties here
 
   // Indexer property to allow additional data
