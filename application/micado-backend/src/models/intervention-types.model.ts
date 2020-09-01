@@ -1,6 +1,7 @@
 import { Entity, model, property, hasMany, belongsTo } from '@loopback/repository';
 import { InterventionTypesTranslation } from './intervention-types-translation.model';
 import { InterventionCategory } from './intervention-category.model';
+import {InterventionTypeValidator} from './intervention-type-validator.model';
 
 @model({
   settings: {
@@ -44,7 +45,8 @@ export class InterventionTypes extends Entity {
   @hasMany(() => InterventionTypesTranslation, { keyTo: 'id' })
   translations: InterventionTypesTranslation[];
 
-
+  @hasMany(() => InterventionTypeValidator, {keyTo: 'interventionTypeId'})
+  interventionTypeValidators: InterventionTypeValidator[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

@@ -55,3 +55,4 @@ export * from './comments.model';
 export * from './comments-translation.model';
 export * from './process-comments.model';
 
+export * from './intervention-type-validator.model';

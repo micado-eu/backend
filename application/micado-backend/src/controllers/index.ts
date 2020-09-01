@@ -56,3 +56,4 @@ export * from './user-individual-intervention-plan.controller';
 export * from './individual-intervention-plan-individual-intervention-plan-interventions.controller';
 export * from './individual-intervention-plan.controller';
 export * from './process-document-type.controller';
+export * from './intervention-types-intervention-type-validator.controller';
