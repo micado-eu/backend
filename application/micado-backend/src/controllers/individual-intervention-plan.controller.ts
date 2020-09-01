@@ -198,10 +198,12 @@ export class IndividualInterventionPlanController {
     },
   })
   async find_ngo (
+    @param.query.string('lang') lang = 'en',
   ): Promise<void> {
 
     //    return this.individualInterventionPlanRepository.dataSource.execute("select json_agg(jj.*)::jsonb from (select iip.*, (select json_agg(kk.*)::jsonb from (SELECT *,(select itt.intervention_title from intervention_types_translation itt where itt.id=iipi.intervention_type and lang='" + lang + "'), (select ip.process_id from intervention_processes ip where ip.intervention_type = iipi.intervention_type), (select json_agg(itv.tenant_id)::jsonb from intervention_type_validator itv where itv.intervention_type_id=iipi.intervention_type) as validators  FROM individual_intervention_plan_interventions iipi where iipi.list_id = iip.id) kk) as interventions from individual_intervention_plan iip where iip.user_id=" + user_id + ") jj");
-    return this.individualInterventionPlanRepository.dataSource.execute("select iip.*, (select json_agg(iipi.*)::jsonb from individual_intervention_plan_interventions iipi where iipi.validationrequestdate is not null and iipi.list_id=iip.id) as interventions from individual_intervention_plan iip where iip.id in (select distinct iipi.list_id from individual_intervention_plan_interventions iipi where iipi.validationrequestdate is not null) ");
+    //    return this.individualInterventionPlanRepository.dataSource.execute("select iip.*, (select json_agg(iipi.*)::jsonb from individual_intervention_plan_interventions iipi where iipi.validationrequestdate is not null and iipi.list_id=iip.id) as interventions from individual_intervention_plan iip where iip.id in (select distinct iipi.list_id from individual_intervention_plan_interventions iipi where iipi.validationrequestdate is not null) ");
+    return this.individualInterventionPlanRepository.dataSource.execute("select iip.*, (select json_agg(kk.*):: jsonb from(select iipi.*, (select itt.intervention_title from intervention_types_translation itt where itt.id = iipi.intervention_type and itt.lang = '" + lang + "') from individual_intervention_plan_interventions iipi where iipi.validationrequestdate is not null and iipi.list_id = iip.id) kk) as interventions from individual_intervention_plan iip where iip.id in (select distinct iipi.list_id from individual_intervention_plan_interventions iipi where iipi.validationrequestdate is not null) ");
   }
 
   async asyncForEach (array: any, callback: any) {
