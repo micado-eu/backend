@@ -60,7 +60,7 @@ export class CommentsCommentTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(CommentTranslationProd, {
             title: 'NewCommentTranslationProdInComments',
-            exclude: ['lang'],
+            //exclude: ['lang'],
             optional: ['id']
           }),
         },

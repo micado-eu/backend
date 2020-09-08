@@ -20,7 +20,6 @@ export class FeaturesFlagsTranslationProd extends Entity {
     type: 'string',
     required: true,
     length: 10,
-    id: 2,
     postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   lang: string;
@@ -42,7 +41,7 @@ export class FeaturesFlagsTranslationProd extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<FeaturesFlagsTranslationProd>) {
     super(data);

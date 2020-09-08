@@ -11,7 +11,6 @@ export class CommentTranslationProd extends Entity {
     type: 'string',
     required: true,
     length: 10,
-    id: 1,
     postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   lang: string;
@@ -32,7 +31,7 @@ export class CommentTranslationProd extends Entity {
     type: 'number',
     required: true,
     scale: 0,
-    id: 2,
+    id: true,
     postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
@@ -41,7 +40,7 @@ export class CommentTranslationProd extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<CommentTranslationProd>) {
     super(data);

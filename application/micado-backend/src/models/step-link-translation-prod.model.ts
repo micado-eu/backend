@@ -11,7 +11,6 @@ export class StepLinkTranslationProd extends Entity {
     type: 'string',
     required: true,
     length: 10,
-    id: 1,
     postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   lang: string;
@@ -26,7 +25,7 @@ export class StepLinkTranslationProd extends Entity {
   @property({
     type: 'string',
     required: true,
-    id: 2,
+    id: 1,
     postgresql: {columnName: 'id', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   id: string;
@@ -35,7 +34,7 @@ export class StepLinkTranslationProd extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<StepLinkTranslationProd>) {
     super(data);

@@ -60,7 +60,7 @@ export class StepStepTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(StepTranslationProd, {
             title: 'NewStepTranslationProdInStep',
-            exclude: ['lang'],
+           // exclude: ['lang'],
             optional: ['id']
           }),
         },
