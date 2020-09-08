@@ -1,6 +1,7 @@
 import { Entity, model, property, hasMany } from '@loopback/repository';
 import { StepTranslation } from './step-translation.model';
 import {StepDocument} from './step-document.model';
+import {StepTranslationProd} from './step-translation-prod.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'step' } }
@@ -60,6 +61,9 @@ export class Step extends Entity {
 
   @hasMany(() => StepDocument, {keyTo: 'idStep'})
   documents: StepDocument[];
+
+  @hasMany(() => StepTranslationProd, {keyTo: 'id'})
+  translations_prod: StepTranslationProd[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

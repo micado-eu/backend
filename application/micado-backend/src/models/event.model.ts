@@ -1,5 +1,6 @@
 import { Entity, model, property, hasMany, hasOne } from '@loopback/repository';
 import { EventTranslation } from '.';
+import {EventTranslationProd} from './event-translation-prod.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'event' } }
@@ -47,6 +48,8 @@ export class Event extends Entity {
   @hasMany(() => EventTranslation, { keyTo: 'id' })
   translations: EventTranslation[];
 
+  @hasMany(() => EventTranslationProd, {keyTo: 'id'})
+  translations_prod: EventTranslationProd[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

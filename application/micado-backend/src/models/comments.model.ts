@@ -1,5 +1,6 @@
 import {Entity, model, property, hasMany} from '@loopback/repository';
 import {CommentsTranslation} from './comments-translation.model';
+import {CommentTranslationProd} from './comment-translation-prod.model';
 
 @model({
   settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'comments'}}
@@ -30,6 +31,9 @@ export class Comments extends Entity {
 
   @hasMany(() => CommentsTranslation, {keyTo: 'id'})
   translations: CommentsTranslation[];
+
+  @hasMany(() => CommentTranslationProd, {keyTo: 'id'})
+  translations_prod: CommentTranslationProd[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

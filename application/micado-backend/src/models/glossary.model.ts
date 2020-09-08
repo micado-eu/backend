@@ -1,5 +1,6 @@
 import { Entity, model, property, hasMany} from '@loopback/repository';
 import {GlossaryTranslation} from './glossary-translation.model';
+import {GlossaryTranslationProd} from './glossary-translation-prod.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'glossary' } }
@@ -53,6 +54,9 @@ export class Glossary extends Entity {
 
   @hasMany(() => GlossaryTranslation, {keyTo: 'id'})
   translations: GlossaryTranslation[];
+
+  @hasMany(() => GlossaryTranslationProd, {keyTo: 'id'})
+  translations_prod: GlossaryTranslationProd[];
   @property({
     type: 'date',
     postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
