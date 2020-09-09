@@ -29,6 +29,14 @@ export class Comments extends Entity {
   })
   id: number;
 
+  @property({
+    type: 'number',
+    required: true,
+    scale: 0,
+    postgresql: {columnName: 'tenant_id', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+  })
+  tenantId: number;
+
   @hasMany(() => CommentsTranslation, {keyTo: 'id'})
   translations: CommentsTranslation[];
 
