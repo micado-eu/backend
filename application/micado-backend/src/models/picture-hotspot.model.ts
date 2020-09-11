@@ -1,5 +1,6 @@
 import {Entity, model, property, hasMany} from '@loopback/repository';
 import {PictureHotspotTranslation} from './picture-hotspot-translation.model';
+import {PictureHotspotTranslationProd} from './picture-hotspot-translation-prod.model';
 
 @model({
   settings: {
@@ -40,6 +41,9 @@ export class PictureHotspot extends Entity {
 
   @hasMany(() => PictureHotspotTranslation, {keyTo: 'phtId'})
   translations: PictureHotspotTranslation[];
+
+  @hasMany(() => PictureHotspotTranslationProd, {keyTo: 'phtId'})
+  translations_prod: PictureHotspotTranslationProd[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

@@ -1,5 +1,5 @@
 import {DefaultCrudRepository, repository, HasManyRepositoryFactory, BelongsToAccessor} from '@loopback/repository';
-import {Process, ProcessRelations, ProcessTranslation, ProcessUsers, ProcessTopic, ProcessComments, DocumentType} from '../models';
+import {Process, ProcessRelations, ProcessTranslation, ProcessUsers, ProcessTopic, ProcessComments, DocumentType, ProcessTranslationProd} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject, Getter} from '@loopback/core';
 import {ProcessTranslationRepository} from './process-translation.repository';
@@ -7,6 +7,7 @@ import {ProcessUsersRepository} from './process-users.repository';
 import {ProcessTopicRepository} from './process-topic.repository';
 import {ProcessCommentsRepository} from './process-comments.repository';
 import {DocumentTypeRepository} from './document-type.repository';
+import {ProcessTranslationProdRepository} from './process-translation-prod.repository';
 
 export class ProcessRepository extends DefaultCrudRepository<
   Process,
@@ -24,10 +25,14 @@ export class ProcessRepository extends DefaultCrudRepository<
 
   public readonly process_document: BelongsToAccessor<DocumentType, typeof Process.prototype.id>;
 
+  public readonly translations_prod: HasManyRepositoryFactory<ProcessTranslationProd, typeof Process.prototype.id>;
+
   constructor(
-    @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('ProcessTranslationRepository') protected processTranslationRepositoryGetter: Getter<ProcessTranslationRepository>, @repository.getter('ProcessUsersRepository') protected processUsersRepositoryGetter: Getter<ProcessUsersRepository>, @repository.getter('ProcessTopicRepository') protected processTopicRepositoryGetter: Getter<ProcessTopicRepository>, @repository.getter('ProcessCommentsRepository') protected processCommentsRepositoryGetter: Getter<ProcessCommentsRepository>, @repository.getter('DocumentTypeRepository') protected documentTypeRepositoryGetter: Getter<DocumentTypeRepository>,
+    @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('ProcessTranslationRepository') protected processTranslationRepositoryGetter: Getter<ProcessTranslationRepository>, @repository.getter('ProcessUsersRepository') protected processUsersRepositoryGetter: Getter<ProcessUsersRepository>, @repository.getter('ProcessTopicRepository') protected processTopicRepositoryGetter: Getter<ProcessTopicRepository>, @repository.getter('ProcessCommentsRepository') protected processCommentsRepositoryGetter: Getter<ProcessCommentsRepository>, @repository.getter('DocumentTypeRepository') protected documentTypeRepositoryGetter: Getter<DocumentTypeRepository>, @repository.getter('ProcessTranslationProdRepository') protected processTranslationProdRepositoryGetter: Getter<ProcessTranslationProdRepository>,
   ) {
     super(Process, dataSource);
+    this.translations_prod = this.createHasManyRepositoryFactoryFor('translations_prod', processTranslationProdRepositoryGetter,);
+    this.registerInclusionResolver('translations_prod', this.translations_prod.inclusionResolver);
     this.process_document = this.createBelongsToAccessorFor('process_document', documentTypeRepositoryGetter,);
     this.registerInclusionResolver('process_document', this.process_document.inclusionResolver);
     this.comments = this.createHasManyRepositoryFactoryFor('comments', processCommentsRepositoryGetter,);

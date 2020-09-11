@@ -1,5 +1,6 @@
 import { Entity, model, property, hasMany, hasOne } from '@loopback/repository';
-import { EventTagTranslation, Event } from '.';
+import { EventTagTranslation, Event, EventTagsTranslationProd } from '.';
+
 
 @model({
     settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'event_tags' } }
@@ -25,6 +26,10 @@ export class EventTag extends Entity {
 
     @hasMany(() => EventTagTranslation, { keyTo: 'id' })
     translations: EventTagTranslation[];
+
+    @hasMany(() => EventTagsTranslationProd, { keyTo: 'id' })
+    translations_prod: EventTagsTranslationProd[];
+
 
     // Define well-known properties here
 

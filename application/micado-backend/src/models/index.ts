@@ -56,3 +56,18 @@ export * from './comments-translation.model';
 export * from './process-comments.model';
 
 export * from './intervention-type-validator.model';
+export * from './comment-translation-prod.model';
+export * from './document-type-translation-prod.model';
+export * from './event-category-translation-prod.model';
+export * from './event-translation-prod.model';
+export * from './features-flags-translation-prod.model';
+export * from './event-tags-translation-prod.model';
+export * from './intervention-category-translation-prod.model';
+export * from './picture-hotspot-translation-prod.model';
+export * from './process-translation-prod.model';
+export * from './intervention-types-translation-prod.model';
+export * from './step-link-translation-prod.model';
+export * from './step-translation-prod.model';
+export * from './topic-translation-prod.model';
+export * from './user-types-translation-prod.model';
+export * from './glossary-translation-prod.model';

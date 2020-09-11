@@ -1,5 +1,6 @@
 import {Entity, model, property, hasMany} from '@loopback/repository';
 import {CommentsTranslation} from './comments-translation.model';
+import {CommentTranslationProd} from './comment-translation-prod.model';
 
 @model({
   settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'comments'}}
@@ -28,8 +29,19 @@ export class Comments extends Entity {
   })
   id: number;
 
+  @property({
+    type: 'number',
+    required: true,
+    scale: 0,
+    postgresql: {columnName: 'tenant_id', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+  })
+  tenantId: number;
+
   @hasMany(() => CommentsTranslation, {keyTo: 'id'})
   translations: CommentsTranslation[];
+
+  @hasMany(() => CommentTranslationProd, {keyTo: 'id'})
+  translations_prod: CommentTranslationProd[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
