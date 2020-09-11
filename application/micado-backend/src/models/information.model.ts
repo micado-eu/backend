@@ -1,11 +1,12 @@
 import { Entity, model, property, hasMany, hasOne } from '@loopback/repository';
-import { EventTranslation, EventTopic } from '.';
-import {EventTranslationProd} from './event-translation-prod.model';
+import { InformationTranslation, InformationTopic } from '.';
+import {InformationTranslationProd} from './information-translation-prod.model';
+import { InformationUserTypes } from './information-user-types.model';
 
 @model({
-  settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'event' } }
+  settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'information' } }
 })
-export class Event extends Entity {
+export class Information extends Entity {
   @property({
     type: 'number',
     required: false,
@@ -45,31 +46,17 @@ export class Event extends Entity {
   })
   category?: number;
 
-  @property({
-    type: 'date',
-    jsonSchema: { nullable: true },
-    postgresql: { columnName: 'start_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  startDate?: string;
+  @hasMany(() => InformationTranslation, { keyTo: 'id' })
+  translations: InformationTranslation[];
 
-  @property({
-    type: 'date',
-    jsonSchema: { nullable: true },
-    postgresql: { columnName: 'start_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  endDate?: string;
+  @hasMany(() => InformationTranslationProd, {keyTo: 'id'})
+  translations_prod: InformationTranslationProd[];
 
-  @hasMany(() => EventTranslation, { keyTo: 'id' })
-  translations: EventTranslation[];
+  @hasMany(() => InformationTopic, {keyTo: 'idInformation'})
+  informationTopics: InformationTopic[];
 
-  @hasMany(() => EventTranslationProd, {keyTo: 'id'})
-  translations_prod: EventTranslationProd[];
-
-  @hasMany(() => EventTopic, {keyTo: 'idEvent'})
-  eventTopics: EventTopic[];
-
-  @hasMany(() => EventTopic, {keyTo: 'idEvent'})
-  eventUserTypes: EventTopic[];
+  @hasMany(() => InformationUserTypes, {keyTo: 'idInformation'})
+  informationUserTypes: InformationUserTypes[];
 
   // Define well-known properties here
 
@@ -77,13 +64,13 @@ export class Event extends Entity {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // [prop: string]: any;
 
-  constructor(data?: Partial<Event>) {
+  constructor(data?: Partial<Information>) {
     super(data);
   }
 }
 
-export interface EventRelations {
+export interface InformationRelations {
   // describe navigational properties here
 }
 
-export type EventWithRelations = Event & EventRelations;
+export type InformationWithRelations = Information & InformationRelations;
