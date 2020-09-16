@@ -392,15 +392,10 @@ CREATE TABLE event (
     link character varying(70),
     published boolean DEFAULT false NOT NULL,
     publication_date timestamp without time zone,
-    category smallint
+    category smallint,
+    start_date timestamp without time zone,
+    end_date timestamp without time zone
 );
-
-
---
--- Name: TABLE event; Type: COMMENT; Schema: micadoapp; Owner: -
---
-
-COMMENT ON TABLE event IS 'this is the generic event table for courses, news,  etc that each organization wants to publish';
 
 
 --
@@ -408,6 +403,17 @@ COMMENT ON TABLE event IS 'this is the generic event table for courses, news,  e
 --
 
 CREATE TABLE event_category (
+    id smallint NOT NULL,
+    icon text,
+    link_integration_plan boolean
+);
+
+
+--
+-- Name: information_category; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_category (
     id smallint NOT NULL,
     icon text,
     link_integration_plan boolean
@@ -431,7 +437,27 @@ CREATE SEQUENCE event_category_id_seq
 -- Name: event_category_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
 --
 
-ALTER SEQUENCE event_category_id_seq OWNED BY event_category.id;
+ALTER SEQUENCE event_category_id_seq OWNED BY information_category.id;
+
+
+--
+-- Name: event_category_id_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_category_id_seq1
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_category_id_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_category_id_seq1 OWNED BY event_category.id;
 
 
 --
@@ -459,6 +485,18 @@ CREATE TABLE event_category_translation_prod (
 
 
 --
+-- Name: information_category_translation_prod; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_category_translation_prod (
+    id smallint NOT NULL,
+    lang character varying(10) NOT NULL,
+    information_category character varying(20),
+    translation_date timestamp without time zone
+);
+
+
+--
 -- Name: event_category_translation_prod_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
 --
 
@@ -475,7 +513,47 @@ CREATE SEQUENCE event_category_translation_prod_id_seq
 -- Name: event_category_translation_prod_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
 --
 
-ALTER SEQUENCE event_category_translation_prod_id_seq OWNED BY event_category_translation_prod.id;
+ALTER SEQUENCE event_category_translation_prod_id_seq OWNED BY information_category_translation_prod.id;
+
+
+--
+-- Name: event_category_translation_prod_id_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_category_translation_prod_id_seq1
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_category_translation_prod_id_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_category_translation_prod_id_seq1 OWNED BY event_category_translation_prod.id;
+
+
+--
+-- Name: information; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information (
+    id smallint NOT NULL,
+    link character varying(70),
+    published boolean DEFAULT false NOT NULL,
+    publication_date timestamp without time zone,
+    category smallint
+);
+
+
+--
+-- Name: TABLE information; Type: COMMENT; Schema: micadoapp; Owner: -
+--
+
+COMMENT ON TABLE information IS 'this is the generic event table for courses, news,  etc that each organization wants to publish';
 
 
 --
@@ -495,7 +573,27 @@ CREATE SEQUENCE event_id_seq
 -- Name: event_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
 --
 
-ALTER SEQUENCE event_id_seq OWNED BY event.id;
+ALTER SEQUENCE event_id_seq OWNED BY information.id;
+
+
+--
+-- Name: event_id_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_id_seq1
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_id_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_id_seq1 OWNED BY event.id;
 
 
 --
@@ -521,6 +619,16 @@ CREATE SEQUENCE event_tags_id_seq
 
 
 --
+-- Name: information_tags; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_tags (
+    id smallint NOT NULL,
+    information_id smallint NOT NULL
+);
+
+
+--
 -- Name: event_tags_id_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
 --
 
@@ -537,7 +645,27 @@ CREATE SEQUENCE event_tags_id_seq1
 -- Name: event_tags_id_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
 --
 
-ALTER SEQUENCE event_tags_id_seq1 OWNED BY event_tags.id;
+ALTER SEQUENCE event_tags_id_seq1 OWNED BY information_tags.id;
+
+
+--
+-- Name: event_tags_id_seq2; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_tags_id_seq2
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_tags_id_seq2; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_tags_id_seq2 OWNED BY event_tags.id;
 
 
 --
@@ -575,6 +703,16 @@ CREATE TABLE event_topic (
 
 
 --
+-- Name: information_topic; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_topic (
+    id_information smallint NOT NULL,
+    id_topic smallint NOT NULL
+);
+
+
+--
 -- Name: event_topic_id_event_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
 --
 
@@ -591,7 +729,27 @@ CREATE SEQUENCE event_topic_id_event_seq
 -- Name: event_topic_id_event_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
 --
 
-ALTER SEQUENCE event_topic_id_event_seq OWNED BY event_topic.id_event;
+ALTER SEQUENCE event_topic_id_event_seq OWNED BY information_topic.id_information;
+
+
+--
+-- Name: event_topic_id_event_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_topic_id_event_seq1
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_topic_id_event_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_topic_id_event_seq1 OWNED BY event_topic.id_event;
 
 
 --
@@ -611,7 +769,27 @@ CREATE SEQUENCE event_topic_id_topic_seq
 -- Name: event_topic_id_topic_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
 --
 
-ALTER SEQUENCE event_topic_id_topic_seq OWNED BY event_topic.id_topic;
+ALTER SEQUENCE event_topic_id_topic_seq OWNED BY information_topic.id_topic;
+
+
+--
+-- Name: event_topic_id_topic_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_topic_id_topic_seq1
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_topic_id_topic_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_topic_id_topic_seq1 OWNED BY event_topic.id_topic;
 
 
 --
@@ -641,6 +819,19 @@ CREATE TABLE event_translation_prod (
 
 
 --
+-- Name: information_translation_prod; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_translation_prod (
+    id smallint NOT NULL,
+    lang character varying(10) NOT NULL,
+    event character varying(20),
+    description text,
+    translation_date timestamp without time zone
+);
+
+
+--
 -- Name: event_translation_prod_id_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
 --
 
@@ -657,7 +848,127 @@ CREATE SEQUENCE event_translation_prod_id_seq
 -- Name: event_translation_prod_id_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
 --
 
-ALTER SEQUENCE event_translation_prod_id_seq OWNED BY event_translation_prod.id;
+ALTER SEQUENCE event_translation_prod_id_seq OWNED BY information_translation_prod.id;
+
+
+--
+-- Name: event_translation_prod_id_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_translation_prod_id_seq1
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_translation_prod_id_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_translation_prod_id_seq1 OWNED BY event_translation_prod.id;
+
+
+--
+-- Name: event_user_types; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE event_user_types (
+    id_event smallint NOT NULL,
+    id_user_types smallint NOT NULL
+);
+
+
+--
+-- Name: information_user_types; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_user_types (
+    id_information smallint NOT NULL,
+    id_user_types smallint NOT NULL
+);
+
+
+--
+-- Name: event_user_types_id_event_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_user_types_id_event_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_user_types_id_event_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_user_types_id_event_seq OWNED BY information_user_types.id_information;
+
+
+--
+-- Name: event_user_types_id_event_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_user_types_id_event_seq1
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_user_types_id_event_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_user_types_id_event_seq1 OWNED BY event_user_types.id_event;
+
+
+--
+-- Name: event_user_types_id_user_types_seq; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_user_types_id_user_types_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_user_types_id_user_types_seq; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_user_types_id_user_types_seq OWNED BY information_user_types.id_user_types;
+
+
+--
+-- Name: event_user_types_id_user_types_seq1; Type: SEQUENCE; Schema: micadoapp; Owner: -
+--
+
+CREATE SEQUENCE event_user_types_id_user_types_seq1
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_user_types_id_user_types_seq1; Type: SEQUENCE OWNED BY; Schema: micadoapp; Owner: -
+--
+
+ALTER SEQUENCE event_user_types_id_user_types_seq1 OWNED BY event_user_types.id_user_types;
 
 
 --
@@ -887,6 +1198,55 @@ CREATE SEQUENCE individual_intervention_plan_interventions_list_id_seq
 --
 
 ALTER SEQUENCE individual_intervention_plan_interventions_list_id_seq OWNED BY individual_intervention_plan_interventions.list_id;
+
+
+--
+-- Name: information_category_translation; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_category_translation (
+    id smallint NOT NULL,
+    lang character varying(10),
+    information_category character varying(20),
+    translation_date timestamp without time zone
+);
+
+
+--
+-- Name: information_tags_translation; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_tags_translation (
+    id smallint NOT NULL,
+    lang character varying(10) NOT NULL,
+    tag character varying NOT NULL,
+    translation_date timestamp without time zone
+);
+
+
+--
+-- Name: information_tags_translation_prod; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_tags_translation_prod (
+    id smallint NOT NULL,
+    lang character varying(10) NOT NULL,
+    tag character varying NOT NULL,
+    translation_date timestamp without time zone
+);
+
+
+--
+-- Name: information_translation; Type: TABLE; Schema: micadoapp; Owner: -
+--
+
+CREATE TABLE information_translation (
+    id smallint NOT NULL,
+    lang character varying(10),
+    information character varying(20),
+    description text,
+    translation_date timestamp without time zone
+);
 
 
 --
@@ -1772,49 +2132,63 @@ ALTER TABLE ONLY document_type_picture ALTER COLUMN id SET DEFAULT nextval('docu
 -- Name: event id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event ALTER COLUMN id SET DEFAULT nextval('event_id_seq'::regclass);
+ALTER TABLE ONLY event ALTER COLUMN id SET DEFAULT nextval('event_id_seq1'::regclass);
 
 
 --
 -- Name: event_category id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_category ALTER COLUMN id SET DEFAULT nextval('event_category_id_seq'::regclass);
+ALTER TABLE ONLY event_category ALTER COLUMN id SET DEFAULT nextval('event_category_id_seq1'::regclass);
 
 
 --
 -- Name: event_category_translation_prod id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_category_translation_prod ALTER COLUMN id SET DEFAULT nextval('event_category_translation_prod_id_seq'::regclass);
+ALTER TABLE ONLY event_category_translation_prod ALTER COLUMN id SET DEFAULT nextval('event_category_translation_prod_id_seq1'::regclass);
 
 
 --
 -- Name: event_tags id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_tags ALTER COLUMN id SET DEFAULT nextval('event_tags_id_seq1'::regclass);
+ALTER TABLE ONLY event_tags ALTER COLUMN id SET DEFAULT nextval('event_tags_id_seq2'::regclass);
 
 
 --
 -- Name: event_topic id_event; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_topic ALTER COLUMN id_event SET DEFAULT nextval('event_topic_id_event_seq'::regclass);
+ALTER TABLE ONLY event_topic ALTER COLUMN id_event SET DEFAULT nextval('event_topic_id_event_seq1'::regclass);
 
 
 --
 -- Name: event_topic id_topic; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_topic ALTER COLUMN id_topic SET DEFAULT nextval('event_topic_id_topic_seq'::regclass);
+ALTER TABLE ONLY event_topic ALTER COLUMN id_topic SET DEFAULT nextval('event_topic_id_topic_seq1'::regclass);
 
 
 --
 -- Name: event_translation_prod id; Type: DEFAULT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_translation_prod ALTER COLUMN id SET DEFAULT nextval('event_translation_prod_id_seq'::regclass);
+ALTER TABLE ONLY event_translation_prod ALTER COLUMN id SET DEFAULT nextval('event_translation_prod_id_seq1'::regclass);
+
+
+--
+-- Name: event_user_types id_event; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY event_user_types ALTER COLUMN id_event SET DEFAULT nextval('event_user_types_id_event_seq1'::regclass);
+
+
+--
+-- Name: event_user_types id_user_types; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY event_user_types ALTER COLUMN id_user_types SET DEFAULT nextval('event_user_types_id_user_types_seq1'::regclass);
 
 
 --
@@ -1857,6 +2231,69 @@ ALTER TABLE ONLY individual_intervention_plan_interventions ALTER COLUMN interve
 --
 
 ALTER TABLE ONLY individual_intervention_plan_interventions ALTER COLUMN id SET DEFAULT nextval('individual_intervention_plan_interventions_id_seq'::regclass);
+
+
+--
+-- Name: information id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information ALTER COLUMN id SET DEFAULT nextval('event_id_seq'::regclass);
+
+
+--
+-- Name: information_category id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_category ALTER COLUMN id SET DEFAULT nextval('event_category_id_seq'::regclass);
+
+
+--
+-- Name: information_category_translation_prod id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_category_translation_prod ALTER COLUMN id SET DEFAULT nextval('event_category_translation_prod_id_seq'::regclass);
+
+
+--
+-- Name: information_tags id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_tags ALTER COLUMN id SET DEFAULT nextval('event_tags_id_seq1'::regclass);
+
+
+--
+-- Name: information_topic id_information; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_topic ALTER COLUMN id_information SET DEFAULT nextval('event_topic_id_event_seq'::regclass);
+
+
+--
+-- Name: information_topic id_topic; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_topic ALTER COLUMN id_topic SET DEFAULT nextval('event_topic_id_topic_seq'::regclass);
+
+
+--
+-- Name: information_translation_prod id; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_translation_prod ALTER COLUMN id SET DEFAULT nextval('event_translation_prod_id_seq'::regclass);
+
+
+--
+-- Name: information_user_types id_information; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_user_types ALTER COLUMN id_information SET DEFAULT nextval('event_user_types_id_event_seq'::regclass);
+
+
+--
+-- Name: information_user_types id_user_types; Type: DEFAULT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_user_types ALTER COLUMN id_user_types SET DEFAULT nextval('event_user_types_id_user_types_seq'::regclass);
 
 
 --
@@ -2112,35 +2549,18 @@ INSERT INTO document_type_translation VALUES (1, 'en', 'Residence permit', 'A re
 -- Data for Name: event; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO event VALUES (44, NULL, true, '2020-09-02 15:42:11.017', 13);
-INSERT INTO event VALUES (48, NULL, true, '2020-09-02 15:57:55.536', 12);
-INSERT INTO event VALUES (49, NULL, true, '2020-09-03 15:36:11.076', 12);
-INSERT INTO event VALUES (50, NULL, false, '2020-09-03 15:55:32.655', 12);
-INSERT INTO event VALUES (43, NULL, true, '2020-09-02 15:36:08.607', 12);
 
 
 --
 -- Data for Name: event_category; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO event_category VALUES (12, NULL, false);
-INSERT INTO event_category VALUES (13, NULL, true);
 
 
 --
 -- Data for Name: event_category_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO event_category_translation VALUES (12, 'de', '', NULL);
-INSERT INTO event_category_translation VALUES (12, 'nl', '', NULL);
-INSERT INTO event_category_translation VALUES (12, 'es', 'curso', NULL);
-INSERT INTO event_category_translation VALUES (12, 'en', 'course', NULL);
-INSERT INTO event_category_translation VALUES (12, 'it', '', NULL);
-INSERT INTO event_category_translation VALUES (13, 'de', '', NULL);
-INSERT INTO event_category_translation VALUES (13, 'en', 'integration', NULL);
-INSERT INTO event_category_translation VALUES (13, 'es', 'integración', NULL);
-INSERT INTO event_category_translation VALUES (13, 'it', '', NULL);
-INSERT INTO event_category_translation VALUES (13, 'nl', '', NULL);
 
 
 --
@@ -2153,32 +2573,12 @@ INSERT INTO event_category_translation VALUES (13, 'nl', '', NULL);
 -- Data for Name: event_tags; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO event_tags VALUES (109, 44);
-INSERT INTO event_tags VALUES (117, 48);
-INSERT INTO event_tags VALUES (118, 48);
-INSERT INTO event_tags VALUES (119, 48);
-INSERT INTO event_tags VALUES (120, 48);
-INSERT INTO event_tags VALUES (121, 49);
-INSERT INTO event_tags VALUES (122, 50);
-INSERT INTO event_tags VALUES (123, 50);
-INSERT INTO event_tags VALUES (92, 43);
-INSERT INTO event_tags VALUES (93, 43);
 
 
 --
 -- Data for Name: event_tags_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO event_tags_translation VALUES (109, 'en', 'family', NULL);
-INSERT INTO event_tags_translation VALUES (117, 'en', 'residence', NULL);
-INSERT INTO event_tags_translation VALUES (119, 'en', 'permit', NULL);
-INSERT INTO event_tags_translation VALUES (118, 'en', 'documentation', NULL);
-INSERT INTO event_tags_translation VALUES (120, 'en', 'documents', NULL);
-INSERT INTO event_tags_translation VALUES (121, 'en', 'course', NULL);
-INSERT INTO event_tags_translation VALUES (122, 'en', 'language', NULL);
-INSERT INTO event_tags_translation VALUES (123, 'en', 'spanish', NULL);
-INSERT INTO event_tags_translation VALUES (92, 'en', 'course', NULL);
-INSERT INTO event_tags_translation VALUES (93, 'en', 'english', NULL);
 
 
 --
@@ -2197,15 +2597,16 @@ INSERT INTO event_tags_translation VALUES (93, 'en', 'english', NULL);
 -- Data for Name: event_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO event_translation VALUES (48, 'en', 'Residence permit', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Now you can get your "},{"type":"mention","attrs":{"id":1,"label":"Residence permit"}},{"type":"text","text":". For more information click here: http://example.com "},{"type":"mention","attrs":{"id":2,"label":"Identity Card"}},{"type":"text","text":" bla bla "},{"type":"mention","attrs":{"id":1,"label":"Residence permit"}},{"type":"text","text":"  "}]}]}', '2020-09-03 15:31:29.926');
-INSERT INTO event_translation VALUES (49, 'en', 'New event', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"dadada"}]}]}', '2020-09-03 15:36:11.136');
-INSERT INTO event_translation VALUES (50, 'en', 'CSO created event', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Spanish course on evenings"}]}]}', '2020-09-03 15:55:32.897');
-INSERT INTO event_translation VALUES (43, 'en', 'English course', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"The english course is now available. For more information check here: http://example.com"}]}]}', '2020-09-02 15:38:19.477');
-INSERT INTO event_translation VALUES (44, 'en', 'Family reunification', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Spouses and registered partners, parents and minor, unmarried children may migrate to _____ in order to join their family members in order to protect the institution of marriage and the family."}]}]}', '2020-09-02 15:54:52.119');
 
 
 --
 -- Data for Name: event_translation_prod; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+
+
+--
+-- Data for Name: event_user_types; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
 
@@ -2286,6 +2687,114 @@ INSERT INTO individual_intervention_plan_interventions VALUES (24, 11, NULL, fal
 INSERT INTO individual_intervention_plan_interventions VALUES (24, 10, NULL, true, 1, -1234, '2016-06-23 04:10:25', 33, '2016-06-23');
 INSERT INTO individual_intervention_plan_interventions VALUES (26, 9, NULL, false, 1, -1234, '2016-06-23 04:10:25', 35, '2016-06-23');
 INSERT INTO individual_intervention_plan_interventions VALUES (32, 10, NULL, true, 1, -1234, '2016-06-23 04:10:25', 36, '2016-06-23');
+
+
+--
+-- Data for Name: information; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO information VALUES (44, NULL, true, '2020-09-02 15:42:11.017', 13);
+INSERT INTO information VALUES (48, NULL, true, '2020-09-02 15:57:55.536', 12);
+INSERT INTO information VALUES (49, NULL, true, '2020-09-03 15:36:11.076', 12);
+INSERT INTO information VALUES (50, NULL, false, '2020-09-03 15:55:32.655', 12);
+INSERT INTO information VALUES (43, NULL, true, '2020-09-02 15:36:08.607', 12);
+
+
+--
+-- Data for Name: information_category; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO information_category VALUES (12, NULL, false);
+INSERT INTO information_category VALUES (13, NULL, true);
+
+
+--
+-- Data for Name: information_category_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO information_category_translation VALUES (12, 'de', '', NULL);
+INSERT INTO information_category_translation VALUES (12, 'nl', '', NULL);
+INSERT INTO information_category_translation VALUES (12, 'es', 'curso', NULL);
+INSERT INTO information_category_translation VALUES (12, 'en', 'course', NULL);
+INSERT INTO information_category_translation VALUES (12, 'it', '', NULL);
+INSERT INTO information_category_translation VALUES (13, 'de', '', NULL);
+INSERT INTO information_category_translation VALUES (13, 'en', 'integration', NULL);
+INSERT INTO information_category_translation VALUES (13, 'es', 'integración', NULL);
+INSERT INTO information_category_translation VALUES (13, 'it', '', NULL);
+INSERT INTO information_category_translation VALUES (13, 'nl', '', NULL);
+
+
+--
+-- Data for Name: information_category_translation_prod; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+
+
+--
+-- Data for Name: information_tags; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO information_tags VALUES (109, 44);
+INSERT INTO information_tags VALUES (117, 48);
+INSERT INTO information_tags VALUES (118, 48);
+INSERT INTO information_tags VALUES (119, 48);
+INSERT INTO information_tags VALUES (120, 48);
+INSERT INTO information_tags VALUES (121, 49);
+INSERT INTO information_tags VALUES (122, 50);
+INSERT INTO information_tags VALUES (123, 50);
+INSERT INTO information_tags VALUES (92, 43);
+INSERT INTO information_tags VALUES (93, 43);
+
+
+--
+-- Data for Name: information_tags_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO information_tags_translation VALUES (109, 'en', 'family', NULL);
+INSERT INTO information_tags_translation VALUES (117, 'en', 'residence', NULL);
+INSERT INTO information_tags_translation VALUES (119, 'en', 'permit', NULL);
+INSERT INTO information_tags_translation VALUES (118, 'en', 'documentation', NULL);
+INSERT INTO information_tags_translation VALUES (120, 'en', 'documents', NULL);
+INSERT INTO information_tags_translation VALUES (121, 'en', 'course', NULL);
+INSERT INTO information_tags_translation VALUES (122, 'en', 'language', NULL);
+INSERT INTO information_tags_translation VALUES (123, 'en', 'spanish', NULL);
+INSERT INTO information_tags_translation VALUES (92, 'en', 'course', NULL);
+INSERT INTO information_tags_translation VALUES (93, 'en', 'english', NULL);
+
+
+--
+-- Data for Name: information_tags_translation_prod; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+
+
+--
+-- Data for Name: information_topic; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+
+
+--
+-- Data for Name: information_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+INSERT INTO information_translation VALUES (48, 'en', 'Residence permit', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Now you can get your "},{"type":"mention","attrs":{"id":1,"label":"Residence permit"}},{"type":"text","text":". For more information click here: http://example.com "},{"type":"mention","attrs":{"id":2,"label":"Identity Card"}},{"type":"text","text":" bla bla "},{"type":"mention","attrs":{"id":1,"label":"Residence permit"}},{"type":"text","text":"  "}]}]}', '2020-09-03 15:31:29.926');
+INSERT INTO information_translation VALUES (49, 'en', 'New event', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"dadada"}]}]}', '2020-09-03 15:36:11.136');
+INSERT INTO information_translation VALUES (50, 'en', 'CSO created event', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Spanish course on evenings"}]}]}', '2020-09-03 15:55:32.897');
+INSERT INTO information_translation VALUES (43, 'en', 'English course', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"The english course is now available. For more information check here: http://example.com"}]}]}', '2020-09-02 15:38:19.477');
+INSERT INTO information_translation VALUES (44, 'en', 'Family reunification', '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Spouses and registered partners, parents and minor, unmarried children may migrate to _____ in order to join their family members in order to protect the institution of marriage and the family."}]}]}', '2020-09-02 15:54:52.119');
+
+
+--
+-- Data for Name: information_translation_prod; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
+
+
+--
+-- Data for Name: information_user_types; Type: TABLE DATA; Schema: micadoapp; Owner: -
+--
+
 
 
 --
@@ -2899,6 +3408,13 @@ SELECT pg_catalog.setval('event_category_id_seq', 13, true);
 
 
 --
+-- Name: event_category_id_seq1; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_category_id_seq1', 1, false);
+
+
+--
 -- Name: event_category_translation_prod_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
@@ -2906,10 +3422,24 @@ SELECT pg_catalog.setval('event_category_translation_prod_id_seq', 1, false);
 
 
 --
+-- Name: event_category_translation_prod_id_seq1; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_category_translation_prod_id_seq1', 1, false);
+
+
+--
 -- Name: event_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
 SELECT pg_catalog.setval('event_id_seq', 50, true);
+
+
+--
+-- Name: event_id_seq1; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_id_seq1', 1, false);
 
 
 --
@@ -2927,10 +3457,24 @@ SELECT pg_catalog.setval('event_tags_id_seq1', 123, true);
 
 
 --
+-- Name: event_tags_id_seq2; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_tags_id_seq2', 1, false);
+
+
+--
 -- Name: event_topic_id_event_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
 SELECT pg_catalog.setval('event_topic_id_event_seq', 1, false);
+
+
+--
+-- Name: event_topic_id_event_seq1; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_topic_id_event_seq1', 1, false);
 
 
 --
@@ -2941,10 +3485,52 @@ SELECT pg_catalog.setval('event_topic_id_topic_seq', 1, false);
 
 
 --
+-- Name: event_topic_id_topic_seq1; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_topic_id_topic_seq1', 1, false);
+
+
+--
 -- Name: event_translation_prod_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
 SELECT pg_catalog.setval('event_translation_prod_id_seq', 1, false);
+
+
+--
+-- Name: event_translation_prod_id_seq1; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_translation_prod_id_seq1', 1, false);
+
+
+--
+-- Name: event_user_types_id_event_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_user_types_id_event_seq', 1, false);
+
+
+--
+-- Name: event_user_types_id_event_seq1; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_user_types_id_event_seq1', 1, false);
+
+
+--
+-- Name: event_user_types_id_user_types_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_user_types_id_user_types_seq', 1, false);
+
+
+--
+-- Name: event_user_types_id_user_types_seq1; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
+--
+
+SELECT pg_catalog.setval('event_user_types_id_user_types_seq1', 1, false);
 
 
 --
@@ -3210,59 +3796,107 @@ ALTER TABLE ONLY document_type_translation_prod
 
 
 --
--- Name: event_category event_category_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_category event_category_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY event_category
+    ADD CONSTRAINT event_category_pk PRIMARY KEY (id);
+
+
+--
+-- Name: information_category event_category_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_category
     ADD CONSTRAINT event_category_pkey PRIMARY KEY (id);
 
 
 --
--- Name: event_category_translation_prod event_category_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_category_translation_prod event_category_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_category_translation_prod
+ALTER TABLE ONLY information_category_translation_prod
     ADD CONSTRAINT event_category_translation_pk PRIMARY KEY (id, lang);
 
 
 --
--- Name: event event_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event event_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY event
+    ADD CONSTRAINT event_pk PRIMARY KEY (id);
+
+
+--
+-- Name: information event_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information
     ADD CONSTRAINT event_pkey PRIMARY KEY (id);
 
 
 --
--- Name: event_tags event_tags_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_tags event_tags_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_tags
+ALTER TABLE ONLY information_tags
     ADD CONSTRAINT event_tags_pk PRIMARY KEY (id);
 
 
 --
--- Name: event_tags_translation event_tags_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_tags event_tags_pk_1; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_tags_translation
+ALTER TABLE ONLY event_tags
+    ADD CONSTRAINT event_tags_pk_1 PRIMARY KEY (id);
+
+
+--
+-- Name: information_tags_translation event_tags_translation_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_tags_translation
     ADD CONSTRAINT event_tags_translation_pk PRIMARY KEY (id, lang);
 
 
 --
--- Name: event_tags_translation_prod event_tags_translation_prod_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_tags_translation_prod event_tags_translation_prod_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY event_tags_translation_prod
+    ADD CONSTRAINT event_tags_translation_prod_pk PRIMARY KEY (id, lang);
+
+
+--
+-- Name: information_tags_translation_prod event_tags_translation_prod_pkey; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_tags_translation_prod
     ADD CONSTRAINT event_tags_translation_prod_pkey PRIMARY KEY (id, lang);
 
 
 --
--- Name: event_translation_prod event_translation_prod_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_topic event_topic_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_translation_prod
+ALTER TABLE ONLY event_topic
+    ADD CONSTRAINT event_topic_pk PRIMARY KEY (id_event, id_topic);
+
+
+--
+-- Name: information_translation_prod event_translation_prod_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_translation_prod
     ADD CONSTRAINT event_translation_prod_pk PRIMARY KEY (id, lang);
+
+
+--
+-- Name: event_user_types event_user_types_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY event_user_types
+    ADD CONSTRAINT event_user_types_pk PRIMARY KEY (id_event, id_user_types);
 
 
 --
@@ -3327,6 +3961,22 @@ ALTER TABLE ONLY individual_intervention_plan_interventions
 
 ALTER TABLE ONLY individual_intervention_plan
     ADD CONSTRAINT individual_intervention_plan_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: information_topic information_topic_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_topic
+    ADD CONSTRAINT information_topic_pk PRIMARY KEY (id_information, id_topic);
+
+
+--
+-- Name: information_user_types information_user_types_pk; Type: CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_user_types
+    ADD CONSTRAINT information_user_types_pk PRIMARY KEY (id_information, id_user_types);
 
 
 --
@@ -3714,35 +4364,75 @@ ALTER TABLE ONLY document
 
 
 --
--- Name: event_category_translation event_category_translation_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_category_translation event_category_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY event_category_translation
-    ADD CONSTRAINT event_category_translation_id_fkey FOREIGN KEY (id) REFERENCES event_category(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_category_translation_fk FOREIGN KEY (id) REFERENCES event_category(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: event_category_translation event_category_translation_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_category_translation event_category_translation_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY event_category_translation
+    ADD CONSTRAINT event_category_translation_fk_1 FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: information_category_translation event_category_translation_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_category_translation
+    ADD CONSTRAINT event_category_translation_id_fkey FOREIGN KEY (id) REFERENCES information_category(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: information_category_translation event_category_translation_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_category_translation
     ADD CONSTRAINT event_category_translation_lang_fkey FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: event_category_translation_prod event_category_translation_prod_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_category_translation_prod event_category_translation_prod_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY event_category_translation_prod
-    ADD CONSTRAINT event_category_translation_prod_id_fkey FOREIGN KEY (id) REFERENCES event_category(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+    ADD CONSTRAINT event_category_translation_prod_fk FOREIGN KEY (id) REFERENCES event_category(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: event_category_translation_prod event_category_translation_prod_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_category_translation_prod event_category_translation_prod_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY event_category_translation_prod
+    ADD CONSTRAINT event_category_translation_prod_fk_1 FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: information_category_translation_prod event_category_translation_prod_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_category_translation_prod
+    ADD CONSTRAINT event_category_translation_prod_id_fkey FOREIGN KEY (id) REFERENCES information_category(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- Name: information_category_translation_prod event_category_translation_prod_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_category_translation_prod
     ADD CONSTRAINT event_category_translation_prod_lang_fkey FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- Name: information event_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information
+    ADD CONSTRAINT event_fk FOREIGN KEY (category) REFERENCES information_category(id);
 
 
 --
@@ -3750,95 +4440,135 @@ ALTER TABLE ONLY event_category_translation_prod
 --
 
 ALTER TABLE ONLY event
-    ADD CONSTRAINT event_fk FOREIGN KEY (category) REFERENCES event_category(id);
+    ADD CONSTRAINT event_fk FOREIGN KEY (id) REFERENCES event_category(id);
 
 
 --
--- Name: event_tags event_tags_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_tags event_tags_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_tags
-    ADD CONSTRAINT event_tags_fk FOREIGN KEY (event_id) REFERENCES event(id);
-
-
---
--- Name: event_tags_translation event_tags_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
---
-
-ALTER TABLE ONLY event_tags_translation
-    ADD CONSTRAINT event_tags_translation_fk FOREIGN KEY (id) REFERENCES event_tags(id);
+ALTER TABLE ONLY information_tags
+    ADD CONSTRAINT event_tags_fk FOREIGN KEY (information_id) REFERENCES information(id);
 
 
 --
--- Name: event_tags_translation event_tags_translation_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_tags_translation event_tags_translation_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_tags_translation
+ALTER TABLE ONLY information_tags_translation
+    ADD CONSTRAINT event_tags_translation_fk FOREIGN KEY (id) REFERENCES information_tags(id);
+
+
+--
+-- Name: information_tags_translation event_tags_translation_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_tags_translation
     ADD CONSTRAINT event_tags_translation_fk_1 FOREIGN KEY (lang) REFERENCES languages(lang);
 
 
 --
--- Name: event_tags_translation_prod event_tags_translation_prod_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: event_tags_translation_prod event_tags_translation_prod_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
 ALTER TABLE ONLY event_tags_translation_prod
-    ADD CONSTRAINT event_tags_translation_prod_id_fkey FOREIGN KEY (id) REFERENCES event_tags(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+    ADD CONSTRAINT event_tags_translation_prod_fk_1 FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: event_tags_translation_prod event_tags_translation_prod_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_tags_translation_prod event_tags_translation_prod_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_tags_translation_prod
+ALTER TABLE ONLY information_tags_translation_prod
+    ADD CONSTRAINT event_tags_translation_prod_id_fkey FOREIGN KEY (id) REFERENCES information_tags(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- Name: information_tags_translation_prod event_tags_translation_prod_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_tags_translation_prod
     ADD CONSTRAINT event_tags_translation_prod_lang_fkey FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
 
 
 --
--- Name: event_topic event_topic_id_process_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_topic event_topic_id_process_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_topic
-    ADD CONSTRAINT event_topic_id_process_fkey FOREIGN KEY (id_event) REFERENCES event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY information_topic
+    ADD CONSTRAINT event_topic_id_process_fkey FOREIGN KEY (id_information) REFERENCES information(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: event_topic event_topic_id_topic_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_topic event_topic_id_topic_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_topic
+ALTER TABLE ONLY information_topic
     ADD CONSTRAINT event_topic_id_topic_fkey FOREIGN KEY (id_topic) REFERENCES topic(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: event_translation event_translation_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_translation event_translation_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_translation
-    ADD CONSTRAINT event_translation_id_fkey FOREIGN KEY (id) REFERENCES event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY information_translation
+    ADD CONSTRAINT event_translation_id_fkey FOREIGN KEY (id) REFERENCES information(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: event_translation event_translation_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_translation event_translation_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_translation
+ALTER TABLE ONLY information_translation
     ADD CONSTRAINT event_translation_lang_fkey FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: event_translation_prod event_translation_prod_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_translation_prod event_translation_prod_id_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_translation_prod
-    ADD CONSTRAINT event_translation_prod_id_fkey FOREIGN KEY (id) REFERENCES event(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+ALTER TABLE ONLY information_translation_prod
+    ADD CONSTRAINT event_translation_prod_id_fkey FOREIGN KEY (id) REFERENCES information(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
 
 
 --
--- Name: event_translation_prod event_translation_prod_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+-- Name: information_translation_prod event_translation_prod_lang_fkey; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
 --
 
-ALTER TABLE ONLY event_translation_prod
+ALTER TABLE ONLY information_translation_prod
     ADD CONSTRAINT event_translation_prod_lang_fkey FOREIGN KEY (lang) REFERENCES languages(lang) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- Name: information_user_types event_user_types_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_user_types
+    ADD CONSTRAINT event_user_types_fk FOREIGN KEY (id_information) REFERENCES information(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_user_types event_user_types_fk; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY event_user_types
+    ADD CONSTRAINT event_user_types_fk FOREIGN KEY (id_event) REFERENCES event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: information_user_types event_user_types_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY information_user_types
+    ADD CONSTRAINT event_user_types_fk_1 FOREIGN KEY (id_user_types) REFERENCES user_types(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_user_types event_user_types_fk_1; Type: FK CONSTRAINT; Schema: micadoapp; Owner: -
+--
+
+ALTER TABLE ONLY event_user_types
+    ADD CONSTRAINT event_user_types_fk_1 FOREIGN KEY (id_user_types) REFERENCES user_types(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
