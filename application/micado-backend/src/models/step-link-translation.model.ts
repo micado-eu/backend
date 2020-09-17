@@ -29,6 +29,14 @@ export class StepLinkTranslation extends Entity {
   })
   id: string;
 
+  @property({
+    type: 'number',
+    required: true,
+    scale: 0,
+    postgresql: {columnName: 'translationState', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+  })
+  translationState: number;
+
   // Define well-known properties here
 
   // Indexer property to allow additional data
