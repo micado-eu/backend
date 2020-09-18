@@ -52,6 +52,12 @@ export class EventTranslation extends Entity {
   })
   translationState: number;
 
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
+
   // Define well-known properties here
 
   // Indexer property to allow additional data
