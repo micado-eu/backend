@@ -21,6 +21,7 @@ import {
   requestBody,
 } from '@loopback/rest';
 import { TopicTranslationRepository } from '../repositories';
+import fs from 'fs';
 
 
 export class SendToTranslationController {
@@ -47,12 +48,10 @@ export class SendToTranslationController {
 
     // here we need to get all the active languages so that this will allows us to cycle to the tables
 
-    /*
-    select array_to_json(array_agg(k)) from (
-    select json_build_object(id,(select row_to_json(t) from (select gl.title, gl.description from glossary_translation as gl where gl.id=glossary_translation.id and gl.lang='it') as t)) as "record" from glossary_translation where lang='it'
-    ) as k
-    
-    */
+
+    let lang = 'en'
+    let query = 'select array_to_json(array_agg(k)) from(select json_build_object(id, (select row_to_json(t) from(select gl.title, gl.description from glossary_translation as gl where gl.id = glossary_translation.id and gl.lang = \'' + lang + '\') as t)) as "record" from glossary_translation where lang = \'' + lang + '\' and "translationState" = 1) as k'
+    this.generateFile('glossary', query, lang)
 
     // for each language we select from all _translation tables the rows that have translationState = 2 and get the data
     // write the data to file in the repository copy in the local FS
@@ -89,5 +88,15 @@ export class SendToTranslationController {
 
 
     return "gioppo";
+  }
+
+  generateFile (filename: String, query: String, lang: String) {
+    this.topicTranslationRepository.dataSource.execute(query)
+      .then(result => {
+        console.log(result[0].array_to_json)
+        fs.writeFile(filename + "." + lang + ".json", JSON.stringify(result[0].array_to_json), (err) => {
+          if (err) console.log(err)
+        })
+      })
   }
 }
