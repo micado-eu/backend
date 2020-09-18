@@ -31,7 +31,6 @@ export class StepLinkTranslation extends Entity {
 
   @property({
     type: 'number',
-    required: true,
     scale: 0,
     postgresql: {columnName: 'translationState', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
