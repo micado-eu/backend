@@ -41,6 +41,8 @@ export class SendToTranslationController {
 
   ): Promise<any> {
 
+    // pull from GITEA
+
     // here we need to update all the rows of the translation tables that has translationStatus = 1 setting it to translationStatus=2
 
     // here we need to get all the active languages so that this will allows us to cycle to the tables
@@ -53,7 +55,11 @@ export class SendToTranslationController {
     */
 
     // for each language we select from all _translation tables the rows that have translationState = 2 and get the data
+    // write the data to file in the repository copy in the local FS
 
+
+
+    // after the cycle and after having saved all the files (and overwritten the previous files) add all to a commit and push to GITEA
 
 
 
