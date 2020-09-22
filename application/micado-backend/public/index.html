@@ -15,7 +15,8 @@
       text-align: center;
     }
 
-    a, a:visited {
+    a,
+    a:visited {
       color: #3f5dff;
     }
 
@@ -23,7 +24,9 @@
       margin-left: 10px;
     }
 
-    a:hover, a:focus, a:active {
+    a:hover,
+    a:focus,
+    a:active {
       color: #001956;
     }
 
@@ -58,22 +61,74 @@
         color: white;
       }
 
-      a, a:visited {
+      a,
+      a:visited {
         color: #4990e2;
       }
 
-      a:hover, a:focus, a:active {
+      a:hover,
+      a:focus,
+      a:active {
         color: #2b78ff;
       }
     }
   </style>
+  <script>
+    /**
+     * Submit the upload form
+     */
+    function setupUploadForm() {
+      const formElem = document.getElementById('uploadForm');
+      formElem.onsubmit = async e => {
+        e.preventDefault();
+
+        const res = await fetch('/files', {
+          method: 'POST',
+          body: new FormData(formElem),
+        });
+
+        const body = await res.json();
+        console.log('Response from upload', body);
+
+        await fetchFiles();
+      };
+    }
+
+    /**
+     * List uploaded files
+     */
+    async function fetchFiles() {
+      const res = await fetch('/files');
+      const files = await res.json();
+      console.log('Response from list', files);
+      const list = files.map(
+        f => `<li><a href="/files/${f}">${f}</a></li>\n`,
+      );
+      document.getElementById('fileList').innerHTML = list.join('');
+    }
+
+    async function init() {
+      setupUploadForm();
+      await fetchFiles();
+    }
+  </script>
 </head>
 
-<body>
+<body onload="init();">
   <div class="info">
     <h1>micado_backend</h1>
     <p>Version 1.0.0</p>
-
+    <div id="upload">
+      <h3>Upload files</h3>
+      <form id="uploadForm">
+        <label for="files">Select files:</label>
+        <input type="file" id="files" name="files" multiple /><br /><br />
+        <label for="note">Note:</label>
+        <input type="text" name="note" id="note" placeholder="Note about the files" />
+        <br /><br />
+        <input type="submit" />
+      </form>
+    </div>
     <h3>OpenAPI spec: <a href="/openapi.json">/openapi.json</a></h3>
     <h3>API Explorer: <a href="/explorer">/explorer</a></h3>
   </div>

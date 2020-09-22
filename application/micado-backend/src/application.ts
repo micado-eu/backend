@@ -1,15 +1,17 @@
-import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import { BootMixin } from '@loopback/boot';
+import { ApplicationConfig } from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
-import {ServiceMixin} from '@loopback/service-proxy';
+import { RepositoryMixin } from '@loopback/repository';
+import { RestApplication } from '@loopback/rest';
+import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
-import {MySequence} from './sequence';
-import {CrudRestComponent} from '@loopback/rest-crud';
+import { MySequence } from './sequence';
+import { CrudRestComponent } from '@loopback/rest-crud';
+import multer from 'multer';
+import { STORAGE_DIRECTORY, FILE_UPLOAD_SERVICE } from './services/file-upload-service.service'
 
 export class MicadoBackendApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -29,6 +31,9 @@ export class MicadoBackendApplication extends BootMixin(
     });
     this.component(RestExplorerComponent);
 
+    // Configure file upload with multer options
+    this.configureFileUpload(options.fileStorageDirectory);
+
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
@@ -40,5 +45,25 @@ export class MicadoBackendApplication extends BootMixin(
       },
     };
     this.component(CrudRestComponent);
+  }
+
+  /**
+ * Configure `multer` options for file upload
+ */
+  protected configureFileUpload (destination?: string) {
+    // Upload files to `dist/.sandbox` by default
+    destination = destination ?? path.join(__dirname, '../.sandbox');
+    this.bind(STORAGE_DIRECTORY).to(destination);
+    const multerOptions: multer.Options = {
+      storage: multer.diskStorage({
+        destination,
+        // Use the original file name as is
+        filename: (req, file, cb) => {
+          cb(null, file.originalname);
+        },
+      }),
+    };
+    // Configure the file upload service with multer options
+    this.configure(FILE_UPLOAD_SERVICE).to(multerOptions);
   }
 }
