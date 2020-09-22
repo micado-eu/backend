@@ -64,14 +64,14 @@ export class EventController {
           schema: getModelSchemaRef(Event, {
             title: 'NewUnpublishedEvent',
             exclude: ['id'],
-            optional: ['published']
+            //optional: ['published']
           }),
         },
       },
     })
     event: Omit<Event, 'id'>,
   ): Promise<Event> {
-    event.published = false
+    //event.published = false
     return this.eventRepository.create(event);
   }
 
@@ -110,7 +110,7 @@ export class EventController {
     return this.eventRepository.find(filter);
   }
 
-  @get('/events/published', {
+ /* @get('/events/published', {
     responses: {
       '200': {
         description: 'Array of Published Event model instances',
@@ -125,11 +125,12 @@ export class EventController {
       },
     },
   })
+  
   async findPublished(
     @param.filter(Event) filter?: Filter<Event>,
   ): Promise<Event[]> {
     return this.eventRepository.findPublished(filter);
-  }
+  }*/
 
   @patch('/events', {
     responses: {
@@ -211,7 +212,7 @@ export class EventController {
     })
     event: Event,
   ): Promise<void> {
-    event.published = false
+    //event.published = false
     await this.eventRepository.updateById(id, event);
   }
 

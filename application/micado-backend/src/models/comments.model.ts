@@ -6,18 +6,6 @@ import {CommentTranslationProd} from './comment-translation-prod.model';
   settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'comments'}}
 })
 export class Comments extends Entity {
-  @property({
-    type: 'boolean',
-    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
-  })
-  published?: boolean;
-
-  @property({
-    type: 'date',
-    jsonSchema: { nullable: true },
-    postgresql: {columnName: 'publicationdate', dataType: 'date', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
-  })
-  publicationdate?: string;
 
   @property({
     type: 'number',

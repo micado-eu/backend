@@ -43,11 +43,11 @@ export class InformationRepository extends DefaultCrudRepository<
     this.registerInclusionResolver('informationUserTypes', this.informationUserTypes.inclusionResolver);
   }
 
-  async findPublished(filter?: Filter<Information>) {
+  /*async findPublished(filter?: Filter<Information>) {
     let combinedFilters = { where: { published: true } }
     if (filter) {
       combinedFilters = { ...filter, ...combinedFilters }
     }
     return await this.find(combinedFilters)
-  }
+  }*/
 }

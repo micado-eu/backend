@@ -25,11 +25,11 @@ export class GlossaryRepository extends DefaultCrudRepository<
     this.registerInclusionResolver('translations', this.translations.inclusionResolver);
   }
 
-  async findPublished(filter?: Filter<Glossary>) {
+  /*async findPublished(filter?: Filter<Glossary>) {
     let combinedFilters = { where: { published: true } }
     if (filter) {
       combinedFilters = { ...filter, ...combinedFilters }
     }
     return await this.find(combinedFilters)
-  }
+  }*/
 }

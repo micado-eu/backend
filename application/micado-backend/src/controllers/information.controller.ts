@@ -64,14 +64,14 @@ export class InformationController {
           schema: getModelSchemaRef(Information, {
             title: 'NewUnpublishedInformation',
             exclude: ['id'],
-            optional: ['published']
+            //optional: ['published']
           }),
         },
       },
     })
     information: Omit<Information, 'id'>,
   ): Promise<Information> {
-    information.published = false
+    //information.published = false
     return this.informationRepository.create(information);
   }
 
@@ -110,7 +110,7 @@ export class InformationController {
     return this.informationRepository.find(filter);
   }
 
-  @get('/information/published', {
+  /*@get('/information/published', {
     responses: {
       '200': {
         description: 'Array of Published Information model instances',
@@ -129,7 +129,7 @@ export class InformationController {
     @param.filter(Information) filter?: Filter<Information>,
   ): Promise<Information[]> {
     return this.informationRepository.findPublished(filter);
-  }
+  }*/
 
   @patch('/information', {
     responses: {
@@ -211,7 +211,7 @@ export class InformationController {
     })
     information: Information,
   ): Promise<void> {
-    information.published = false
+    //information.published = false
     await this.informationRepository.updateById(id, information);
   }
 

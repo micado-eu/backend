@@ -54,17 +54,6 @@ export class DocumentType extends Entity {
   validityDuration?: number;
 
 
-  @property({
-    type: 'boolean'
-  })
-  published?: boolean;
-
-  @property({
-    type: 'date',
-    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  publicationDate?: string;
-
   @hasMany(() => DocumentTypeTranslation, { keyTo: 'id' })
   translations: DocumentTypeTranslation[];
 

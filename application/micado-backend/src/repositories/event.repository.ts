@@ -44,11 +44,11 @@ export class EventRepository extends DefaultCrudRepository<
     this.registerInclusionResolver('eventUserTypes', this.eventUserTypes.inclusionResolver);
   }
 
-  async findPublished(filter?: Filter<Event>) {
+ /* async findPublished(filter?: Filter<Event>) {
     let combinedFilters = { where: { published: true } }
     if (filter) {
       combinedFilters = { ...filter, ...combinedFilters }
     }
     return await this.find(combinedFilters)
-  }
+  }*/
 }

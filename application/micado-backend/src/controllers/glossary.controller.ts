@@ -84,7 +84,7 @@ export class GlossaryController {
     return this.glossaryRepository.find(filter);
   }
 
-  @get('/glossaries/published', {
+ /* @get('/glossaries/published', {
     responses: {
       '200': {
         description: 'Array of Published Glossary model instances',
@@ -103,7 +103,7 @@ export class GlossaryController {
     @param.filter(Glossary) filter?: Filter<Glossary>,
   ): Promise<Glossary[]> {
     return this.glossaryRepository.findPublished(filter);
-  }
+  }*/
 
   @patch('/glossaries', {
     responses: {

@@ -30,19 +30,6 @@ export class InterventionTypes extends Entity {
   })
   categoryType: number;
 
-
-  @property({
-    type: 'boolean'
-  })
-  published?: boolean;
-
-  @property({
-    type: 'date',
-    jsonSchema: { nullable: true },
-    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  publicationDate?: string;
-
   @hasMany(() => InterventionTypesTranslation, { keyTo: 'id' })
   translations: InterventionTypesTranslation[];
 

@@ -25,20 +25,6 @@ export class Information extends Entity {
   link?: string;
 
   @property({
-    type: 'boolean',
-    required: true,
-    postgresql: { columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO' },
-  })
-  published: boolean;
-
-  @property({
-    type: 'date',
-    jsonSchema: { nullable: true },
-    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  publicationDate?: string;
-
-  @property({
     type: 'number',
     required: false,
     scale: 0,

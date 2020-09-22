@@ -47,21 +47,12 @@ export class Glossary extends Entity {
   translationDate?: string;
 */
 
-  @property({
-    type: 'boolean'
-  })
-  published?: boolean;
 
   @hasMany(() => GlossaryTranslation, {keyTo: 'id'})
   translations: GlossaryTranslation[];
 
   @hasMany(() => GlossaryTranslationProd, {keyTo: 'id'})
   translations_prod: GlossaryTranslationProd[];
-  @property({
-    type: 'date',
-    postgresql: { columnName: 'publication_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
-  })
-  publicationDate?: string;
 
   // Define well-known properties here
 
