@@ -23,6 +23,7 @@ import {
 import { TopicTranslationRepository } from '../repositories';
 import fs from 'fs';
 
+const simpleGit = require('simple-git');
 
 
 var config = {
@@ -32,15 +33,13 @@ var config = {
   TRANSLATIONS_DIR: "/tmp/translations"
 }
 
-if (!config.MICADO_BACKEND_URL) {
-  console.log('MICADO_BACKEND_URL must be set');
-  process.exit(1)
-}
 if (!config.MICADO_GIT_URL) {
   console.log('MICADO_GIT_URL must be set');
   process.exit(1)
 }
 
+
+const git = simpleGit(config.TRANSLATIONS_DIR);
 
 
 export class SendToTranslationController {
@@ -61,7 +60,29 @@ export class SendToTranslationController {
 
   ): Promise<any> {
 
-    // pull from GITEA
+    // Initial git setup
+    await git
+      .init()
+      .addRemote('origin', config.MICADO_GIT_URL) 
+      .commit('Initial Commit', {'--allow-empty': null})
+      .push(['-u', 'origin', 'master'])
+      .catch(() => {
+        // We silently fail when the remote is already set.
+        // We cant to run all of the above commands only the first time to make sure all is setup well.
+      })
+  
+  
+    // Sync from git remote
+    console.log("Pulling remote changes...")
+  
+    await git
+      .pull('origin', 'master', {'--no-edit': null})
+      .catch((err: Error) => {
+        console.log(JSON.stringify(err, ["message", "arguments", "type", "name"]))
+        process.exit(1)
+      });
+
+
 
     // here we need to update all the rows of the translation tables that has translationStatus = 1 setting it to translationStatus=2
 
@@ -71,7 +92,7 @@ export class SendToTranslationController {
     let lang = 'en'
     let model = 'glossery'
     
-    let records = this.getTranslationForModelAndLang(model, lang)
+    let records = await this.getTranslationForModelAndLang(model, lang)
     
     let filename = this.buildFileName(model, lang)
     
@@ -85,7 +106,15 @@ export class SendToTranslationController {
 
 
     // after the cycle and after having saved all the files (and overwritten the previous files) add all to a commit and push to GITEA
-
+    console.log(` > Committing and pushing language file`)
+    
+      git
+        .add(filename)
+        .commit(`Updated translation file: ${filename}`)
+        .push()
+        .catch((err: Error) => {
+          console.log(JSON.stringify(err, ["message", "arguments", "type", "name"]))
+        });
 
 
 
@@ -113,7 +142,7 @@ export class SendToTranslationController {
 
 
 
-    return "gioppo";
+    return "koekestad";
   }
 
   
@@ -124,7 +153,7 @@ export class SendToTranslationController {
    * @param model 
    * @param lang 
    */
-  getTranslationForModelAndLang(model: String, lang: String) {
+  async getTranslationForModelAndLang(model: String, lang: String) {
     let query = 'select array_to_json(array_agg(k)) from(select json_build_object(id, (select row_to_json(t) from(select gl.title, gl.description from glossary_translation as gl where gl.id = glossary_translation.id and gl.lang = \'$1\') as t)) as "record" from glossary_translation where lang = \'$1\' and "translationState" = 1) as k'
     
     let recordsForLang = {}
@@ -166,6 +195,6 @@ export class SendToTranslationController {
    */
   fileToJSon(filename: String) {
     let raw_data = fs.readFileSync(`${config.TRANSLATIONS_DIR}/${filename}`);
-    return JSON.parse(raw_data)
+    return JSON.parse(raw_data.toString())
   }
 }
