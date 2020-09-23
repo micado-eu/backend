@@ -41,7 +41,7 @@ export class Event extends Entity {
   @property({
     type: 'date',
     jsonSchema: { nullable: true },
-    postgresql: { columnName: 'start_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'end_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   endDate?: string;
 
