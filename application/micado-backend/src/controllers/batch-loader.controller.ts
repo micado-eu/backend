@@ -144,10 +144,6 @@ export class BatchLoaderController {
                     })
                 }
               });
-              this.glossaryTranslationRepository.create(element)
-                .then(newTranslation => {
-                  console.log(newTranslation)
-                })
             })
 
         });
