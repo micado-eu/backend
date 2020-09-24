@@ -4,6 +4,16 @@ import {Entity, model, property} from '@loopback/repository';
   settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'ratings'}}
 })
 export class Ratings extends Entity {
+   @property({
+    type: 'number',
+    id: 1,
+    required: false,
+    generated: true,
+    scale: 0,
+    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+  })
+  id: number;
+
   @property({
     type: 'number',
     scale: 0,
@@ -44,7 +54,7 @@ export class Ratings extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<Ratings>) {
     super(data);
