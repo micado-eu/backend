@@ -87,3 +87,4 @@ export * from './features-flags-features-flags-translation-prod.controller';
 export * from './glossary-glossary-translation-prod.controller';
 export * from './send-to-translation.controller';
 export * from './batch-loader.controller';
+export * from './ratings.controller';
