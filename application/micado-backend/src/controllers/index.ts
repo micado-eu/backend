@@ -88,3 +88,4 @@ export * from './glossary-glossary-translation-prod.controller';
 export * from './send-to-translation.controller';
 export * from './batch-loader.controller';
 export * from './ratings.controller';
+export * from './migrant-app-config.controller';
