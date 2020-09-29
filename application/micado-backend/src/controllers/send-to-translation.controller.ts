@@ -21,6 +21,9 @@ import {
   requestBody,
 } from '@loopback/rest';
 import { TopicTranslationRepository } from '../repositories';
+import { LanguagesRepository } from '../repositories';
+import { SettingsRepository } from '../repositories';
+
 import fs from 'fs';
 
 const simpleGit = require('simple-git');
@@ -30,7 +33,7 @@ var config = {
   MICADO_BACKEND_URL: process.env.MICADO_BACKEND_URL,
   MICADO_GIT_URL: process.env.MICADO_GIT_URL,
   MICADO_GIT_PASSWORD: process.env.MICADO_GIT_PASSWORD,
-  TRANSLATIONS_DIR: "/tmp"
+  TRANSLATIONS_DIR: "git"
 }
 
 if (!config.MICADO_GIT_URL) {
@@ -42,9 +45,13 @@ if (!config.MICADO_GIT_URL) {
 const git = simpleGit(config.TRANSLATIONS_DIR);
 
 
+
 export class SendToTranslationController {
   constructor(
     @repository(TopicTranslationRepository) public topicTranslationRepository: TopicTranslationRepository,
+    @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
+    @repository(SettingsRepository) protected settingsRepository: SettingsRepository,
+
   ) { }
 
 
@@ -59,29 +66,54 @@ export class SendToTranslationController {
   async sendtotranslation (
 
   ): Promise<any> {
+    console.log(config.MICADO_GIT_URL)
+
+    let settings = await this.settingsRepository.find({});
+    //   let lang_filter = { where: { active: true } }
+    let languages = await this.languagesRepository.find({ where: { active: true } });
 
     // Initial git setup
+    /*
     await git
       .init()
-      .addRemote('origin', config.MICADO_GIT_URL)
+//      .addRemote('origin', config.MICADO_GIT_URL)
+      .addRemote('origin', 'https://micadoadmin:gitea@git.micadoproject.eu/micadoadmin/backend')
       .commit('Initial Commit', { '--allow-empty': null })
       .push(['-u', 'origin', 'master'])
       .catch(() => {
         // We silently fail when the remote is already set.
         // We cant to run all of the above commands only the first time to make sure all is setup well.
       })
+*/
+    await git.checkIsRepo()
+      .then((isRepo: any) => {
+        console.log("cheching if is a repo")
+        console.log(isRepo)
+        if (!isRepo) {
+          return git.init()
+            .addRemote('origin', 'https://micadoadmin:gitea@git.micadoproject.eu/micadoadmin/backend')
+            .commit('Initial Commit', { '--allow-empty': null })
+            .push(['-u', 'origin', 'master'])
+            .catch(() => {
+              // We silently fail when the remote is already set.
+              // We cant to run all of the above commands only the first time to make sure all is setup well.
+              console.log("error in init")
+            })
+        }
+      })
+    //      .then(() => git.fetch());
 
 
     // Sync from git remote
     console.log("Pulling remote changes...")
-
-    await git
-      .pull('origin', 'master', { '--no-edit': null })
-      .catch((err: Error) => {
-        console.log(JSON.stringify(err, ["message", "arguments", "type", "name"]))
-        process.exit(1)
-      });
-
+    /*
+        await git
+          .pull('origin', 'master', { '--no-edit': null })
+          .catch((err: Error) => {
+            console.log(JSON.stringify(err, ["message", "arguments", "type", "name"]))
+            process.exit(1)
+          });
+    */
 
 
     // here we need to update all the rows of the translation tables that has translationStatus = 1 setting it to translationStatus=2
@@ -89,14 +121,31 @@ export class SendToTranslationController {
     // here we need to get all the active languages so that this will allows us to cycle to the tables
 
 
-    let lang = 'en'
-    let model = 'glossery'
+    //   let lang = 'en'
 
-    let records = await this.getTranslationForModelAndLang(model, lang)
+    // TODO fix Promises that do not work properly
 
-    let filename = this.buildFileName(model, lang)
+    let model = 'glossary'
+    let files: String[] = []
 
-    this.jsonToFile(records, filename)
+    languages.forEach((alang: any) => {
+      console.log("cycle in lang: " + alang.lang)
+      this.getTranslationForModelAndLang(model, alang.lang)
+        .then(records => {
+          let recordsForLang = records[0].array_to_json
+          console.log("managing a language")
+          console.log(recordsForLang)
+          let filename = this.buildFileName(model, alang.lang)
+          console.log(filename)
+          files.push(filename)
+          this.jsonToFile(recordsForLang, filename)
+        })
+      console.log("after managing lang: " + alang.lang)
+    })
+
+
+
+
 
 
 
@@ -109,8 +158,8 @@ export class SendToTranslationController {
     console.log(` > Committing and pushing language file`)
 
     git
-      .add(filename)
-      .commit(`Updated translation file: ${filename}`)
+      .add(files)
+      .commit(`Updated translation file`)
       .push()
       .catch((err: Error) => {
         console.log(JSON.stringify(err, ["message", "arguments", "type", "name"]))
@@ -153,16 +202,19 @@ export class SendToTranslationController {
    * @param model 
    * @param lang 
    */
-  async getTranslationForModelAndLang (model: String, lang: String) {
-    let query = 'select array_to_json(array_agg(k)) from(select json_build_object(id, (select row_to_json(t) from(select gl.title, gl.description from glossary_translation as gl where gl.id = glossary_translation.id and gl.lang = \'$1\') as t)) as "record" from glossary_translation where lang = \'$1\' and "translationState" = 1) as k'
+  getTranslationForModelAndLang (model: String, lang: String): Promise<any> {
+    let query = 'select array_to_json(array_agg(k)) from(select json_build_object(id, (select row_to_json(t) from(select gl.title, gl.description from glossary_translation as gl where gl.id = glossary_translation.id and gl.lang = \'' + lang + '\') as t)) as "record" from glossary_translation where lang = \'' + lang + '\' and "translationState" = 1) as k'
 
-    let recordsForLang = {}
+    //   let recordsForLang = {}
 
-    await this.topicTranslationRepository.dataSource.execute(query, [lang]).then(result => {
+    return this.topicTranslationRepository.dataSource.execute(query)
+    /*.then(result => {
       recordsForLang = result[0].array_to_json
-    })
-
-    return recordsForLang
+      return new Promise(function (resolve, reject) {
+        resolve(recordsForLang)
+      })
+      
+    })*/
   }
 
 
