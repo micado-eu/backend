@@ -8,11 +8,15 @@ services:
       - type: volume
         source: backend
         target: /code
+    tmpfs:
+      /tmp/translations
     ports:
      - "3000:3000"
 #     - "8080:8080"
 #    command: /bin/sh -c "cd backend && npm start"
     command: /bin/sh -c "bash"
+    environment:
+      - MICADO_GIT_URL=http://test.org/
     networks:
       - micado_net
   micado_db:

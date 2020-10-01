@@ -76,7 +76,7 @@ export class BatchLoaderController {
           let csv_options: any = { trim: true }
           fs.createReadStream('/code/micado-backend/.sandbox' + "/" + uploadedPayload.files[0].originalname)
             .pipe(csv(csv_options))
-            .on('data', (data) => results.push(data))
+            .on('data', (data: any) => results.push(data))
             .on('end', () => {
               console.log(results);
               this.loadData('glossary', results, def_lang.value, languages)
