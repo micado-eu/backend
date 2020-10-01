@@ -30,6 +30,13 @@ export class InterventionTypes extends Entity {
   })
   categoryType: number;
 
+  @property({
+    type: 'string',
+    length: 100,
+    postgresql: {columnName: 'external_id', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  externalId?: string;
+
   @hasMany(() => InterventionTypesTranslation, { keyTo: 'id' })
   translations: InterventionTypesTranslation[];
 

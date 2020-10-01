@@ -17,8 +17,8 @@ export class StepTranslationProd extends Entity {
 
   @property({
     type: 'string',
-    length: 25,
-    postgresql: {columnName: 'step', dataType: 'character varying', dataLength: 25, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    length: 50,
+    postgresql: {columnName: 'step', dataType: 'character varying', dataLength: 50, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   step?: string;
 
