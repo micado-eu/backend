@@ -66,6 +66,18 @@ psql -U $WSO2_API_USER -d $POSTGRES_DB -a -q -f /docker-entrypoint-initdb.d/api_
 #psql -U $WSO2_IDENTITY_USER -d $POSTGRES_DB -a -q -f /docker-entrypoint-initdb.d/09_wso2_is_bpel_postgresql.sql.txt
 #psql -U $WSO2_IDENTITY_USER -d $POSTGRES_DB -a -q -f /docker-entrypoint-initdb.d/11_wso2_is_metric_postgresql.sql.txt
 
+echo "\nCreating GITEA components\n"
+psql -c "CREATE USER $GITEA_DB_USER WITH ENCRYPTED PASSWORD '$GITEA_DB_PWD';"
+psql -c "CREATE SCHEMA $GITEA_SCHEMA;"
+psql -c "GRANT CONNECT ON DATABASE $POSTGRES_DB TO $GITEA_DB_USER;"
+psql -c "GRANT USAGE ON SCHEMA $GITEA_SCHEMA TO $GITEA_DB_USER;"
+psql -c "GRANT CREATE ON SCHEMA $GITEA_SCHEMA TO $GITEA_DB_USER;"
+psql -c "ALTER ROLE $GITEA_DB_USER IN DATABASE $POSTGRES_DB SET search_path = $GITEA_SCHEMA;"
+psql -c "ALTER DEFAULT PRIVILEGES IN SCHEMA $GITEA_SCHEMA GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO $GITEA_DB_USER;"
+psql -c "ALTER DEFAULT PRIVILEGES IN SCHEMA $GITEA_SCHEMA GRANT USAGE ON SEQUENCES TO $GITEA_DB_USER;"
+
+echo "\nCreated GITEA components, now adding tables\n"
+
 
 echo "\nCreating MICADO apps components\n"
 psql -c "CREATE USER $MICADO_DB_USER WITH ENCRYPTED PASSWORD '$MICADO_DB_PWD';"

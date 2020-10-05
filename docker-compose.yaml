@@ -19,6 +19,7 @@ services:
       - MICADO_GIT_URL=http://test.org/
     networks:
       - micado_net
+
   micado_db:
     image: mdillon/postgis:11-alpine
     env_file:
@@ -37,12 +38,41 @@ services:
       - "com.centurylinklabs.watchtower.enable=false"
     networks:
       - micado_net
+
+  git:
+    image: gitea/gitea:1.12.2
+    networks:
+      - micado_net
+    ports:
+      - "3001:3000"
+      - "222:22"
+    env_file:
+      - prod.env
+    environment:
+      APP_NAME: "micado git"
+      RUN_MODE: prod
+      INSTALL_LOCK: "true"
+      DB_TYPE: postgres
+      DB_HOST: micado_db:5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${GITEA_DB_USER}
+      DB_PASSWD: ${GITEA_DB_PWD}
+      GIT_HOSTNAME: ${GIT_HOSTNAME}
+      SECRET_KEY: ${GIT_SECRET_KEY}
+      DISABLE_REGISTRATION: "true"
+    volumes:
+      - git_data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+#    command: "sh -c '/bin/s6-svscan /etc/s6 && /app/gitea/gitea admin create-user --name=gitea --password=gitea --email=test@xx.com --admin --must-change-password=false'"
+
   testnode:
     image: micadoproject/backend
     ports:
       - "3001:3000"
     networks:
       - micado_net
+
 volumes:
   postgres_data:
     driver: local
@@ -63,6 +93,11 @@ volumes:
     driver_opts:
       type: none
       device: $PWD/application
+      o: bind
+  git_data:
+    driver_opts:
+      type: none
+      device: $PWD/git_data
       o: bind
 
            
