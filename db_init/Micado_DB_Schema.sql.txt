@@ -4543,7 +4543,7 @@ ALTER TABLE ONLY information_category_translation_prod
 --
 
 ALTER TABLE ONLY event
-    ADD CONSTRAINT event_fk FOREIGN KEY (id) REFERENCES event_category(id);
+    ADD CONSTRAINT event_fk FOREIGN KEY (category) REFERENCES event_category(id);
 
 
 --
