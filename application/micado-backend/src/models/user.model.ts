@@ -54,7 +54,7 @@ export class User extends Entity {
   })
   umTenantId?: number;
 
-  @hasMany(() => UserAttribute, {keyTo: 'umId'})
+  @hasMany(() => UserAttribute, {keyTo: 'umUserId'})
   attributes: UserAttribute[];
 
   @hasMany(() => IndividualInterventionPlan)
