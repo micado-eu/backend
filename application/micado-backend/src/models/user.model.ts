@@ -61,7 +61,7 @@ export class User extends Entity {
   @hasMany(() => IndividualInterventionPlan)
   interventionPlans: IndividualInterventionPlan[];
 
-  @hasOne(() => Tenant, {keyTo: 'umId'})
+  @hasOne(() => Tenant, {keyTo: 'umId', keyFrom: 'umTenantId'})
   tenant: Tenant;
   // Define well-known properties here
 
