@@ -4,11 +4,6 @@
   "baseURL": "https://identity.micadoproject.eu",
   "debug": true,
   "options": {
-    "headers": {
-      "accept": "*/*",
-      "content-type": "application/json",
-      "Authorization": "Basic YWRtaW46bWljYWRvYWRtMjAyMA=="
-    },
     "strictSSL": false
   },
   "crud": false,
@@ -16,13 +11,18 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://identity.micadoproject.eu/api/identity/consent-mgt/v1.0/consents",
+        "url": "https://identity.micadoproject.eu/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Basic {auth}"
+        },
         "query": {
           "limit": 10,
           "offset": 0,
-          "spTenantDomain": "carbon.super",
-          "piiPrincipalId": "newgioppo",
-          "dummy": "{tenant}{principal}"
+          "spTenantDomain": "{tenant}",
+          "piiPrincipalId": "{principal}",
+          "state": "ACTIVE",
         },
         "options": {
           "strictSSL": false,
@@ -32,7 +32,29 @@
       "functions": {
         "consent": [
           "tenant",
-          "principal"
+          "principal",
+          "auth"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "https://identity.micadoproject.eu/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents/receipts/{receipt}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Basic {auth}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "receipt": [
+          "receipt",
+          "auth"
         ]
       }
     }
