@@ -22,7 +22,7 @@
           "offset": 0,
           "spTenantDomain": "{tenant}",
           "piiPrincipalId": "{principal}",
-          "state": "ACTIVE",
+          "state": "ACTIVE"
         },
         "options": {
           "strictSSL": false,

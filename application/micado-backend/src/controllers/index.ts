@@ -91,3 +91,5 @@ export * from './send-to-translation.controller';
 export * from './batch-loader.controller';
 export * from './ratings.controller';
 export * from './migrant-app-config.controller';
+export * from './tenant.controller';
+export * from './user-tenant.controller';
