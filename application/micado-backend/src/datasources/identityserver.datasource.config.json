@@ -40,7 +40,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://identity.micadoproject.eu/t/migrants.micado.eu:9443/api/identity/consent-mgt/v1.0/consents/receipts/{receipt}",
+        "url": "https://identity.micadoproject.eu:9443/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents/receipts/{receipt}",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
