@@ -25,7 +25,8 @@ export class IdentityproxyController {
     return this.identityService.consent(
       tenant,
       principal,
-      "YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
+      "YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA=",
+      "identity.micadoproject.eu:9443"
     );
 
   }
@@ -39,7 +40,8 @@ export class IdentityproxyController {
     console.log(receipt)
     return this.identityService.receipt(
       receipt,
-      "YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
+      "YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA=",
+      "identity.micadoproject.eu:9443"
     );
 
   }

@@ -8,8 +8,8 @@ export interface IdentityService {
   // this is where you define the Node.js methods that will be
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.
-  consent (tenant: String, principal: String, auth: String): Promise<String>;
-  receipt (receipt: String, auth: String): Promise<any>;
+  consent (tenant: String, principal: String, auth: String, baseurl: String): Promise<String>;
+  receipt (receipt: String, auth: String, baseurl: String): Promise<any>;
 }
 
 export class IdentityProvider implements Provider<IdentityService> {

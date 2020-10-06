@@ -11,7 +11,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://identity.micadoproject.eu:9443/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents",
+        "url": "https://{baseurl}/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -33,14 +33,15 @@
         "consent": [
           "tenant",
           "principal",
-          "auth"
+          "auth",
+          "baseurl"
         ]
       }
     },
     {
       "template": {
         "method": "GET",
-        "url": "https://identity.micadoproject.eu:9443/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents/receipts/{receipt}",
+        "url": "https://{baseurl}/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents/receipts/{receipt}",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -54,7 +55,8 @@
       "functions": {
         "receipt": [
           "receipt",
-          "auth"
+          "auth",
+          "baseurl"
         ]
       }
     }
