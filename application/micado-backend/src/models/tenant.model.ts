@@ -40,12 +40,7 @@ export class Tenant extends Entity {
   })
   umCreatedDate?: string;
 
-  @property({
-    type: 'string',
-    scale: 0,
-    postgresql: { columnName: 'um_user_config', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES' },
-  })
-  umUserConfig?: number;
+
 
  
   // Define well-known properties here
