@@ -93,3 +93,4 @@ export * from './ratings.controller';
 export * from './migrant-app-config.controller';
 export * from './tenant.controller';
 export * from './user-tenant.controller';
+export * from './active-features.controller';
