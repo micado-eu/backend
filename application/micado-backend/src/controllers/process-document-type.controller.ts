@@ -18,7 +18,7 @@ export class ProcessDocumentTypeController {
     public processRepository: ProcessRepository,
   ) { }
 
-  @get('/processes/{id}/document-type', {
+ /* @get('/processes/{id}/document-type', {
     responses: {
       '200': {
         description: 'DocumentType belonging to Process',
@@ -34,5 +34,5 @@ export class ProcessDocumentTypeController {
     @param.path.number('id') id: typeof Process.prototype.id,
   ): Promise<DocumentType> {
     return this.processRepository.process_document(id);
-  }
+  }*/
 }

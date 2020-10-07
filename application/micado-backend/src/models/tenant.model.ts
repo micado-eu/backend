@@ -1,53 +1,51 @@
-import { Entity, model, property, hasMany} from '@loopback/repository';
-
+import {Entity, model, property} from '@loopback/repository';
 
 @model({
-  settings: { idInjection: false, postgresql: { schema: 'wso2_shared', table: 'um_tenant' } }
+  settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'tenant'}}
 })
 export class Tenant extends Entity {
   @property({
     type: 'number',
+    required: true,
     scale: 0,
-    id: true,
-    postgresql: { columnName: 'um_id', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
+    id: 1,
+    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
-  umId?: number;
+  id: number;
 
   @property({
     type: 'string',
-    length: 255,
-    postgresql: { columnName: 'um_domain_name', dataType: 'character varying', dataLength: 255, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    length: 50,
+    postgresql: {columnName: 'name', dataType: 'character varying', dataLength: 50, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
-  umDomainName?: string;
+  name?: string;
 
   @property({
     type: 'string',
-    length: 255,
-    postgresql: { columnName: 'um_email', dataType: 'character varying', dataLength: 255, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    length: 70,
+    postgresql: {columnName: 'link', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
-  umEmail?: string;
-
+  link?: string;
 
   @property({
-    type: 'boolean',
-    postgresql: { columnName: 'um_active', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    type: 'string',
+    length: 100,
+    postgresql: {columnName: 'email', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
-  umActive?: boolean;
+  email?: string;
 
   @property({
-    type: 'date',
-    postgresql: { columnName: 'um_created_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    type: 'string',
+    length: 100,
+    postgresql: {columnName: 'address', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
-  umCreatedDate?: string;
+  address?: string;
 
-
-
- 
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
- // [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<Tenant>) {
     super(data);

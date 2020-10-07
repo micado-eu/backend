@@ -2,6 +2,7 @@ import { Entity, model, property, hasMany } from '@loopback/repository';
 import { DocumentTypeTranslation } from './document-type-translation.model'
 import { DocumentTypePicture } from './document-type-picture.model';
 import {DocumentTypeTranslationProd} from './document-type-translation-prod.model';
+import {ProcessProducedDocuments} from './process-produced-documents.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'document_type' } }
@@ -62,6 +63,9 @@ export class DocumentType extends Entity {
 
   @hasMany(() => DocumentTypeTranslationProd, {keyTo: 'id'})
   translations_prod: DocumentTypeTranslationProd[];
+
+  @hasMany(() => ProcessProducedDocuments, {keyTo: 'idDocument'})
+  generatedBy: ProcessProducedDocuments[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

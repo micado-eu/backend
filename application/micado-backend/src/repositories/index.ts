@@ -75,4 +75,6 @@ export * from './features-flags-translation-prod.repository';
 export * from './glossary-translation-prod.repository';
 export * from './ratings.repository';
 export * from './migrant-app-config.repository';
+export * from './um_tenant.repository';
 export * from './tenant.repository';
+export * from './process-produced-documents.repository';

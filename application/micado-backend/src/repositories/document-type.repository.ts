@@ -1,10 +1,11 @@
 import {DefaultCrudRepository, repository, HasManyRepositoryFactory} from '@loopback/repository';
-import {DocumentType, DocumentTypeRelations, DocumentTypeTranslation, DocumentTypePicture, DocumentTypeTranslationProd} from '../models';
+import {DocumentType, DocumentTypeRelations, DocumentTypeTranslation, DocumentTypePicture, DocumentTypeTranslationProd, ProcessProducedDocuments} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject, Getter} from '@loopback/core';
 import {DocumentTypeTranslationRepository} from './document-type-translation.repository';
 import {DocumentTypePictureRepository} from './document-type-picture.repository';
 import {DocumentTypeTranslationProdRepository} from './document-type-translation-prod.repository';
+import {ProcessProducedDocumentsRepository} from './process-produced-documents.repository';
 
 export class DocumentTypeRepository extends DefaultCrudRepository<
   DocumentType,
@@ -18,10 +19,14 @@ export class DocumentTypeRepository extends DefaultCrudRepository<
 
   public readonly translations_prod: HasManyRepositoryFactory<DocumentTypeTranslationProd, typeof DocumentType.prototype.id>;
 
+  public readonly generatedBy: HasManyRepositoryFactory<ProcessProducedDocuments, typeof DocumentType.prototype.id>;
+
   constructor(
-    @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('DocumentTypeTranslationRepository') protected documentTypeTranslationRepositoryGetter: Getter<DocumentTypeTranslationRepository>, @repository.getter('DocumentTypePictureRepository') protected documentTypePictureRepositoryGetter: Getter<DocumentTypePictureRepository>, @repository.getter('DocumentTypeTranslationProdRepository') protected documentTypeTranslationProdRepositoryGetter: Getter<DocumentTypeTranslationProdRepository>,
+    @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('DocumentTypeTranslationRepository') protected documentTypeTranslationRepositoryGetter: Getter<DocumentTypeTranslationRepository>, @repository.getter('DocumentTypePictureRepository') protected documentTypePictureRepositoryGetter: Getter<DocumentTypePictureRepository>, @repository.getter('DocumentTypeTranslationProdRepository') protected documentTypeTranslationProdRepositoryGetter: Getter<DocumentTypeTranslationProdRepository>, @repository.getter('ProcessProducedDocumentsRepository') protected processProducedDocumentsRepositoryGetter: Getter<ProcessProducedDocumentsRepository>,
   ) {
     super(DocumentType, dataSource);
+    this.generatedBy = this.createHasManyRepositoryFactoryFor('generatedBy', processProducedDocumentsRepositoryGetter,);
+    this.registerInclusionResolver('generatedBy', this.generatedBy.inclusionResolver);
     this.translations_prod = this.createHasManyRepositoryFactoryFor('translations_prod', documentTypeTranslationProdRepositoryGetter,);
     this.registerInclusionResolver('translations_prod', this.translations_prod.inclusionResolver);
     this.pictures = this.createHasManyRepositoryFactoryFor('pictures', documentTypePictureRepositoryGetter,);
