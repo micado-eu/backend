@@ -28,6 +28,7 @@ export class Process extends Entity {
     postgresql: {columnName: 'link', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   link?: string;
+  
 
   @hasMany(() => ProcessTranslation, {keyTo: 'id'})
   translations: ProcessTranslation[];
