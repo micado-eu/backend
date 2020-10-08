@@ -1,8 +1,8 @@
 {
   "name": "identityTenantDS",
   "connector": "soap",
-  "url": "https://identity.micadoproject.eu/services/TenantMgtAdminService",
-  "wsdl": "https://identity.micadoproject.eu/services/TenantMgtAdminService?wsdl",
+  "url": "https://identity.micadoproject.eu:9443/services/TenantMgtAdminService",
+  "wsdl": "https://identity.micadoproject.eu:9443/services/TenantMgtAdminService?wsdl",
   "remotingEnabled": true,
   "operations": {
     "addTenant": {
