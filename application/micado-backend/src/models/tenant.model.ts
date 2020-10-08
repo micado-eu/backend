@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
+import {UmTenant} from './um-tenant.model';
 
 @model({
   settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'tenant'}}
@@ -41,6 +42,8 @@ export class Tenant extends Entity {
   })
   address?: string;
 
+  @hasOne(() => UmTenant, {keyTo: 'umId'})
+  tenantData: UmTenant;
   // Define well-known properties here
 
   // Indexer property to allow additional data

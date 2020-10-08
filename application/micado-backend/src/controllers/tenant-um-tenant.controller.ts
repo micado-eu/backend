@@ -16,20 +16,20 @@ import {
   requestBody,
 } from '@loopback/rest';
 import {
-  User,
+  Tenant,
   UmTenant,
 } from '../models';
-import {UserRepository} from '../repositories';
+import {TenantRepository} from '../repositories';
 
-export class UserTenantController {
+export class TenantUmTenantController {
   constructor(
-    @repository(UserRepository) protected userRepository: UserRepository,
+    @repository(TenantRepository) protected tenantRepository: TenantRepository,
   ) { }
 
-  @get('/users/{id}/um_tenant', {
+  @get('/tenants/{id}/um-tenant', {
     responses: {
       '200': {
-        description: 'User has one Tenant',
+        description: 'Tenant has one UmTenant',
         content: {
           'application/json': {
             schema: getModelSchemaRef(UmTenant),
@@ -42,38 +42,38 @@ export class UserTenantController {
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<UmTenant>,
   ): Promise<UmTenant> {
-    return this.userRepository.tenant(id).get(filter);
+    return this.tenantRepository.tenantData(id).get(filter);
   }
 
-  @post('/users/{id}/um_tenant', {
+  @post('/tenants/{id}/um-tenant', {
     responses: {
       '200': {
-        description: 'User model instance',
+        description: 'Tenant model instance',
         content: {'application/json': {schema: getModelSchemaRef(UmTenant)}},
       },
     },
   })
   async create(
-    @param.path.number('id') id: typeof User.prototype.umId,
+    @param.path.number('id') id: typeof Tenant.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(UmTenant, {
-            title: 'NewTenantInUser',
+            title: 'NewUmTenantInTenant',
             exclude: ['umId'],
             optional: ['umId']
           }),
         },
       },
-    }) tenant: Omit<UmTenant, 'umId'>,
+    }) umTenant: Omit<UmTenant, 'umId'>,
   ): Promise<UmTenant> {
-    return this.userRepository.tenant(id).create(tenant);
+    return this.tenantRepository.tenantData(id).create(umTenant);
   }
 
-  @patch('/users/{id}/um_tenant', {
+  @patch('/tenants/{id}/um-tenant', {
     responses: {
       '200': {
-        description: 'User.Tenant PATCH success count',
+        description: 'Tenant.UmTenant PATCH success count',
         content: {'application/json': {schema: CountSchema}},
       },
     },
@@ -87,16 +87,16 @@ export class UserTenantController {
         },
       },
     })
-    tenant: Partial<UmTenant>,
+    umTenant: Partial<UmTenant>,
     @param.query.object('where', getWhereSchemaFor(UmTenant)) where?: Where<UmTenant>,
   ): Promise<Count> {
-    return this.userRepository.tenant(id).patch(tenant, where);
+    return this.tenantRepository.tenantData(id).patch(umTenant, where);
   }
 
-  @del('/users/{id}/um_tenant', {
+  @del('/tenants/{id}/um-tenant', {
     responses: {
       '200': {
-        description: 'User.Tenant DELETE success count',
+        description: 'Tenant.UmTenant DELETE success count',
         content: {'application/json': {schema: CountSchema}},
       },
     },
@@ -105,6 +105,6 @@ export class UserTenantController {
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(UmTenant)) where?: Where<UmTenant>,
   ): Promise<Count> {
-    return this.userRepository.tenant(id).delete(where);
+    return this.tenantRepository.tenantData(id).delete(where);
   }
 }

@@ -3,6 +3,7 @@ import { DocumentTypeTranslation } from './document-type-translation.model'
 import { DocumentTypePicture } from './document-type-picture.model';
 import {DocumentTypeTranslationProd} from './document-type-translation-prod.model';
 import {ProcessProducedDocuments} from './process-produced-documents.model';
+import {DocumentTypeValidator} from './document-type-validator.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'document_type' } }
@@ -66,6 +67,9 @@ export class DocumentType extends Entity {
 
   @hasMany(() => ProcessProducedDocuments, {keyTo: 'idDocument'})
   generatedBy: ProcessProducedDocuments[];
+
+  @hasMany(() => DocumentTypeValidator)
+  validators: DocumentTypeValidator[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

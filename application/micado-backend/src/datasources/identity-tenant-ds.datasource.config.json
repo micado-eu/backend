@@ -1,0 +1,14 @@
+{
+  "name": "identityTenantDS",
+  "connector": "soap",
+  "url": "https://identity.micadoproject.eu/services/TenantMgtAdminService",
+  "wsdl": "https://identity.micadoproject.eu/services/TenantMgtAdminService?wsdl",
+  "remotingEnabled": true,
+  "operations": {
+    "addTenant": {
+      "service": "TenantMgtAdminService",
+      "port": "TenantMgtAdminServiceHttpsEndpoint",
+      "operation": "addTenant"
+    }
+  }
+}
