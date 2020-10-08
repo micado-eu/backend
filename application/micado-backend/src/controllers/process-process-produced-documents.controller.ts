@@ -60,7 +60,7 @@ export class ProcessProcessProducedDocumentsController {
         'application/json': {
           schema: getModelSchemaRef(ProcessProducedDocuments, {
             title: 'NewProcessProducedDocumentsInProcess',
-            exclude: ['idProcess'],
+            //exclude: ['idProcess'],
             optional: ['idProcess']
           }),
         },

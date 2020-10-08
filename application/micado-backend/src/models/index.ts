@@ -87,4 +87,4 @@ export * from './um-tenant.model';
 
 export * from './tenant.model';
 export * from './process-produced-documents.model';
-export * from './tenant-mgt-admin-service.model';
+//export * from './tenant-mgt-admin-service.model';
