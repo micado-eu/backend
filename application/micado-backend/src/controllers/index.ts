@@ -100,3 +100,4 @@ export * from './document-type-process-produced-documents.controller';
 export * from './document-type-document-type-validator.controller';
 export * from './document-type-validator.controller';
 export * from './tenant-um-tenant.controller';
+export * from './identity-tenant-manager.controller';
