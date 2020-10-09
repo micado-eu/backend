@@ -4,7 +4,7 @@ import { Entity, model, property, hasMany} from '@loopback/repository';
 @model({
   settings: { idInjection: false, postgresql: { schema: 'wso2_shared', table: 'um_tenant' } }
 })
-export class Um_Tenant extends Entity {
+export class UmTenant extends Entity {
   @property({
     type: 'number',
     scale: 0,
@@ -49,13 +49,13 @@ export class Um_Tenant extends Entity {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
  // [prop: string]: any;
 
-  constructor(data?: Partial<Um_Tenant>) {
+  constructor(data?: Partial<UmTenant>) {
     super(data);
   }
 }
 
-export interface Um_TenantRelations {
+export interface UmTenantRelations {
   // describe navigational properties here
 }
 
-export type Um_TenantWithRelations = Um_Tenant & Um_TenantRelations;
+export type UmTenantWithRelations = UmTenant & UmTenantRelations;

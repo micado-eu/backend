@@ -10,6 +10,7 @@ export class DocumentTypeValidator extends Entity {
   @property({
     type: 'number',
     required: true,
+    id:true,
     scale: 0,
     postgresql: {columnName: 'document_type_id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
@@ -26,7 +27,7 @@ export class DocumentTypeValidator extends Entity {
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(data?: Partial<DocumentTypeValidator>) {
     super(data);

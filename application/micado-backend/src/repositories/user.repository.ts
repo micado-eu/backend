@@ -1,10 +1,10 @@
 import {DefaultCrudRepository, repository, HasManyRepositoryFactory, HasOneRepositoryFactory} from '@loopback/repository';
-import {User, UserRelations, UserAttribute, IndividualInterventionPlan, Um_Tenant} from '../models';
+import {User, UserRelations, UserAttribute, IndividualInterventionPlan, UmTenant} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject, Getter} from '@loopback/core';
 import {UserAttributeRepository} from './user-attribute.repository';
 import {IndividualInterventionPlanRepository} from './individual-intervention-plan.repository';
-import {Um_TenantRepository} from './um_tenant.repository';
+import {UmTenantRepository} from './um-tenant.repository';
 
 export class UserRepository extends DefaultCrudRepository<
   User,
@@ -16,10 +16,10 @@ export class UserRepository extends DefaultCrudRepository<
 
   public readonly interventionPlans: HasManyRepositoryFactory<IndividualInterventionPlan, typeof User.prototype.umId>;
 
-  public readonly tenant: HasOneRepositoryFactory<Um_Tenant, typeof User.prototype.umId>;
+  public readonly tenant: HasOneRepositoryFactory<UmTenant, typeof User.prototype.umId>;
 
   constructor(
-    @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('UserAttributeRepository') protected userAttributeRepositoryGetter: Getter<UserAttributeRepository>, @repository.getter('IndividualInterventionPlanRepository') protected individualInterventionPlanRepositoryGetter: Getter<IndividualInterventionPlanRepository>, @repository.getter('Um_TenantRepository') protected tenantRepositoryGetter: Getter<Um_TenantRepository>,
+    @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('UserAttributeRepository') protected userAttributeRepositoryGetter: Getter<UserAttributeRepository>, @repository.getter('IndividualInterventionPlanRepository') protected individualInterventionPlanRepositoryGetter: Getter<IndividualInterventionPlanRepository>, @repository.getter('UmTenantRepository') protected tenantRepositoryGetter: Getter<UmTenantRepository>,
   ) {
     super(User, dataSource);
     this.tenant = this.createHasOneRepositoryFactoryFor('tenant', tenantRepositoryGetter);
