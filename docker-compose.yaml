@@ -17,6 +17,7 @@ services:
     command: /bin/sh -c "bash"
     environment:
       - MICADO_GIT_URL=http://test.org/
+      - MICADO_TRANSLATIONS_DIR=/tmp/translations
     networks:
       - micado_net
 

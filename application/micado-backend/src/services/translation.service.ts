@@ -10,7 +10,7 @@ import {repository} from '@loopback/repository';
 // Should come from a config file or the database.
 const MICADO_SOURCE_LANGUAGE = process.env.MICADO_SOURCE_LANGUAGE || 'en';
 const MICADO_GIT_URL = process.env.MICADO_GIT_URL || '';
-const TRANSLATIONS_DIR = '/tmp/translations-repo';
+const TRANSLATIONS_DIR = process.env.MICADO_TRANSLATIONS_DIR || '/tmp/translations';
 
 let gitInitialized: boolean = false;
 
