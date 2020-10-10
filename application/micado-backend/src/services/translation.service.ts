@@ -10,16 +10,16 @@ import {repository} from '@loopback/repository';
 // Should come from a config file or the database.
 const MICADO_SOURCE_LANGUAGE = process.env.MICADO_SOURCE_LANGUAGE || 'en';
 const MICADO_GIT_URL = process.env.MICADO_GIT_URL || '';
-const TRANSLATIONS_DIR = process.env.MICADO_TRANSLATIONS_DIR || '/tmp/translations';
+const MICADO_TRANSLATIONS_DIR = process.env.MICADO_TRANSLATIONS_DIR || '/tmp/translations';
 
 let gitInitialized: boolean = false;
 
 
-if(!fs.existsSync(TRANSLATIONS_DIR)){
-  fs.mkdirSync(TRANSLATIONS_DIR);
+if(!fs.existsSync(MICADO_TRANSLATIONS_DIR)){
+  fs.mkdirSync(MICADO_TRANSLATIONS_DIR);
 }
 
-const git = simpleGit(TRANSLATIONS_DIR);
+const git = simpleGit(MICADO_TRANSLATIONS_DIR);
 
 if(MICADO_GIT_URL === '') {
   console.log('MICADO_GIT_URL environment variable is not set, this is required for the translation service to work.');
@@ -119,10 +119,10 @@ export class TranslationService {
 
 
     // Remove previous files in git.
-    fs.readdirSync(TRANSLATIONS_DIR).filter(
+    fs.readdirSync(MICADO_TRANSLATIONS_DIR).filter(
       fn => (fn.startsWith(componentName) && fn.endsWith('.json'))
     ).forEach((filename) => {
-      fs.unlinkSync(TRANSLATIONS_DIR + '/' + filename);
+      fs.unlinkSync(MICADO_TRANSLATIONS_DIR + '/' + filename);
     });
 
     // Generate the files on the filesystem and push them to git.
@@ -163,10 +163,10 @@ export class TranslationService {
 
     let data: {[id: number]: {[language: string]: string}} = {};
 
-    const files = fs.readdirSync(TRANSLATIONS_DIR).filter(fn => (fn.startsWith(componentName) && fn.endsWith('.json')));
+    const files = fs.readdirSync(MICADO_TRANSLATIONS_DIR).filter(fn => (fn.startsWith(componentName) && fn.endsWith('.json')));
     files.forEach((filename) => {
       const [componentNameFromFile, language, extension] = filename.split('.');
-      const rawData = fs.readFileSync(TRANSLATIONS_DIR + '/' + filename);
+      const rawData = fs.readFileSync(MICADO_TRANSLATIONS_DIR + '/' + filename);
       const componentLanguageData = JSON.parse(rawData.toString());
       
       for(let key in componentLanguageData) {
@@ -186,7 +186,7 @@ export class TranslationService {
    private generateFiles(fileDict: any) {
     let promises = [];
     for(const [lang, translations] of Object.entries(fileDict)) {
-      promises.push(fsAsync.writeFile(TRANSLATIONS_DIR + "/topic." + lang + ".json", JSON.stringify(translations)));
+      promises.push(fsAsync.writeFile(MICADO_TRANSLATIONS_DIR + "/topic." + lang + ".json", JSON.stringify(translations)));
     }
 
     return promises;
