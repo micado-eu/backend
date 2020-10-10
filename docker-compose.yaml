@@ -17,7 +17,8 @@ services:
     command: /bin/sh -c "bash"
     environment:
       - MICADO_GIT_URL=http://test.org/
-      - MICADO_TRANSLATIONS_DIR=/tmp/translations-repo # don't use the /tmp/translations from tmpfs because it gives a permission error (have to fix this).
+      # don't use the /tmp/translations from tmpfs because it gives a permission error (have to fix this).
+      - MICADO_TRANSLATIONS_DIR=/tmp/translations-repo
     networks:
       - micado_net
 
