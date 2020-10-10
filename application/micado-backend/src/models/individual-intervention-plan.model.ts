@@ -20,8 +20,8 @@ export class IndividualInterventionPlan extends Entity {
 
   @property({
     type: 'string',
-    length: 30,
-    postgresql: {columnName: 'title', dataType: 'character varying', dataLength: 30, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    length: 100,
+    postgresql: {columnName: 'title', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   title?: string;
 
@@ -65,6 +65,13 @@ export class IndividualInterventionPlan extends Entity {
     postgresql: {columnName: 'completed', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
   })
   completed: boolean;
+
+  @property({
+    type: 'string',
+    length: 100,
+    postgresql: {columnName: 'external_id', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  externalId?: string;
 
   @hasMany(() => IndividualInterventionPlanInterventions, {keyTo: 'listId'})
   interventions: IndividualInterventionPlanInterventions[];

@@ -8,27 +8,27 @@ import {repository} from '@loopback/repository';
 
 
 // Should come from a config file or the database.
-const SOURCE_LANGUAGE = process.env.SOURCE_LANGUAGE || 'en';
-const GIT_REPO = process.env.GIT_REPO || '';
-const REPO_PATH = '/tmp/translations-repo';
+const MICADO_SOURCE_LANGUAGE = process.env.MICADO_SOURCE_LANGUAGE || 'en';
+const MICADO_GIT_URL = process.env.MICADO_GIT_URL || '';
+const TRANSLATIONS_DIR = '/tmp/translations-repo';
 
 let gitInitialized: boolean = false;
 
 
-if(!fs.existsSync(REPO_PATH)){
-  fs.mkdirSync(REPO_PATH);
+if(!fs.existsSync(TRANSLATIONS_DIR)){
+  fs.mkdirSync(TRANSLATIONS_DIR);
 }
 
-const git = simpleGit(REPO_PATH);
+const git = simpleGit(TRANSLATIONS_DIR);
 
-if(GIT_REPO === '') {
-  console.log('GIT_REPO environment variable is not set, this is required for the translation service to work.');
+if(MICADO_GIT_URL === '') {
+  console.log('MICADO_GIT_URL environment variable is not set, this is required for the translation service to work.');
 }
 
 git.checkIsRepo()
 .then((isRepo) => {
   if(!isRepo) {
-    return git.clone(GIT_REPO, '.')
+    return git.clone(MICADO_GIT_URL, '.')
       .then(() => {
         return git.pull('origin', 'master');
       })
@@ -94,7 +94,7 @@ export class TranslationService {
         case 1:
           // Should be translated, so we remove the old translation.
           // Except if it's the source language, then we have to keep it.
-          if(translatable.lang !== SOURCE_LANGUAGE) {
+          if(translatable.lang !== MICADO_SOURCE_LANGUAGE) {
             translatable.text = '';
           }
           break;
@@ -111,18 +111,18 @@ export class TranslationService {
       files[translatable.lang][translatable.id.toString() + '.' + componentName] = translatable.text;
     });
 
-    if(!files.hasOwnProperty(SOURCE_LANGUAGE)) {
+    if(!files.hasOwnProperty(MICADO_SOURCE_LANGUAGE)) {
       // We need atleast an empty file for the source language in weblate.
-      files[SOURCE_LANGUAGE] = {};
+      files[MICADO_SOURCE_LANGUAGE] = {};
     }
 
 
 
     // Remove previous files in git.
-    fs.readdirSync(REPO_PATH).filter(
+    fs.readdirSync(TRANSLATIONS_DIR).filter(
       fn => (fn.startsWith(componentName) && fn.endsWith('.json'))
     ).forEach((filename) => {
-      fs.unlinkSync(REPO_PATH + '/' + filename);
+      fs.unlinkSync(TRANSLATIONS_DIR + '/' + filename);
     });
 
     // Generate the files on the filesystem and push them to git.
@@ -163,10 +163,10 @@ export class TranslationService {
 
     let data: {[id: number]: {[language: string]: string}} = {};
 
-    const files = fs.readdirSync(REPO_PATH).filter(fn => (fn.startsWith(componentName) && fn.endsWith('.json')));
+    const files = fs.readdirSync(TRANSLATIONS_DIR).filter(fn => (fn.startsWith(componentName) && fn.endsWith('.json')));
     files.forEach((filename) => {
       const [componentNameFromFile, language, extension] = filename.split('.');
-      const rawData = fs.readFileSync(REPO_PATH + '/' + filename);
+      const rawData = fs.readFileSync(TRANSLATIONS_DIR + '/' + filename);
       const componentLanguageData = JSON.parse(rawData.toString());
       
       for(let key in componentLanguageData) {
@@ -186,7 +186,7 @@ export class TranslationService {
    private generateFiles(fileDict: any) {
     let promises = [];
     for(const [lang, translations] of Object.entries(fileDict)) {
-      promises.push(fsAsync.writeFile(REPO_PATH + "/topic." + lang + ".json", JSON.stringify(translations)));
+      promises.push(fsAsync.writeFile(TRANSLATIONS_DIR + "/topic." + lang + ".json", JSON.stringify(translations)));
     }
 
     return promises;

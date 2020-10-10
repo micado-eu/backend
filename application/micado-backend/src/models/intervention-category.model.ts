@@ -18,6 +18,13 @@ export class InterventionCategory extends Entity {
     postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
+  
+  @property({
+    type: 'string',
+    length: 100,
+    postgresql: {columnName: 'external_id', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  externalId?: string;
 
 
   @hasMany(() => InterventionCategoryTranslation, { keyTo: 'id' })

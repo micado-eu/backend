@@ -96,7 +96,7 @@ export class RasaController {
     return "gioppo";
   }
 
-  @get('/process_x_doc', {
+ /* @get('/process_x_doc', {
     responses: {
       '200': {
         description: 'Topic export',
@@ -165,6 +165,6 @@ export class RasaController {
     console.log("found processes:")
     console.log(found_processes)
     return found_processes
-  }
+  }*/
 
 }

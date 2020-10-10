@@ -5,6 +5,7 @@ import { ProcessTopic } from './process-topic.model';
 import { ProcessComments } from './process-comments.model';
 import {DocumentType} from './document-type.model';
 import {ProcessTranslationProd} from './process-translation-prod.model';
+import {ProcessProducedDocuments} from './process-produced-documents.model';
 
 @model({
   settings: {idInjection: false, postgresql: {schema: 'micadoapp', table: 'process'}}
@@ -27,6 +28,7 @@ export class Process extends Entity {
     postgresql: {columnName: 'link', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   link?: string;
+  
 
   @hasMany(() => ProcessTranslation, {keyTo: 'id'})
   translations: ProcessTranslation[];
@@ -40,11 +42,15 @@ export class Process extends Entity {
   @hasMany(() => ProcessComments, {keyTo: 'idprocess'})
   comments: ProcessComments[];
 
-  @belongsTo(() => DocumentType, {name: 'process_document'})
-  produced_document: number;
 
+  /*@belongsTo(() => DocumentType, {name: 'process_document'})
+  produced_document: number;*/
+  @hasMany(() => ProcessProducedDocuments, {keyTo: 'idProcess'})
+  producedDoc: ProcessProducedDocuments[];
   @hasMany(() => ProcessTranslationProd, {keyTo: 'id'})
   translations_prod: ProcessTranslationProd[];
+
+  
   // Define well-known properties here
 
   // Indexer property to allow additional data

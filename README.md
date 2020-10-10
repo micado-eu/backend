@@ -43,6 +43,7 @@ WEBLATE_ADMIN_PASSWORD=secretpassword9
 WEBLATE_POSTGRES_PASSWORD=secretpassword10
 WEBLATE_EMAIL_HOST_PASSWORD=secretpassword11
 GITEA_DB_PWD=secretpassword12
+GIT_SECRET_KEY=xxxxx
 ```
 
 
@@ -63,6 +64,22 @@ npm start
 ```
 The container will mount the application folder and it will be possibile to code with preferred editor.
 Wait until you see `Server is running at http://[::1]:3000`
+
+### Work with gitea
+For developing the backend for the weblate integration we need also to use GITEA so this means that we need to install and run the GITEA container
+
+The first time that the container is run we need to create the admin user with the following command from within the container (using custom user and password):
+```
+/app/gitea/gitea admin create-user --name=gitea --password=gitea --email=test@xx.com --admin --must-change-password=false
+```
+
+To execute the container properly at the moment (until an issue is solved) the user will have to open the git_data/gitea/conf/app.ini and add the following:
+```
+[database]
+...
+SCHEMA  = gitea
+```
+
 
 ### To add a CRUD endpoint for a Model
 It is possible to expose directly a Model straightforward as a CRUD API the command is like the one that follows.

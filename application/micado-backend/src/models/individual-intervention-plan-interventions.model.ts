@@ -72,6 +72,27 @@ export class IndividualInterventionPlanInterventions extends Entity {
   })
   validationRequestDate?: string;
 
+  @property({
+    type: 'string',
+    length: 100,
+    postgresql: {columnName: 'external_id', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  externalId?: string;
+
+  @property({
+    type: 'string',
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'description', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  description?: string;
+
+  @property({
+    type: 'string',
+    length: 100,
+    postgresql: {columnName: 'title', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  title?: string;
+
   
   // Define well-known properties here
 
