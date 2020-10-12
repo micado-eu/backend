@@ -60,7 +60,7 @@ export class InterventionTypesInterventionTypeValidatorController {
         'application/json': {
           schema: getModelSchemaRef(InterventionTypeValidator, {
             title: 'NewInterventionTypeValidatorInInterventionTypes',
-            exclude: ['tenantId'],
+            //exclude: ['tenantId'],
             optional: ['interventionTypeId']
           }),
         },
