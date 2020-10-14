@@ -79,3 +79,4 @@ export * from './um-tenant.repository';
 export * from './tenant.repository';
 export * from './process-produced-documents.repository';
 export * from './document-type-validator.repository';
+export * from './completed-intervention-document.repository';

@@ -103,3 +103,5 @@ export * from './tenant-um-tenant.controller';
 export * from './identity-tenant-manager.controller';
 export * from './individual-intervention-plan-interventions.controller';
 export * from './individual-intervention-plan-interventions-individual-intervention-plan.controller';
+export * from './completed-intervention-document.controller';
+export * from './individual-intervention-plan-interventions-completed-intervention-document.controller';
