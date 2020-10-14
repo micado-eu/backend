@@ -1,7 +1,7 @@
 import {bind, /* inject, */ BindingScope, DefaultConfigurationResolver} from '@loopback/core';
 import {promises as fsAsync} from 'fs';
 import fs from 'fs';
-import simpleGit, {ResetMode, SimpleGit} from 'simple-git';
+//import simpleGit, {ResetMode, SimpleGit} from 'simple-git';
 import { createEmptyApiSpec } from '@loopback/rest';
 import { TopicTranslationRepository } from '../repositories';
 import {repository} from '@loopback/repository';
@@ -19,12 +19,14 @@ if(!fs.existsSync(MICADO_TRANSLATIONS_DIR)){
   fs.mkdirSync(MICADO_TRANSLATIONS_DIR);
 }
 
-const git = simpleGit(MICADO_TRANSLATIONS_DIR);
+//const git = simpleGit(MICADO_TRANSLATIONS_DIR);
+const git: any = null;
 
 if(MICADO_GIT_URL === '') {
   console.log('MICADO_GIT_URL environment variable is not set, this is required for the translation service to work.');
 }
 
+/*
 git.checkIsRepo()
 .then((isRepo) => {
   if(!isRepo) {
@@ -46,6 +48,7 @@ git.checkIsRepo()
 .catch((reason) => {
   console.log('Could not initialize git: ', reason);
 });
+*/
 
 @bind({scope: BindingScope.TRANSIENT})
 export class TranslationService {
@@ -154,7 +157,7 @@ export class TranslationService {
 
     // Reset our state to the remote. So we have less chance on a merge conflict.
     await git.fetch('origin');
-    await git.reset(ResetMode.HARD);
+    //await git.reset(ResetMode.HARD);
     await git.pull('origin', 'master');
 
     console.log('Importing translations for component "' + componentName + '".');
