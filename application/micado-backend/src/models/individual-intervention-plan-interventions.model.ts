@@ -1,4 +1,6 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
+import {IndividualInterventionPlan} from './individual-intervention-plan.model';
+import {CompletedInterventionDocument} from './completed-intervention-document.model';
 
 @model({
   settings: {
@@ -93,7 +95,11 @@ export class IndividualInterventionPlanInterventions extends Entity {
   })
   title?: string;
 
-  
+  @hasOne(() => IndividualInterventionPlan, {keyTo: 'id'})
+  interventionPlan: IndividualInterventionPlan;
+
+  @hasOne(() => CompletedInterventionDocument, {keyTo: 'idIntervention'})
+  document: CompletedInterventionDocument;
   // Define well-known properties here
 
   // Indexer property to allow additional data

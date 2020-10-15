@@ -34,7 +34,7 @@ export class IdentityTenantManagerController {
   @post('/addTenant1/{tenant}')
   async addTenant1 (
     @param.path.string('tenant') tenantDomain: String,
-    @param.path.string('tenant') password: String,
+    @param.path.string('password') password: String,
   ): Promise<any> {
     //Preconditions
     console.log("in the identity controller")
