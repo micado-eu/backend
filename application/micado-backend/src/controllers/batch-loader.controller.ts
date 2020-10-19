@@ -79,7 +79,7 @@ export class BatchLoaderController {
           console.log(uploadedPayload.fields.entity)
           const results: any = [];
           let csv_options: any = { trim: true }
-          fs.createReadStream('/code/micado-backend/.sandbox' + "/" + uploadedPayload.files[0].originalname)
+          fs.createReadStream('.sandbox' + "/" + uploadedPayload.files[0].originalname)
             .pipe(csv(csv_options))
             .on('data', (data: any) => results.push(data))
             .on('end', () => {
