@@ -25,6 +25,8 @@ import path from 'path';
 import { SettingsRepository } from '../repositories';
 import { GlossaryTranslationRepository } from '../repositories';
 import { GlossaryRepository } from '../repositories';
+import { InterventionCategoryRepository } from '../repositories';
+import { InterventionCategoryTranslationRepository } from '../repositories';
 import { LanguagesRepository } from '../repositories';
 
 
@@ -34,6 +36,8 @@ export class BatchLoaderController {
     @repository(SettingsRepository) protected settingsRepository: SettingsRepository,
     @repository(GlossaryTranslationRepository) protected glossaryTranslationRepository: GlossaryTranslationRepository,
     @repository(GlossaryRepository) protected glossaryRepository: GlossaryRepository,
+    @repository(InterventionCategoryRepository) protected interventionCategoryRepository: InterventionCategoryRepository,
+    @repository(InterventionCategoryTranslationRepository) protected interventionCategoryTranslationRepository: InterventionCategoryTranslationRepository,
     @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
 
   ) { }
@@ -72,6 +76,7 @@ export class BatchLoaderController {
 
           let uploadedPayload: any = BatchLoaderController.getFilesAndFields(request)
           console.log(uploadedPayload)
+          console.log(uploadedPayload.fields.entity)
           const results: any = [];
           let csv_options: any = { trim: true }
           fs.createReadStream('/code/micado-backend/.sandbox' + "/" + uploadedPayload.files[0].originalname)
@@ -79,7 +84,7 @@ export class BatchLoaderController {
             .on('data', (data: any) => results.push(data))
             .on('end', () => {
               console.log(results);
-              this.loadData('glossary', results, def_lang.value, languages)
+              this.loadData(uploadedPayload.fields.entity, results, def_lang.value, languages)
               // [
               //   { NAME: 'Daffy Duck', AGE: '24' },
               //   { NAME: 'Bugs Bunny', AGE: '22' }
@@ -148,7 +153,34 @@ export class BatchLoaderController {
 
         });
         break;
-      case "Orange":
+      case "intervention_category":
+        csv.forEach((element: any) => {
+          this.interventionCategoryRepository.create({})
+            .then(newEntity => {
+              console.log(newEntity)
+
+              console.log("ready to add text")
+              console.log(def_lang)
+              element.lang = def_lang
+              element.id = newEntity.id
+              console.log(element)
+              act_lang.forEach((alang: any) => {
+                if (alang.lang === def_lang) {
+                  this.interventionCategoryTranslationRepository.create(element)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                } else {
+                  let empty = { lang: alang.lang, id: newEntity.id }
+                  this.interventionCategoryTranslationRepository.create(empty)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                }
+              });
+            })
+
+        });
         break;
       case "Apple":
         break;
