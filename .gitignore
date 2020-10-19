@@ -1,3 +1,4 @@
 prod.env
 .DS_Store
 db_data
+git_data
