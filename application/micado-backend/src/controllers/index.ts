@@ -107,3 +107,4 @@ export * from './completed-intervention-document.controller';
 export * from './individual-intervention-plan-interventions-completed-intervention-document.controller';
 export * from './active-features.controller';
 export * from './comments-tenant.controller';
+export * from './picture-hotspot.controller';
