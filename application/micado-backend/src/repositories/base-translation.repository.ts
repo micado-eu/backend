@@ -47,8 +47,7 @@ export abstract class BaseTranslationRepository <
    */
   public async updateToTranslated(baseLanguage: string, translations: {[id: number]: {[language: string]: string}}) {
     let q = 'UPDATE ' + this.getTableName() + ' AS t1 SET "' + this.getTranslatableColumnName() + '" = $1, "translationState" = 3 WHERE "translationState" = 2 AND "lang" = $2 AND "' + this.getIdColumnName() + '" = $3 AND (t1."' + this.getTranslatableColumnName() + '" != $1 OR t1."' + this.getTranslatableColumnName() + '" ISNULL);';
-    console.log(q);
-    console.log(translations);
+
     for(const id in translations) {
       for(const language in translations[id]) {
         let text = translations[id][language];
