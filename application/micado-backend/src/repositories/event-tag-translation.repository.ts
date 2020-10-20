@@ -2,8 +2,9 @@ import { DefaultCrudRepository } from '@loopback/repository';
 import { EventTagTranslation, EventTagTranslationRelations } from '../models';
 import { MicadoDsDataSource } from '../datasources';
 import { inject } from '@loopback/core';
+import { BaseTranslationRepository } from './base-translation.repository';
 
-export class EventTagTranslationRepository extends DefaultCrudRepository<
+export class EventTagTranslationRepository extends BaseTranslationRepository<
     EventTagTranslation,
     typeof EventTagTranslation.prototype.id,
     EventTagTranslationRelations
@@ -12,5 +13,9 @@ export class EventTagTranslationRepository extends DefaultCrudRepository<
         @inject('datasources.micadoDS') dataSource: MicadoDsDataSource,
     ) {
         super(EventTagTranslation, dataSource);
+    }
+
+    getTranslatableColumnName(): string {
+        return 'tag';
     }
 }

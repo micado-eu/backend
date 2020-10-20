@@ -2,8 +2,9 @@ import {DefaultCrudRepository} from '@loopback/repository';
 import {InformationTranslation, InformationTranslationRelations} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject} from '@loopback/core';
+import { BaseTranslationRepository } from './base-translation.repository';
 
-export class InformationTranslationRepository extends DefaultCrudRepository<
+export class InformationTranslationRepository extends BaseTranslationRepository<
   InformationTranslation,
   typeof InformationTranslation.prototype.id,
   InformationTranslationRelations

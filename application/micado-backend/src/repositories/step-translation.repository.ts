@@ -2,8 +2,9 @@ import {DefaultCrudRepository} from '@loopback/repository';
 import {StepTranslation, StepTranslationRelations} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject} from '@loopback/core';
+import { BaseTranslationRepository } from './base-translation.repository';
 
-export class StepTranslationRepository extends DefaultCrudRepository<
+export class StepTranslationRepository extends BaseTranslationRepository<
   StepTranslation,
   typeof StepTranslation.prototype.id,
   StepTranslationRelations

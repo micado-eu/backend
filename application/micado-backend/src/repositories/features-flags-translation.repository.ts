@@ -2,8 +2,9 @@ import {DefaultCrudRepository} from '@loopback/repository';
 import {FeaturesFlagsTranslation, FeaturesFlagsTranslationRelations} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject} from '@loopback/core';
+import { BaseTranslationRepository } from './base-translation.repository';
 
-export class FeaturesFlagsTranslationRepository extends DefaultCrudRepository<
+export class FeaturesFlagsTranslationRepository extends BaseTranslationRepository<
   FeaturesFlagsTranslation,
   typeof FeaturesFlagsTranslation.prototype.id,
   FeaturesFlagsTranslationRelations
@@ -12,5 +13,9 @@ export class FeaturesFlagsTranslationRepository extends DefaultCrudRepository<
     @inject('datasources.micadoDS') dataSource: MicadoDsDataSource,
   ) {
     super(FeaturesFlagsTranslation, dataSource);
+  }
+
+  getTranslatableColumnName(): string {
+    return 'feature';
   }
 }

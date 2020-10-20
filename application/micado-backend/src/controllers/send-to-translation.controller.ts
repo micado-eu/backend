@@ -20,7 +20,7 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {service} from '@loopback/core';
+import {service, inject} from '@loopback/core';
 import { TopicTranslationRepository } from '../repositories';
 import {promises as fsAsync} from 'fs';
 import fs from 'fs';
@@ -30,7 +30,7 @@ import { TranslationService } from '../services';
 export class SendToTranslationController {
   constructor(
     @repository(TopicTranslationRepository) public topicTranslationRepository: TopicTranslationRepository,
-    @service() public translationService: TranslationService
+    @service() public translationService: TranslationService,
   ) {
    }
 
@@ -46,6 +46,10 @@ export class SendToTranslationController {
   async sendtotranslation (
 
   ): Promise<any> {
-    this.translationService.uploadTranslatables();
+    await this.translationService.initializeService();
+    //await this.translationService.install();
+    await this.translationService.updateTranslatables();
+    //await this.translationService.initializeService();
+    //this.translationService.uploadTranslatables();
   }
 }

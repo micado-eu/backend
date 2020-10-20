@@ -2,8 +2,9 @@ import {DefaultCrudRepository} from '@loopback/repository';
 import {UserTypesTranslation, UserTypesTranslationRelations} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject} from '@loopback/core';
+import { BaseTranslationRepository } from './base-translation.repository';
 
-export class UserTypesTranslationRepository extends DefaultCrudRepository<
+export class UserTypesTranslationRepository extends BaseTranslationRepository<
   UserTypesTranslation,
   typeof UserTypesTranslation.prototype.id,
   UserTypesTranslationRelations
@@ -12,5 +13,9 @@ export class UserTypesTranslationRepository extends DefaultCrudRepository<
     @inject('datasources.micadoDS') dataSource: MicadoDsDataSource,
   ) {
     super(UserTypesTranslation, dataSource);
+  }
+
+  getTranslatableColumnName(): string {
+    return 'user_type';
   }
 }

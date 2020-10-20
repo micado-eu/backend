@@ -2,8 +2,9 @@ import {DefaultCrudRepository} from '@loopback/repository';
 import {InterventionCategoryTranslation, InterventionCategoryTranslationRelations} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject} from '@loopback/core';
+import { BaseTranslationRepository } from './base-translation.repository';
 
-export class InterventionCategoryTranslationRepository extends DefaultCrudRepository<
+export class InterventionCategoryTranslationRepository extends BaseTranslationRepository<
   InterventionCategoryTranslation,
   typeof InterventionCategoryTranslation.prototype.id,
   InterventionCategoryTranslationRelations
@@ -12,5 +13,9 @@ export class InterventionCategoryTranslationRepository extends DefaultCrudReposi
     @inject('datasources.micadoDS') dataSource: MicadoDsDataSource,
   ) {
     super(InterventionCategoryTranslation, dataSource);
+  }
+
+  getTranslatableColumnName(): string {
+    return 'title';
   }
 }
