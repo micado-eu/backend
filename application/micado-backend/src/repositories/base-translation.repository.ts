@@ -1,6 +1,4 @@
 import {DefaultCrudRepository, Entity} from '@loopback/repository';
-import { del } from '@loopback/rest';
-import { cpuUsage } from 'process';
 
 export abstract class BaseTranslationRepository <
     E extends Entity,
@@ -12,33 +10,33 @@ export abstract class BaseTranslationRepository <
     return 'id';
   }
 
-  getTranslatableColumnNames(): Array<string> {
+  getTranslatableColumnName(): string {
     const tableName = this.getTableName();
-    return [tableName.replace(/\_translation$/, "")];
+    return tableName.replace(/\_translation$/, "");
   }
 
   public getTableName(): string {
     return (<any>(this.modelClass)).settings.postgresql.table;
   }
 
-  public async getBaseLanguageTranslatables(language: string): Promise<any> {
-    const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
-    let results = await this.dataSource.execute(q, [language]);
-
-    for(let i = 0; i < results.length; i++) {
-      let strings: any = {};
-      this.getTranslatableColumnNames().forEach((columnName) => {
-        strings[columnName] = results[i][columnName];
-        delete results[i][columnName];
-      });
-      results[i]['strings'] = strings;
-    }
-
-    return results;
+  public getBaseLanguageTranslatables(language: string): any {
+    const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", "' + this.getTranslatableColumnName() + '" AS "text", "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
+    return this.dataSource.execute(q, [language]);
   }
 
   public getTranslatableLanguages(): any {
     const q = 'SELECT DISTINCT "lang" FROM ' + this.getTableName() + ' t1 WHERE (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
+    return this.dataSource.execute(q);
+  }
+
+
+  /**
+   * Get all objects that should be pushed to weblate.
+   * This includes strings in state 'translatable' but also it's siblings that are in any other state (otherwise weblate thinks it has to be translated again).
+   *
+   */
+  public getTranslatables(): any {
+    const q = 'SELECT "id", "lang", "' + this.getTranslatableColumnName() + '" AS "text", "translationState" FROM ' + this.getTableName() + ' t1 WHERE (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "id"=t1.id AND "translationState" in (1,2)) > 0;';
     return this.dataSource.execute(q);
   }
 
@@ -47,57 +45,23 @@ export abstract class BaseTranslationRepository <
    * @parambaseLanguage: The base language.
    * @param translations: dictionary of {1: {en: "house", nl: "huis"}} 
    */
-  public async updateToTranslated(baseLanguage: string, translations: {[id: number]: {[language: string]: {[columnName: string]: string}}}) {
-    let columnsAssign = this.getTranslatableColumnNames();
-    for(let i = 0; i < columnsAssign.length; i++) {
-      columnsAssign[i] = columnsAssign[i] + '=' + '$' + (i+1).toString();
-    }
-
-    let columnsUpdated = this.getTranslatableColumnNames();
-    for(let i = 0; i < columnsUpdated.length; i++) {
-      columnsUpdated[i] = '(t1.' + columnsUpdated[i] + ' != $' + (i+1).toString() + ' OR t1.' + columnsUpdated[i] + ' ISNULL)';
-    }
-
-
-    let q = `
-    UPDATE ` + this.getTableName() + ` AS t1
-    SET ` + columnsAssign.join(', ') + `,
-    "translationState" = 3
-    WHERE "translationState" = 2
-    AND "lang" = $` + (columnsAssign.length+1).toString() + `
-    AND "` + this.getIdColumnName() + `" = $` + (columnsAssign.length+2).toString() + `
-    AND ` + columnsUpdated.join(' AND ') + `;
-    `;
-
+  public async updateToTranslated(baseLanguage: string, translations: {[id: number]: {[language: string]: string}}) {
+    let q = 'UPDATE ' + this.getTableName() + ' AS t1 SET "' + this.getTranslatableColumnName() + '" = $1, "translationState" = 3 WHERE "translationState" = 2 AND "lang" = $2 AND "' + this.getIdColumnName() + '" = $3 AND (t1."' + this.getTranslatableColumnName() + '" != $1 OR t1."' + this.getTranslatableColumnName() + '" ISNULL);';
+    console.log(q);
+    console.log(translations);
     for(const id in translations) {
       for(const language in translations[id]) {
-        let args: Array<any> = [];
-        this.getTranslatableColumnNames().forEach((columnName) => {
-          if(!translations[id][language].hasOwnProperty(columnName)) {
-            return;
-          }
-
-          let text = translations[id][language][columnName];
-          if(text === null) {
-            return;
-          }
-  
-          text = text.trim();
-          if(text.length === 0) {
-            return;
-          }
-
-          args.push(text);
-        });
-
-        if(args.length !== this.getTranslatableColumnNames().length) {
-          // Some columns are empty or null. So we don't update this.
+        let text = translations[id][language];
+        if(text === null) {
           continue;
         }
 
-        args.push(language);
-        args.push(id);
-        await this.dataSource.execute(q, args);
+        text = text.trim();
+        if(text.length === 0) {
+          continue;
+        }
+
+        await this.dataSource.execute(q, [text, language, id]);
       }
     }
 

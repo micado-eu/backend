@@ -201,10 +201,7 @@ export class TranslationService {
         files[translatable.lang] = {};
       }
 
-      for(let key in translatable.strings) {
-        files[translatable.lang][translatable.id.toString() + '.' + key] = translatable.strings[key];
-      }
-      
+      files[translatable.lang][translatable.id.toString() + '.' + componentName] = translatable.text;      
     });
 
     // Add empty files for languages if not already in git.
@@ -366,12 +363,7 @@ export class TranslationService {
           data[id] = {};
         }
 
-        const columnName = key.substring(dotIndex+1);
-        if(!data[id].hasOwnProperty(language)) {
-          data[id][language] = {};
-        }
-
-        data[id][language][columnName] = componentLanguageData[key];
+        data[id][language] = componentLanguageData[key];
       }
     });
 

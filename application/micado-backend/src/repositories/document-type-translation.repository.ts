@@ -15,7 +15,7 @@ export class DocumentTypeTranslationRepository extends BaseTranslationRepository
     super(DocumentTypeTranslation, dataSource);
   }
 
-  getTranslatableColumnNames(): Array<string> {
-    return ['document', 'description'];
+  getTranslatableColumnName(): string {
+    return 'document';
   }
 }
