@@ -2,8 +2,9 @@ import { DefaultCrudRepository } from '@loopback/repository';
 import { InformationTagTranslation, InformationTagTranslationRelations } from '../models';
 import { MicadoDsDataSource } from '../datasources';
 import { inject } from '@loopback/core';
+import { BaseTranslationRepository } from './base-translation.repository';
 
-export class InformationTagTranslationRepository extends DefaultCrudRepository<
+export class InformationTagTranslationRepository extends BaseTranslationRepository<
     InformationTagTranslation,
     typeof InformationTagTranslation.prototype.id,
     InformationTagTranslationRelations
@@ -13,4 +14,8 @@ export class InformationTagTranslationRepository extends DefaultCrudRepository<
     ) {
         super(InformationTagTranslation, dataSource);
     }
+
+    public getTranslatableColumnNames(): Array<string> {
+        return ['tag'];
+      }
 }

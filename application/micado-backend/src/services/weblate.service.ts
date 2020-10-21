@@ -2,13 +2,14 @@ import { getService } from '@loopback/service-proxy';
 import { inject, Provider } from '@loopback/core';
 import { WeblateDataSource } from '../datasources';
 
-
-
 export interface WeblateService {
   // this is where you define the Node.js methods that will be
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.
   translations (): Promise<any>;
+  components (project: string): Promise<any>;
+  lock(project: string, component: string, lock: boolean): Promise<any>;
+  git(project: string, operation: string): Promise<any>;
 }
 
 export class WeblateProvider implements Provider<WeblateService> {

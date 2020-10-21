@@ -29,6 +29,57 @@
       "functions": {
         "translations": []
       }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "/api/projects/{project}/components",
+        "query": {
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "components": ["project"]
+      }
+    },
+    {
+      "template": {
+        "method": "POST",
+        "url": "/api/components/{project}/{component}/lock/",
+        "query": {
+        },
+        "body": {
+          "lock": "{lock}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "lock": ["project", "component", "lock"]
+      }
+    },
+    {
+      "template": {
+        "method": "POST",
+        "url": "/api/projects/{project}/repository/",
+        "query": {
+        },
+        "body": {
+          "operation": "{operation}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "git": ["project", "operation"]
+      }
     }
   ]
 }
