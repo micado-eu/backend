@@ -108,3 +108,4 @@ export * from './individual-intervention-plan-interventions-completed-interventi
 export * from './active-features.controller';
 export * from './comments-tenant.controller';
 export * from './picture-hotspot.controller';
+export * from './mail-document.controller';
