@@ -28,6 +28,12 @@ export class Process extends Entity {
     postgresql: {columnName: 'link', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   link?: string;
+
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
   
 
   @hasMany(() => ProcessTranslation, {keyTo: 'id'})
