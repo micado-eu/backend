@@ -15,7 +15,7 @@ export class UserTypesTranslationRepository extends BaseTranslationRepository<
     super(UserTypesTranslation, dataSource);
   }
 
-  getTranslatableColumnName(): string {
-    return 'user_type';
+  public getTranslatableColumnNames(): Array<string> {
+    return ['user_type', 'description'];
   }
 }

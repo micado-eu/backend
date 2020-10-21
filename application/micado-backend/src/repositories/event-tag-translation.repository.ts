@@ -15,7 +15,7 @@ export class EventTagTranslationRepository extends BaseTranslationRepository<
         super(EventTagTranslation, dataSource);
     }
 
-    getTranslatableColumnName(): string {
-        return 'tag';
+    getTranslatableColumnNames(): Array<string> {
+        return ['tag'];
     }
 }

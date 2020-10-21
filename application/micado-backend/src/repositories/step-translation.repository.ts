@@ -14,4 +14,8 @@ export class StepTranslationRepository extends BaseTranslationRepository<
   ) {
     super(StepTranslation, dataSource);
   }
+
+  public getTranslatableColumnNames(): Array<string> {
+    return ['step', 'description'];
+  }
 }

@@ -15,7 +15,7 @@ export class InterventionTypesTranslationRepository extends BaseTranslationRepos
     super(InterventionTypesTranslation, dataSource);
   }
 
-  getTranslatableColumnName(): string {
-    return 'intervention_title';
+  public getTranslatableColumnNames(): Array<string> {
+    return ['intervention_title', 'description'];
   }
 }

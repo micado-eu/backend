@@ -14,4 +14,8 @@ export class InformationTagTranslationRepository extends BaseTranslationReposito
     ) {
         super(InformationTagTranslation, dataSource);
     }
+
+    public getTranslatableColumnNames(): Array<string> {
+        return ['tag'];
+      }
 }

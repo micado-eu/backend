@@ -19,7 +19,7 @@ export class PictureHotspotTranslationRepository extends BaseTranslationReposito
     return 'pht_id';
   }
 
-  getTranslatableColumnName(): string {
-    return 'message';
+  public getTranslatableColumnNames(): Array<string> {
+    return ['title', 'message'];
   }
 }

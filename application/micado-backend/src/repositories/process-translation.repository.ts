@@ -14,4 +14,8 @@ export class ProcessTranslationRepository extends BaseTranslationRepository<
   ) {
     super(ProcessTranslation, dataSource);
   }
+
+  public getTranslatableColumnNames(): Array<string> {
+    return ['process', 'description'];
+  }
 }

@@ -15,7 +15,7 @@ export class TopicTranslationRepository extends BaseTranslationRepository<
     super(TopicTranslation, dataSource);
   }
 
-  public getTranslatableColumnName(): string {
-    return 'topic';
+  public getTranslatableColumnNames(): Array<string> {
+    return ['topic'];
   }
 }

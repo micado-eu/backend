@@ -14,4 +14,8 @@ export class EventTranslationRepository extends BaseTranslationRepository<
   ) {
     super(EventTranslation, dataSource);
   }
+
+  public getTranslatableColumnNames(): Array<string> {
+    return ['event', 'description'];
+  }
 }

@@ -43,8 +43,8 @@ export class TranslationService {
 
     // Map component names to their repos. TODO: should be done automatically.
     this.componentRepos = {
-      //'comments': this.commentsTranslationRepository,
-      'document_type': this.documentTypeTranslationRepository,/*
+      'comments': this.commentsTranslationRepository,
+      'document_type': this.documentTypeTranslationRepository,
       'event_category': this.eventCategoryTranslationRepository,
       'event_tag': this.eventTagTranslationRepository,
       'event': this.eventTranslationRepository,
@@ -59,11 +59,11 @@ export class TranslationService {
       'step_link': this.stepLinkTranslationRepository,
       'step': this.stepTranslationRepository,
       'topic': this.topicTranslationRepository,
-      'user_types': this.userTypesTranslationRepository,*/
+      'user_types': this.userTypesTranslationRepository,
     };
   }
 
-  public async install(): Promise<any> {
+  private async install(): Promise<any> {
     for(let componentName in this.componentRepos) {
       // Remove previous files in git.
       fs.readdirSync(MICADO_TRANSLATIONS_DIR).filter(
@@ -100,15 +100,14 @@ export class TranslationService {
       }
       
       this.git = simpleGit(MICADO_TRANSLATIONS_DIR);
-      
-      if(MICADO_GIT_URL === '') {
-        console.log('MICADO_GIT_URL environment variable is not set, this is required for the translation service to work.');
-      }
-            
+                 
       this.git.checkIsRepo()
       .then((isRepo) => {
         if(!isRepo) {
-          console.log('no repo');
+          if(MICADO_GIT_URL === '') {
+            console.log('MICADO_GIT_URL environment variable is not set, this is required for the translation service to work.');
+            return Promise.reject('No MICADO_GIT_URL given');
+          }
           return this.git.clone(MICADO_GIT_URL, '.')
             .then(() => {
               return this.git.pull('origin', 'master');
@@ -118,6 +117,8 @@ export class TranslationService {
             })
             .then(() => {
               return this.git.addConfig('user.email', 'backend@backend.backend')
+            }).then(() => {
+              return this.install();
             });
         }
       })

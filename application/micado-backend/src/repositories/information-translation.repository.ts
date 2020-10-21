@@ -14,4 +14,8 @@ export class InformationTranslationRepository extends BaseTranslationRepository<
   ) {
     super(InformationTranslation, dataSource);
   }
+
+  public getTranslatableColumnNames(): Array<string> {
+    return ['information', 'description'];
+  }
 }

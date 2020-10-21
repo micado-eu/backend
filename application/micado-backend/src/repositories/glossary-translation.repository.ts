@@ -15,7 +15,7 @@ export class GlossaryTranslationRepository extends BaseTranslationRepository<
     super(GlossaryTranslation, dataSource);
   }
 
-  public getTranslatableColumnName(): string {
-    return 'title';
+  public getTranslatableColumnNames(): Array<string> {
+    return ['title', 'description'];
   }
 }

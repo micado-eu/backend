@@ -15,7 +15,7 @@ export class CommentsTranslationRepository extends BaseTranslationRepository<
     super(CommentsTranslation, dataSource);
   }
 
-  getTranslatableColumnName(): string {
-    return 'comment';
+  getTranslatableColumnNames(): Array<string> {
+    return ['comment'];
   }
 }

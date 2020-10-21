@@ -15,7 +15,7 @@ export class FeaturesFlagsTranslationRepository extends BaseTranslationRepositor
     super(FeaturesFlagsTranslation, dataSource);
   }
 
-  getTranslatableColumnName(): string {
-    return 'feature';
+  public getTranslatableColumnNames(): Array<string> {
+    return ['feature'];
   }
 }

@@ -22,7 +22,7 @@ export abstract class BaseTranslationRepository <
   }
 
   public async getBaseLanguageTranslatables(language: string): Promise<any> {
-    const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
+    const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().map(c => `"${c}"`).join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
     let results = await this.dataSource.execute(q, [language]);
 
     for(let i = 0; i < results.length; i++) {
