@@ -109,3 +109,4 @@ export * from './active-features.controller';
 export * from './comments-tenant.controller';
 export * from './picture-hotspot.controller';
 export * from './mail-document.controller';
+export * from './countly.controller';
