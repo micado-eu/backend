@@ -1,3 +1,4 @@
+import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -20,10 +21,12 @@ import {
   EventTranslation,
 } from '../models';
 import { EventRepository } from '../repositories';
+import { MarkdownConverterService } from '../services';
 
 export class EventEventTranslationController {
   constructor(
     @repository(EventRepository) protected eventRepository: EventRepository,
+    @service(MarkdownConverterService) protected markdownConverterService: MarkdownConverterService
   ) { }
 
   @get('/events/{id}/event-translations', {
@@ -42,7 +45,14 @@ export class EventEventTranslationController {
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<EventTranslation>,
   ): Promise<EventTranslation[]> {
-    return this.eventRepository.translations(id).find(filter);
+    const eventTranslations = await this.eventRepository.translations(id).find(filter)
+    for (const eventTranslation of eventTranslations) {
+      if (eventTranslation.description && eventTranslation.lang) {
+        eventTranslation.description = 
+          await this.markdownConverterService.markdownToHTML(eventTranslation.description, eventTranslation.lang)
+      }
+    }
+    return eventTranslations;
   }
 
   @post('/events/{id}/event-translations', {
@@ -68,6 +78,9 @@ export class EventEventTranslationController {
     }) eventTranslation: EventTranslation,
     //    }) eventTranslation: Omit < EventTranslation, 'id' >,
   ): Promise<EventTranslation> {
+    if (eventTranslation.description) {
+      eventTranslation.description = await this.markdownConverterService.HTMLToMarkdown(eventTranslation.description)
+    }
     return this.eventRepository.translations(id).create(eventTranslation);
   }
 
@@ -91,6 +104,9 @@ export class EventEventTranslationController {
     eventTranslation: Partial<EventTranslation>,
     @param.query.object('where', getWhereSchemaFor(EventTranslation)) where?: Where<EventTranslation>,
   ): Promise<Count> {
+    if (eventTranslation.description) {
+      eventTranslation.description = await this.markdownConverterService.HTMLToMarkdown(eventTranslation.description)
+    }
     return this.eventRepository.translations(id).patch(eventTranslation, where);
   }
 
