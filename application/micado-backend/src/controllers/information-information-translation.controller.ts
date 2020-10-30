@@ -1,4 +1,3 @@
-import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -21,12 +20,10 @@ import {
   InformationTranslation,
 } from '../models';
 import { InformationRepository } from '../repositories';
-import { MarkdownConverterService } from '../services';
 
 export class InformationInformationTranslationController {
   constructor(
     @repository(InformationRepository) protected informationRepository: InformationRepository,
-    @service(MarkdownConverterService) protected markdownConverterService: MarkdownConverterService
   ) { }
 
   @get('/information/{id}/information-translations', {
@@ -45,14 +42,7 @@ export class InformationInformationTranslationController {
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<InformationTranslation>,
   ): Promise<InformationTranslation[]> {
-    const informationTranslations = await this.informationRepository.translations(id).find(filter)
-    for (const informationTranslation of informationTranslations) {
-      if (informationTranslation.description && informationTranslation.lang) {
-        informationTranslation.description = 
-          await this.markdownConverterService.markdownToHTML(informationTranslation.description, informationTranslation.lang)
-      }
-    }
-    return informationTranslations;
+    return this.informationRepository.translations(id).find(filter);
   }
 
   @post('/information/{id}/information-translations', {
@@ -78,9 +68,6 @@ export class InformationInformationTranslationController {
     }) informationTranslation: InformationTranslation,
     //    }) informationTranslation: Omit < InformationTranslation, 'id' >,
   ): Promise<InformationTranslation> {
-    if (informationTranslation.description) {
-      informationTranslation.description = await this.markdownConverterService.HTMLToMarkdown(informationTranslation.description)
-    }
     return this.informationRepository.translations(id).create(informationTranslation);
   }
 
@@ -104,9 +91,6 @@ export class InformationInformationTranslationController {
     informationTranslation: Partial<InformationTranslation>,
     @param.query.object('where', getWhereSchemaFor(InformationTranslation)) where?: Where<InformationTranslation>,
   ): Promise<Count> {
-    if (informationTranslation.description) {
-      informationTranslation.description = await this.markdownConverterService.HTMLToMarkdown(informationTranslation.description)
-    }
     return this.informationRepository.translations(id).patch(informationTranslation, where);
   }
 
