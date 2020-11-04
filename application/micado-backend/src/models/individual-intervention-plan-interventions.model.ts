@@ -64,12 +64,14 @@ export class IndividualInterventionPlanInterventions extends Entity {
 
   @property({
     type: 'date',
+    jsonSchema: { nullable: true },
     postgresql: {columnName: 'assignment_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   assignmentDate?: string;
 
   @property({
     type: 'date',
+    jsonSchema: { nullable: true },
     postgresql: {columnName: 'validationrequestdate', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   validationRequestDate?: string;
