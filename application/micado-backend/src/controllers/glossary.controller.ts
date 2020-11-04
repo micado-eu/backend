@@ -1,3 +1,4 @@
+import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -18,11 +19,13 @@ import {
 } from '@loopback/rest';
 import { Glossary } from '../models';
 import { GlossaryRepository } from '../repositories';
+import { MarkdownConverterService } from '../services/markdown-converter.service';
 
 export class GlossaryController {
   constructor(
     @repository(GlossaryRepository)
     public glossaryRepository: GlossaryRepository,
+    @service(MarkdownConverterService) private markdownConverterService: MarkdownConverterService
   ) { }
 
   @post('/glossaries', {
@@ -81,7 +84,17 @@ export class GlossaryController {
   async find(
     @param.filter(Glossary) filter?: Filter<Glossary>,
   ): Promise<Glossary[]> {
-    return this.glossaryRepository.find(filter);
+    let glossaryElements = await this.glossaryRepository.find(filter);
+    for (let glossaryElement of glossaryElements) {
+      if (glossaryElement.translations) {
+        for (let translation of glossaryElement.translations) {
+          if (translation.description) {
+            translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
+          }
+        }
+      }
+    }
+    return glossaryElements
   }
 
  /* @get('/glossaries/published', {
@@ -143,7 +156,15 @@ export class GlossaryController {
     @param.path.number('id') id: number,
     @param.filter(Glossary, { exclude: 'where' }) filter?: FilterExcludingWhere<Glossary>
   ): Promise<Glossary> {
-    return this.glossaryRepository.findById(id, filter);
+    let glossaryElement = await this.glossaryRepository.findById(id, filter);
+    if (glossaryElement.translations) {
+      for (let translation of glossaryElement.translations) {
+        if (translation.description) {
+          translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
+        }
+      }
+    }
+    return glossaryElement
   }
 
   @patch('/glossaries/{id}', {

@@ -1,3 +1,4 @@
+import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -20,10 +21,12 @@ import {
   GlossaryTranslation,
 } from '../models';
 import { GlossaryRepository } from '../repositories';
+import { MarkdownConverterService } from '../services/markdown-converter.service';
 
 export class GlossaryGlossaryTranslationController {
   constructor(
     @repository(GlossaryRepository) protected glossaryRepository: GlossaryRepository,
+    @service(MarkdownConverterService) private markdownConverterService: MarkdownConverterService
   ) { }
 
   @get('/glossaries/{id}/glossary-translations', {
@@ -42,7 +45,13 @@ export class GlossaryGlossaryTranslationController {
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<GlossaryTranslation>,
   ): Promise<GlossaryTranslation[]> {
-    return this.glossaryRepository.translations(id).find(filter);
+    let glossaryElementTranslations = await this.glossaryRepository.translations(id).find(filter)
+    for (let translation of glossaryElementTranslations) {
+      if (translation.description) {
+        translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
+      }
+    }
+    return glossaryElementTranslations
   }
 
   @post('/glossaries/{id}/glossary-translations', {
@@ -68,6 +77,9 @@ export class GlossaryGlossaryTranslationController {
     }) glossaryTranslation: GlossaryTranslation,
     //    }) glossaryTranslation: Omit < GlossaryTranslation, 'id' >,
   ): Promise<GlossaryTranslation> {
+    if (glossaryTranslation.description) {
+      glossaryTranslation.description = await this.markdownConverterService.HTMLToMarkdown(glossaryTranslation.description)
+    }
     return this.glossaryRepository.translations(id).create(glossaryTranslation);
   }
 
@@ -91,6 +103,9 @@ export class GlossaryGlossaryTranslationController {
     glossaryTranslation: Partial<GlossaryTranslation>,
     @param.query.object('where', getWhereSchemaFor(GlossaryTranslation)) where?: Where<GlossaryTranslation>,
   ): Promise<Count> {
+    if (glossaryTranslation.description) {
+      glossaryTranslation.description = await this.markdownConverterService.HTMLToMarkdown(glossaryTranslation.description)
+    }
     return this.glossaryRepository.translations(id).patch(glossaryTranslation, where);
   }
 
