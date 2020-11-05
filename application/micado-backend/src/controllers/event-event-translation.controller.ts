@@ -25,8 +25,7 @@ import { MarkdownConverterService } from '../services/markdown-converter.service
 
 export class EventEventTranslationController {
   constructor(
-    @repository(EventRepository) protected eventRepository: EventRepository,
-    @service(MarkdownConverterService) private markdownConverterService: MarkdownConverterService
+    @repository(EventRepository) protected eventRepository: EventRepository
   ) { }
 
   @get('/events/{id}/event-translations', {
@@ -71,9 +70,6 @@ export class EventEventTranslationController {
     }) eventTranslation: EventTranslation,
     //    }) eventTranslation: Omit < EventTranslation, 'id' >,
   ): Promise<EventTranslation> {
-    if (eventTranslation.description) {
-      eventTranslation.description = await this.markdownConverterService.HTMLToMarkdown(eventTranslation.description)
-    }
     return this.eventRepository.translations(id).create(eventTranslation);
   }
 
@@ -97,9 +93,6 @@ export class EventEventTranslationController {
     eventTranslation: Partial<EventTranslation>,
     @param.query.object('where', getWhereSchemaFor(EventTranslation)) where?: Where<EventTranslation>,
   ): Promise<Count> {
-    if (eventTranslation.description) {
-      eventTranslation.description = await this.markdownConverterService.HTMLToMarkdown(eventTranslation.description)
-    }
     return this.eventRepository.translations(id).patch(eventTranslation, where);
   }
 

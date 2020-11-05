@@ -24,8 +24,7 @@ import { MarkdownConverterService } from '../services/markdown-converter.service
 export class EventController {
   constructor(
     @repository(EventRepository)
-    public eventRepository: EventRepository,
-    @service(MarkdownConverterService) private markdownConverterService: MarkdownConverterService
+    public eventRepository: EventRepository
   ) { }
 
   @post('/events', {
@@ -110,17 +109,7 @@ export class EventController {
   async find(
     @param.filter(Event) filter?: Filter<Event>,
   ): Promise<Event[]> {
-    let eventElements = await this.eventRepository.find(filter);
-    for (let eventElement of eventElements) {
-      if (eventElement.translations) {
-        for (let translation of eventElement.translations) {
-          if (translation.description && translation.lang) {
-            translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
-          }
-        }
-      }
-    }
-    return eventElements
+    return this.eventRepository.find(filter);
   }
 
  /* @get('/events/published', {
@@ -183,13 +172,7 @@ export class EventController {
     @param.path.number('id') id: number,
     @param.filter(Event, { exclude: 'where' }) filter?: FilterExcludingWhere<Event>
   ): Promise<Event> {
-    let eventElement = await this.eventRepository.findById(id, filter);
-    for (let translation of eventElement.translations) {
-      if (translation.description && translation.lang) {
-        translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
-      }
-    }
-    return eventElement
+    return this.eventRepository.findById(id, filter);
   }
 
   @patch('/events/{id}', {

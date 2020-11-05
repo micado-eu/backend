@@ -19,13 +19,11 @@ import {
 } from '@loopback/rest';
 import { Information } from '../models';
 import { InformationRepository } from '../repositories';
-import { MarkdownConverterService } from '../services/markdown-converter.service';
 
 export class InformationController {
   constructor(
     @repository(InformationRepository)
-    public informationRepository: InformationRepository,
-    @service(MarkdownConverterService) private markdownConverterService: MarkdownConverterService
+    public informationRepository: InformationRepository
   ) { }
 
   @post('/information', {
@@ -110,17 +108,7 @@ export class InformationController {
   async find(
     @param.filter(Information) filter?: Filter<Information>,
   ): Promise<Information[]> {
-    let infoElements = await this.informationRepository.find(filter);
-    for (let infoElement of infoElements) {
-      if (infoElement.translations) {
-        for (let translation of infoElement.translations) {
-          if (translation.description && translation.lang) {
-            translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
-          }
-        }
-      }
-    }
-    return infoElements
+    return this.informationRepository.find(filter);
   }
 
   /*@get('/information/published', {
@@ -182,13 +170,7 @@ export class InformationController {
     @param.path.number('id') id: number,
     @param.filter(Information, { exclude: 'where' }) filter?: FilterExcludingWhere<Information>
   ): Promise<Information> {
-    let infoElement = await this.informationRepository.findById(id, filter);
-    for (let translation of infoElement.translations) {
-      if (translation.description && translation.lang) {
-        translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
-      }
-    }
-    return infoElement
+    return this.informationRepository.findById(id, filter);
   }
 
   @patch('/information/{id}', {

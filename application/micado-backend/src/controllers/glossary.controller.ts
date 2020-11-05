@@ -24,8 +24,7 @@ import { MarkdownConverterService } from '../services/markdown-converter.service
 export class GlossaryController {
   constructor(
     @repository(GlossaryRepository)
-    public glossaryRepository: GlossaryRepository,
-    @service(MarkdownConverterService) private markdownConverterService: MarkdownConverterService
+    public glossaryRepository: GlossaryRepository
   ) { }
 
   @post('/glossaries', {
@@ -84,17 +83,7 @@ export class GlossaryController {
   async find(
     @param.filter(Glossary) filter?: Filter<Glossary>,
   ): Promise<Glossary[]> {
-    let glossaryElements = await this.glossaryRepository.find(filter);
-    for (let glossaryElement of glossaryElements) {
-      if (glossaryElement.translations) {
-        for (let translation of glossaryElement.translations) {
-          if (translation.description) {
-            translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
-          }
-        }
-      }
-    }
-    return glossaryElements
+    return this.glossaryRepository.find(filter);
   }
 
  /* @get('/glossaries/published', {
@@ -156,15 +145,7 @@ export class GlossaryController {
     @param.path.number('id') id: number,
     @param.filter(Glossary, { exclude: 'where' }) filter?: FilterExcludingWhere<Glossary>
   ): Promise<Glossary> {
-    let glossaryElement = await this.glossaryRepository.findById(id, filter);
-    if (glossaryElement.translations) {
-      for (let translation of glossaryElement.translations) {
-        if (translation.description) {
-          translation.description = await this.markdownConverterService.markdownToHTML(translation.description, translation.lang)
-        }
-      }
-    }
-    return glossaryElement
+    return this.glossaryRepository.findById(id, filter);
   }
 
   @patch('/glossaries/{id}', {
