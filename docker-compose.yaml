@@ -16,6 +16,7 @@ services:
 #    command: /bin/sh -c "cd backend && npm start"
     command: /bin/sh -c "bash"
     env_file:
+      - .env
       - prod.env
     environment:
       - MICADO_GIT_URL=http://test.org/
@@ -24,7 +25,9 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - MICADO_DB_PWD=${MICADO_DB_PWD} 
       - MICADO_DB_USER=${MICADO_DB_USER} 
-      - MICADO_DB_SCHEMA=${MICADO_DB_SCHEMA}  
+      - MICADO_DB_SCHEMA=${MICADO_DB_SCHEMA} 
+      - WSO2_IDENTITY_ADMIN_PWD=${WSO2_IDENTITY_ADMIN_PWD} 
+      - WSO2_IDENTITY_ADMIN_USER=${WSO2_IDENTITY_ADMIN_USER} 
     networks:
       - micado_net
 

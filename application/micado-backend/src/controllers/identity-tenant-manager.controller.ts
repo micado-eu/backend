@@ -20,7 +20,7 @@ export class IdentityTenantManagerController {
     var tenantInfo = null
     return new Promise((resolve, reject) => {
       soap.createClient(url, function (err: any, client: any) {
-        client.setSecurity(new soap.BasicAuthSecurity('admin', 'micadoadm2020'));
+        client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
         client.getTenant(args, function (err: any, result: any) {
           console.log(result);
@@ -40,7 +40,7 @@ export class IdentityTenantManagerController {
     var tenantInfo = null
     return new Promise((resolve, reject) => {
       soap.createClient(url, function (err: any, client: any) {
-        client.setSecurity(new soap.BasicAuthSecurity('admin', 'micadoadm2020'));
+        client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
         client.retrieveTenants(args, function (err: any, result: any) {
           console.log(result);
@@ -90,7 +90,7 @@ export class IdentityTenantManagerController {
     var tenantInfo = null
     return new Promise((resolve, reject) => {
       soap.createClient(url, function (err: any, client: any) {
-        client.setSecurity(new soap.BasicAuthSecurity('admin', 'micadoadm2020'));
+        client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
         client.addTenant(args, function (err: any, result: any) {
           console.log(result);
