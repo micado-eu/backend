@@ -8,7 +8,7 @@ export class IdentityTenantManagerController {
   constructor() { }
 
 
-  @get('/getTenant1/{tenant}')
+  @get('/getTenant/{tenant}')
   async getTenant (
     @param.path.string('tenant') tenantDomain: String,
   ): Promise<any> {
@@ -30,30 +30,61 @@ export class IdentityTenantManagerController {
     })
   }
 
+  @get('/getTenant')
+  async retrieveTenants (
+  ): Promise<any> {
+    //Preconditions
+    console.log("in the identity controller retrieveTenants")
+    var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
+    var args = {};
+    var tenantInfo = null
+    return new Promise((resolve, reject) => {
+      soap.createClient(url, function (err: any, client: any) {
+        client.setSecurity(new soap.BasicAuthSecurity('admin', 'micadoadm2020'));
+        console.log(JSON.stringify(client.describe()))
+        client.retrieveTenants(args, function (err: any, result: any) {
+          console.log(result);
+          return resolve(result)
+        });
+      });
+    })
+  }
 
-  @post('/addTenant1/{tenant}')
-  async addTenant1 (
-    @param.path.string('tenant') tenantDomain: String,
-    @param.path.string('password') password: String,
+  @post('/addTenant')
+  async addTenant (
+    @param.query.string('tenant') tenantDomain: String,
+    @param.query.string('password') password: String,
+    @param.query.string('email') email: String,
+    @param.query.string('firstname') firstname: String,
+    @param.query.string('lastname') lastname: String,
   ): Promise<any> {
     //Preconditions
     console.log("in the identity controller")
     console.log(tenantDomain)
     var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
+    let tenants = await this.retrieveTenants()
+    console.log(tenants)
+    let maxTenant = tenants.retrieveTenantsResponse.return.sort(
+      function (a: any, b: any) {
+        return b['tenantId'] - a['tenantId'];
+      }
+    )[0]['tenantId']
+    console.log(maxTenant)
+    maxTenant++
     var args = {
       tenantInfoBean: {
         active: true,
         admin: "admin",
         adminPassword: password,
-        createdDate: null,
-        email: "xs:string",
-        firstname: "xs:string",
-        lastname: "xs:string",
-        originatedService: null,
-        successKey: null,
-        tenantDomain: "xs:string",
-        tenantId: null,
-        usagePlan: null
+        createdDate: '',
+        email: email,
+        firstname: firstname,
+        lastname: lastname,
+        originatedService: '',
+        successKey: '',
+        tenantDomain: tenantDomain,
+        tenantId: maxTenant,
+        usagePlan: ''
       }
     };
     var tenantInfo = null
@@ -61,8 +92,9 @@ export class IdentityTenantManagerController {
       soap.createClient(url, function (err: any, client: any) {
         client.setSecurity(new soap.BasicAuthSecurity('admin', 'micadoadm2020'));
         console.log(JSON.stringify(client.describe()))
-        client.getTenant(args, function (err: any, result: any) {
+        client.addTenant(args, function (err: any, result: any) {
           console.log(result);
+          console.log(err)
           return resolve(result)
         });
       });
