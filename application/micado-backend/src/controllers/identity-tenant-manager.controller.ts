@@ -15,11 +15,12 @@ export class IdentityTenantManagerController {
     //Preconditions
     console.log("in the identity controller")
     console.log(tenantDomain)
-    var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
+    var url = 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService?wsdl'
     var args = { tenantDomain: tenantDomain };
+    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
     var tenantInfo = null
     return new Promise((resolve, reject) => {
-      soap.createClient(url, function (err: any, client: any) {
+      soap.createClient(url, options, function (err: any, client: any) {
         client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
         client.getTenant(args, function (err: any, result: any) {
@@ -35,11 +36,13 @@ export class IdentityTenantManagerController {
   ): Promise<any> {
     //Preconditions
     console.log("in the identity controller retrieveTenants")
-    var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
+    //    var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
+    var url = 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService?wsdl'
     var args = {};
+    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
     var tenantInfo = null
     return new Promise((resolve, reject) => {
-      soap.createClient(url, function (err: any, client: any) {
+      soap.createClient(url, options, function (err: any, client: any) {
         client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
         client.retrieveTenants(args, function (err: any, result: any) {
@@ -61,7 +64,7 @@ export class IdentityTenantManagerController {
     //Preconditions
     console.log("in the identity controller")
     console.log(tenantDomain)
-    var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
+    var url = 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService?wsdl'
     let tenants = await this.retrieveTenants()
     console.log(tenants)
     let maxTenant = tenants.retrieveTenantsResponse.return.sort(
@@ -87,9 +90,10 @@ export class IdentityTenantManagerController {
         usagePlan: ''
       }
     };
+    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
     var tenantInfo = null
     return new Promise((resolve, reject) => {
-      soap.createClient(url, function (err: any, client: any) {
+      soap.createClient(url, options, function (err: any, client: any) {
         client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
         client.addTenant(args, function (err: any, result: any) {
