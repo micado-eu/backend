@@ -50,7 +50,15 @@ export class IdentityTenantManagerController {
     var url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService?wsdl'
     console.log(url)
     var args = {};
-    var options = { request: req, endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
+    var options = {
+      request: req,
+      wsdl_options: {
+        forever: true,
+        rejectUnauthorized: false,
+        strictSSL: false
+      },
+      endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/'
+    }
     var tenantInfo = null
     return new Promise((resolve, reject) => {
       soap.createClient(url, options, function (err: any, client: any) {
