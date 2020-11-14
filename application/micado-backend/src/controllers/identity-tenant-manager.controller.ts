@@ -15,9 +15,10 @@ export class IdentityTenantManagerController {
     //Preconditions
     console.log("in the identity controller")
     console.log(tenantDomain)
-    var url = 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService?wsdl'
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+    var url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService?wsdl'
     var args = { tenantDomain: tenantDomain };
-    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
+    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
     var tenantInfo = null
     return new Promise((resolve, reject) => {
       soap.createClient(url, options, function (err: any, client: any) {
@@ -37,9 +38,14 @@ export class IdentityTenantManagerController {
     //Preconditions
     console.log("in the identity controller retrieveTenants")
     //    var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
-    var url = 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService?wsdl'
+
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+    console.log(process.env.MICADO_ENV)
+    console.log(innerPort)
+    var url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService?wsdl'
+    console.log(url)
     var args = {};
-    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
+    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
     var tenantInfo = null
     return new Promise((resolve, reject) => {
       soap.createClient(url, options, function (err: any, client: any) {
@@ -64,7 +70,8 @@ export class IdentityTenantManagerController {
     //Preconditions
     console.log("in the identity controller")
     console.log(tenantDomain)
-    var url = 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService?wsdl'
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+    var url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService?wsdl'
     let tenants = await this.retrieveTenants()
     console.log(tenants)
     let maxTenant = tenants.retrieveTenantsResponse.return.sort(
@@ -90,7 +97,7 @@ export class IdentityTenantManagerController {
         usagePlan: ''
       }
     };
-    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
+    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
     var tenantInfo = null
     return new Promise((resolve, reject) => {
       soap.createClient(url, options, function (err: any, client: any) {

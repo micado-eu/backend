@@ -28,6 +28,7 @@ services:
       - MICADO_DB_SCHEMA=${MICADO_DB_SCHEMA} 
       - WSO2_IDENTITY_ADMIN_PWD=${WSO2_IDENTITY_ADMIN_PWD} 
       - WSO2_IDENTITY_ADMIN_USER=${WSO2_IDENTITY_ADMIN_USER} 
+      - MICADO_ENV=${MICADO_ENV} 
     networks:
       - micado_net
 
