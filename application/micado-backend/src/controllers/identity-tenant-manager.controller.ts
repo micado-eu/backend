@@ -3,6 +3,11 @@ import { get, post, param, HttpErrors } from '@loopback/rest';
 
 // import {inject} from '@loopback/context';
 var soap = require('soap');
+var request = require('request')
+
+var req = request.defaults({
+  strictSSL: false
+});
 
 export class IdentityTenantManagerController {
   constructor() { }
@@ -45,7 +50,7 @@ export class IdentityTenantManagerController {
     var url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService?wsdl'
     console.log(url)
     var args = {};
-    var options = { endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
+    var options = { request: req, endpoint: 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/' }
     var tenantInfo = null
     return new Promise((resolve, reject) => {
       soap.createClient(url, options, function (err: any, client: any) {
