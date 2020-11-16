@@ -22,6 +22,12 @@ export class Topic extends Entity {
   })
   icon?: string;
 
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
+
   @hasMany(() => TopicTranslation, { keyTo: 'id' })
   translations: TopicTranslation[];
 

@@ -24,6 +24,12 @@ export class EventTag extends Entity {
     })
     eventId: number;
 
+    @property({
+        type: 'boolean',
+        postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+      })
+      published?: boolean;
+
     @hasMany(() => EventTagTranslation, { keyTo: 'id' })
     translations: EventTagTranslation[];
 

@@ -32,6 +32,12 @@ export class Information extends Entity {
   })
   category?: number;
 
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
+
   @hasMany(() => InformationTranslation, { keyTo: 'id' })
   translations: InformationTranslation[];
 

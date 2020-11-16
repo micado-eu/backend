@@ -24,6 +24,12 @@ export class InformationTag extends Entity {
     })
     informationId: number;
 
+    @property({
+        type: 'boolean',
+        postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+      })
+      published?: boolean;
+
     @hasMany(() => InformationTagTranslation, { keyTo: 'id' })
     translations: InformationTagTranslation[];
 

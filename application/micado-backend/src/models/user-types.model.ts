@@ -22,6 +22,12 @@ export class UserTypes extends Entity {
   })
   icon?: string;
 
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
+
   @hasMany(() => UserTypesTranslation, { keyTo: 'id' })
   translations: UserTypesTranslation[];
 

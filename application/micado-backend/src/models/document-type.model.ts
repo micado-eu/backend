@@ -54,6 +54,12 @@ export class DocumentType extends Entity {
     postgresql: { columnName: 'validity_duration', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES' },
   })
   validityDuration?: number;
+  
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
 
 
   @hasMany(() => DocumentTypeTranslation, { keyTo: 'id' })

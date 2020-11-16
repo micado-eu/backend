@@ -26,6 +26,12 @@ export class InterventionCategory extends Entity {
   })
   externalId?: string;
 
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
+
 
   @hasMany(() => InterventionCategoryTranslation, { keyTo: 'id' })
   translations: InterventionCategoryTranslation[];

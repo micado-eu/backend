@@ -28,6 +28,12 @@ export class InformationCategory extends Entity {
   })
   link_integration_plan?: string;
 
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
+
   @hasMany(() => InformationCategoryTranslation, { keyTo: 'id' })
   translations: InformationCategoryTranslation[];
 

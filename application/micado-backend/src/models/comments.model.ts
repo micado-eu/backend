@@ -26,6 +26,12 @@ export class Comments extends Entity {
   })
   tenantId: number;
 
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  published?: boolean;
+
   @hasMany(() => CommentsTranslation, {keyTo: 'id'})
   translations: CommentsTranslation[];
 
