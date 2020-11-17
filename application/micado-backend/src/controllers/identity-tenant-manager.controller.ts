@@ -72,7 +72,9 @@ export class IdentityTenantManagerController {
       soap.createClient(url, options, function (err: any, client: any) {
         client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
+
         client.retrieveTenants(args, function (err: any, result: any) {
+          //     client.getTenant(args, function (err: any, result: any) {
           console.log(result);
           return resolve(result)
         });

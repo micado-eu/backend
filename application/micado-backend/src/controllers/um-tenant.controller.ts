@@ -16,29 +16,29 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {UmTenant} from '../models';
-import {UmTenantRepository} from '../repositories';
+import { UmTenant } from '../models';
+import { UmTenantRepository } from '../repositories';
 
 export class UmTenantController {
   constructor(
     @repository(UmTenantRepository)
-    public tenantRepository : UmTenantRepository,
-  ) {}
+    public tenantRepository: UmTenantRepository,
+  ) { }
 
   @post('/um_tenants', {
     responses: {
       '200': {
         description: 'Tenant model instance',
-        content: {'application/json': {schema: getModelSchemaRef(UmTenant)}},
+        content: { 'application/json': { schema: getModelSchemaRef(UmTenant) } },
       },
     },
   })
-  async create(
+  async create (
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(UmTenant, {
-            title: 'NewTenant',
+            title: 'NewTenantUm',
             exclude: ['umId'],
           }),
         },
@@ -53,11 +53,11 @@ export class UmTenantController {
     responses: {
       '200': {
         description: 'Tenant model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async count(
+  async count (
     @param.where(UmTenant) where?: Where<UmTenant>,
   ): Promise<Count> {
     return this.tenantRepository.count(where);
@@ -71,14 +71,14 @@ export class UmTenantController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(UmTenant, {includeRelations: true}),
+              items: getModelSchemaRef(UmTenant, { includeRelations: true }),
             },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.filter(UmTenant) filter?: Filter<UmTenant>,
   ): Promise<UmTenant[]> {
     return this.tenantRepository.find(filter);
@@ -88,15 +88,15 @@ export class UmTenantController {
     responses: {
       '200': {
         description: 'Tenant PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async updateAll(
+  async updateAll (
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(UmTenant, {partial: true}),
+          schema: getModelSchemaRef(UmTenant, { partial: true }),
         },
       },
     })
@@ -112,15 +112,15 @@ export class UmTenantController {
         description: 'Tenant model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(UmTenant, {includeRelations: true}),
+            schema: getModelSchemaRef(UmTenant, { includeRelations: true }),
           },
         },
       },
     },
   })
-  async findById(
+  async findById (
     @param.path.number('id') id: number,
-    @param.filter(UmTenant, {exclude: 'where'}) filter?: FilterExcludingWhere<UmTenant>
+    @param.filter(UmTenant, { exclude: 'where' }) filter?: FilterExcludingWhere<UmTenant>
   ): Promise<UmTenant> {
     return this.tenantRepository.findById(id, filter);
   }
@@ -132,12 +132,12 @@ export class UmTenantController {
       },
     },
   })
-  async updateById(
+  async updateById (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(UmTenant, {partial: true}),
+          schema: getModelSchemaRef(UmTenant, { partial: true }),
         },
       },
     })
@@ -153,7 +153,7 @@ export class UmTenantController {
       },
     },
   })
-  async replaceById(
+  async replaceById (
     @param.path.number('id') id: number,
     @requestBody() tenant: UmTenant,
   ): Promise<void> {
@@ -167,7 +167,7 @@ export class UmTenantController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById (@param.path.number('id') id: number): Promise<void> {
     await this.tenantRepository.deleteById(id);
   }
 }

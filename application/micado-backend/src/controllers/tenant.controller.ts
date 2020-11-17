@@ -16,30 +16,30 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Tenant} from '../models';
-import {TenantRepository} from '../repositories';
+import { Tenant } from '../models';
+import { TenantRepository } from '../repositories';
 
 export class TenantController {
   constructor(
     @repository(TenantRepository)
-    public tenantRepository : TenantRepository,
-  ) {}
+    public tenantRepository: TenantRepository,
+  ) { }
 
   @post('/tenants', {
     responses: {
       '200': {
         description: 'Tenant model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Tenant)}},
+        //        content: { 'application/json': { schema: getModelSchemaRef(Tenant) } },
       },
     },
   })
-  async create(
+  async create (
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(Tenant, {
-            title: 'NewTenant',
-            
+            title: 'NewTenant'
+
           }),
         },
       },
@@ -53,11 +53,11 @@ export class TenantController {
     responses: {
       '200': {
         description: 'Tenant model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async count(
+  async count (
     @param.where(Tenant) where?: Where<Tenant>,
   ): Promise<Count> {
     return this.tenantRepository.count(where);
@@ -71,14 +71,14 @@ export class TenantController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Tenant, {includeRelations: true}),
+              items: getModelSchemaRef(Tenant, { includeRelations: true }),
             },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.filter(Tenant) filter?: Filter<Tenant>,
   ): Promise<Tenant[]> {
     return this.tenantRepository.find(filter);
@@ -88,15 +88,15 @@ export class TenantController {
     responses: {
       '200': {
         description: 'Tenant PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async updateAll(
+  async updateAll (
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Tenant, {partial: true}),
+          schema: getModelSchemaRef(Tenant, { partial: true }),
         },
       },
     })
@@ -112,15 +112,15 @@ export class TenantController {
         description: 'Tenant model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Tenant, {includeRelations: true}),
+            schema: getModelSchemaRef(Tenant, { includeRelations: true }),
           },
         },
       },
     },
   })
-  async findById(
+  async findById (
     @param.path.number('id') id: number,
-    @param.filter(Tenant, {exclude: 'where'}) filter?: FilterExcludingWhere<Tenant>
+    @param.filter(Tenant, { exclude: 'where' }) filter?: FilterExcludingWhere<Tenant>
   ): Promise<Tenant> {
     return this.tenantRepository.findById(id, filter);
   }
@@ -132,12 +132,12 @@ export class TenantController {
       },
     },
   })
-  async updateById(
+  async updateById (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Tenant, {partial: true}),
+          schema: getModelSchemaRef(Tenant, { partial: true }),
         },
       },
     })
@@ -153,7 +153,7 @@ export class TenantController {
       },
     },
   })
-  async replaceById(
+  async replaceById (
     @param.path.number('id') id: number,
     @requestBody() tenant: Tenant,
   ): Promise<void> {
@@ -167,7 +167,7 @@ export class TenantController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById (@param.path.number('id') id: number): Promise<void> {
     await this.tenantRepository.deleteById(id);
   }
 }
