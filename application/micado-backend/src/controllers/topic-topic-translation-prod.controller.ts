@@ -60,7 +60,7 @@ export class TopicTopicTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(TopicTranslationProd, {
             title: 'NewTopicTranslationProdInTopic',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },
