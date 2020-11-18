@@ -1,5 +1,15 @@
 // Uncomment these imports to begin using these cool features!
 import { get, post, param, HttpErrors } from '@loopback/rest';
+import {
+  Count,
+  CountSchema,
+  Filter,
+  FilterExcludingWhere,
+  repository,
+  Where,
+} from '@loopback/repository';
+import { TenantRepository } from '../repositories';
+import { Tenant } from '../models';
 
 // import {inject} from '@loopback/context';
 var soap = require('soap');
@@ -10,7 +20,10 @@ var req = request.defaults({
 });
 
 export class IdentityTenantManagerController {
-  constructor() { }
+  constructor(
+    @repository(TenantRepository) public tenantRepository: TenantRepository,
+
+  ) { }
 
 
   @get('/getTenant/{tenant}')
@@ -137,9 +150,35 @@ export class IdentityTenantManagerController {
         client.addTenant(args, function (err: any, result: any) {
           console.log(result);
           console.log(err)
+          result.tenantInfoBean = args.tenantInfoBean
           return resolve(result)
         });
       });
     })
+  }
+
+  @post('/addTenantPlusDB')
+  async addTenantPlusDB (
+    @param.query.string('tenant') tenantDomain: String,
+    @param.query.string('password') password: String,
+    @param.query.string('email') email: String,
+    @param.query.string('firstname') firstname: String,
+    @param.query.string('lastname') lastname: String,
+    @param.query.string('tenantname') tenantname: string,
+    @param.query.string('link') link: string,
+    @param.query.string('address') address: string,
+    @param.query.string('contactmail') contactmail: string,
+  ): Promise<any> {
+
+    let isRet = await this.addTenant(tenantDomain, password, email, firstname, lastname)
+    console.log(isRet)
+    let dbTenant: Tenant = new Tenant({
+      id: isRet.tenantInfoBean.tenantId,
+      name: tenantname,
+      link: link,
+      email: contactmail,
+      address: address
+    })
+    return this.tenantRepository.create(dbTenant);
   }
 }
