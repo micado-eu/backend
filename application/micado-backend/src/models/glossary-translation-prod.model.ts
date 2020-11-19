@@ -26,8 +26,7 @@ export class GlossaryTranslationProd extends Entity {
 
   @property({
     type: 'string',
-    length: 25,
-    postgresql: {columnName: 'title', dataType: 'character varying', dataLength: 25, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'title', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   title?: string;
 

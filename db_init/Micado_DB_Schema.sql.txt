@@ -483,7 +483,7 @@ ALTER SEQUENCE event_category_id_seq1 OWNED BY event_category.id;
 CREATE TABLE event_category_translation (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    event_category character varying(20),
+    event_category text,
     translation_date timestamp without time zone,
     "translationState" integer DEFAULT 0 NOT NULL,
     published boolean DEFAULT false
@@ -497,7 +497,7 @@ CREATE TABLE event_category_translation (
 CREATE TABLE event_category_translation_prod (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    event_category character varying(20),
+    event_category text,
     translation_date timestamp without time zone
 );
 
@@ -509,7 +509,7 @@ CREATE TABLE event_category_translation_prod (
 CREATE TABLE information_category_translation_prod (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    information_category character varying(20),
+    information_category text,
     translation_date timestamp without time zone
 );
 
@@ -820,7 +820,7 @@ ALTER SEQUENCE event_topic_id_topic_seq1 OWNED BY event_topic.id_topic;
 CREATE TABLE event_translation (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    event character varying(20),
+    event text,
     description text,
     translation_date timestamp without time zone,
     "translationState" integer DEFAULT 0 NOT NULL,
@@ -835,7 +835,7 @@ CREATE TABLE event_translation (
 CREATE TABLE event_translation_prod (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    event character varying(20),
+    event text,
     description text,
     translation_date timestamp without time zone
 );
@@ -848,7 +848,7 @@ CREATE TABLE event_translation_prod (
 CREATE TABLE information_translation_prod (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    event character varying(20),
+    event text,
     description text,
     translation_date timestamp without time zone
 );
@@ -1092,7 +1092,7 @@ ALTER SEQUENCE glossary_id_seq OWNED BY glossary.id;
 CREATE TABLE glossary_translation (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    title character varying(25),
+    title text,
     description text,
     translation_date timestamp without time zone,
     "translationState" integer DEFAULT 0 NOT NULL,
@@ -1107,7 +1107,7 @@ CREATE TABLE glossary_translation (
 CREATE TABLE glossary_translation_prod (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    title character varying(25),
+    title text,
     description text,
     translation_date timestamp without time zone
 );
@@ -1237,7 +1237,7 @@ ALTER SEQUENCE individual_intervention_plan_interventions_list_id_seq OWNED BY i
 CREATE TABLE information_category_translation (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    information_category character varying(20),
+    information_category text,
     translation_date timestamp without time zone,
     "translationState" integer DEFAULT 0 NOT NULL,
     published boolean DEFAULT false
@@ -1277,7 +1277,7 @@ CREATE TABLE information_tags_translation_prod (
 CREATE TABLE information_translation (
     id smallint NOT NULL,
     lang character varying(10) NOT NULL,
-    information character varying(20),
+    information text,
     description text,
     translation_date timestamp without time zone,
     "translationState" integer DEFAULT 0 NOT NULL,

@@ -26,8 +26,7 @@ export class EventCategoryTranslationProd extends Entity {
 
   @property({
     type: 'string',
-    length: 20,
-    postgresql: {columnName: 'event_category', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'event_category', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   eventCategory?: string;
 

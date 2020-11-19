@@ -26,8 +26,7 @@ export class InformationTranslation extends Entity {
 
   @property({
     type: 'string',
-    length: 20,
-    postgresql: { columnName: 'information', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'information', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   information?: string;
 
