@@ -110,3 +110,4 @@ export * from './comments-tenant.controller';
 export * from './picture-hotspot.controller';
 export * from './mail-document.controller';
 export * from './countly.controller';
+export * from './intervention-types-individual-intervention-plan-interventions.controller';

@@ -3,6 +3,7 @@ import { InterventionTypesTranslation } from './intervention-types-translation.m
 import { InterventionCategory } from './intervention-category.model';
 import {InterventionTypeValidator} from './intervention-type-validator.model';
 import {InterventionTypesTranslationProd} from './intervention-types-translation-prod.model';
+import {IndividualInterventionPlanInterventions} from './individual-intervention-plan-interventions.model';
 
 @model({
   settings: {
@@ -51,6 +52,9 @@ export class InterventionTypes extends Entity {
 
   @hasMany(() => InterventionTypesTranslationProd, {keyTo: 'id'})
   translations_prod: InterventionTypesTranslationProd[];
+
+  @hasMany(() => IndividualInterventionPlanInterventions, {keyTo: 'interventionType'})
+  linkedInterventions: IndividualInterventionPlanInterventions[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
