@@ -60,7 +60,7 @@ export class InterventionCategoryInterventionCategoryTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(InterventionCategoryTranslationProd, {
             title: 'NewInterventionCategoryTranslationProdInInterventionCategory',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },

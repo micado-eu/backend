@@ -60,7 +60,7 @@ export class EventEventTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(EventTranslationProd, {
             title: 'NewEventTranslationProdInEvent',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },

@@ -60,7 +60,7 @@ export class UserTypesUserTypesTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(UserTypesTranslationProd, {
             title: 'NewUserTypesTranslationProdInUserTypes',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },

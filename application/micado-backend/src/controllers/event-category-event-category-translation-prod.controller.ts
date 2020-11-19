@@ -60,7 +60,7 @@ export class EventCategoryEventCategoryTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(EventCategoryTranslationProd, {
             title: 'NewEventCategoryTranslationProdInEventCategory',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },

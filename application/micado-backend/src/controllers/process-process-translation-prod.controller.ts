@@ -60,7 +60,7 @@ export class ProcessProcessTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(ProcessTranslationProd, {
             title: 'NewProcessTranslationProdInProcess',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },

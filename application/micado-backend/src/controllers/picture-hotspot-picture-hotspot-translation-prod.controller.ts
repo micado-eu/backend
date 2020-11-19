@@ -60,7 +60,7 @@ export class PictureHotspotPictureHotspotTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(PictureHotspotTranslationProd, {
             title: 'NewPictureHotspotTranslationProdInPictureHotspot',
-            exclude: ['phtId'],
+            //exclude: ['phtId'],
             optional: ['phtId']
           }),
         },

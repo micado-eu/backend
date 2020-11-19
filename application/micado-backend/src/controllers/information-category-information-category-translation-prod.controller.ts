@@ -60,7 +60,7 @@ export class InformationCategoryInformationCategoryTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(InformationCategoryTranslationProd, {
             title: 'NewInformationCategoryTranslationProdInInformationCategory',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },

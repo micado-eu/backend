@@ -60,7 +60,7 @@ export class DocumentTypeDocumentTypeTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(DocumentTypeTranslationProd, {
             title: 'NewDocumentTypeTranslationProdInDocumentType',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },

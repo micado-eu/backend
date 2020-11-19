@@ -60,7 +60,7 @@ export class GlossaryGlossaryTranslationProdController {
         'application/json': {
           schema: getModelSchemaRef(GlossaryTranslationProd, {
             title: 'NewGlossaryTranslationProdInGlossary',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },
