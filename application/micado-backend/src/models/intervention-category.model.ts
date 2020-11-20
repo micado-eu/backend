@@ -1,6 +1,7 @@
 import { Entity, model, property, hasMany } from '@loopback/repository';
 import { InterventionCategoryTranslation } from './intervention-category-translation.model';
 import {InterventionCategoryTranslationProd} from './intervention-category-translation-prod.model';
+import {InterventionTypes} from './intervention-types.model';
 
 @model({
   settings: {
@@ -38,6 +39,9 @@ export class InterventionCategory extends Entity {
 
   @hasMany(() => InterventionCategoryTranslationProd, {keyTo: 'id'})
   translations_prod: InterventionCategoryTranslationProd[];
+
+  @hasMany(() => InterventionTypes, {keyTo: 'categoryType'})
+  linkedInterventionType: InterventionTypes[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

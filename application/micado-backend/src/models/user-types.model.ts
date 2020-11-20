@@ -1,6 +1,7 @@
 import { Entity, model, property, hasMany } from '@loopback/repository';
 import { UserTypesTranslation } from './user-types-translation.model';
 import {UserTypesTranslationProd} from './user-types-translation-prod.model';
+import {ProcessUsers} from './process-users.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'user_types' } }
@@ -33,6 +34,9 @@ export class UserTypes extends Entity {
 
   @hasMany(() => UserTypesTranslationProd, {keyTo: 'id'})
   translations_prod: UserTypesTranslationProd[];
+
+  @hasMany(() => ProcessUsers, {keyTo: 'idUserTypes'})
+  linkedProcess: ProcessUsers[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

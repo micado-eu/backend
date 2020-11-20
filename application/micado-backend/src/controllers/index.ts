@@ -111,3 +111,6 @@ export * from './picture-hotspot.controller';
 export * from './mail-document.controller';
 export * from './countly.controller';
 export * from './intervention-types-individual-intervention-plan-interventions.controller';
+export * from './user-types-process-users.controller';
+export * from './topic-process-topic.controller';
+export * from './intervention-category-intervention-types.controller';

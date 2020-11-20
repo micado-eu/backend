@@ -76,6 +76,9 @@ export class DocumentType extends Entity {
 
   @hasMany(() => DocumentTypeValidator)
   validators: DocumentTypeValidator[];
+
+  @hasMany(() => ProcessProducedDocuments, {keyTo: 'idDocument'})
+  linkedProcess: ProcessProducedDocuments[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

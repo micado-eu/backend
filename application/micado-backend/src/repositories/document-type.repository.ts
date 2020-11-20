@@ -24,10 +24,14 @@ export class DocumentTypeRepository extends DefaultCrudRepository<
 
   public readonly validators: HasManyRepositoryFactory<DocumentTypeValidator, typeof DocumentType.prototype.id>;
 
+  public readonly linkedProcess: HasManyRepositoryFactory<ProcessProducedDocuments, typeof DocumentType.prototype.id>;
+
   constructor(
     @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('DocumentTypeTranslationRepository') protected documentTypeTranslationRepositoryGetter: Getter<DocumentTypeTranslationRepository>, @repository.getter('DocumentTypePictureRepository') protected documentTypePictureRepositoryGetter: Getter<DocumentTypePictureRepository>, @repository.getter('DocumentTypeTranslationProdRepository') protected documentTypeTranslationProdRepositoryGetter: Getter<DocumentTypeTranslationProdRepository>, @repository.getter('ProcessProducedDocumentsRepository') protected processProducedDocumentsRepositoryGetter: Getter<ProcessProducedDocumentsRepository>, @repository.getter('DocumentTypeValidatorRepository') protected documentTypeValidatorRepositoryGetter: Getter<DocumentTypeValidatorRepository>,
   ) {
     super(DocumentType, dataSource);
+    this.linkedProcess = this.createHasManyRepositoryFactoryFor('linkedProcess', processProducedDocumentsRepositoryGetter,);
+    this.registerInclusionResolver('linkedProcess', this.linkedProcess.inclusionResolver);
     this.validators = this.createHasManyRepositoryFactoryFor('validators', documentTypeValidatorRepositoryGetter,);
     this.registerInclusionResolver('validators', this.validators.inclusionResolver);
     this.generatedBy = this.createHasManyRepositoryFactoryFor('generatedBy', processProducedDocumentsRepositoryGetter,);
