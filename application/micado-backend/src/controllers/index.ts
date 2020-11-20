@@ -114,3 +114,4 @@ export * from './intervention-types-individual-intervention-plan-interventions.c
 export * from './user-types-process-users.controller';
 export * from './topic-process-topic.controller';
 export * from './intervention-category-intervention-types.controller';
+export * from './document-type-step-document.controller';
