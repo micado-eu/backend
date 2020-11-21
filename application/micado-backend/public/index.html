@@ -94,6 +94,23 @@
       };
     }
 
+    function setupUploadImages() {
+      const formElem = document.getElementById('uploadImages');
+      formElem.onsubmit = async e => {
+        e.preventDefault();
+
+        const res = await fetch('/upload-image', {
+          method: 'POST',
+          body: new FormData(formElem),
+        });
+
+        const body = await res.json();
+        console.log('Response from upload', body);
+
+        await fetchImages();
+      };
+    }
+
     /**
      * List uploaded files
      */
@@ -107,9 +124,21 @@
       document.getElementById('fileList').innerHTML = list.join('');
     }
 
+    async function fetchImages() {
+      const res = await fetch('/upload-image');
+      const files = await res.json();
+      console.log('Response from list', files);
+      const list = files.map(
+        f => `<li><a href="/files/${f}">${f}</a></li>\n`,
+      );
+      document.getElementById('fileList').innerHTML = list.join('');
+    }
+
     async function init() {
       setupUploadForm();
+      setupUploadImages();
       await fetchFiles();
+      await fetchImages()
     }
   </script>
 </head>
@@ -123,6 +152,17 @@
       <form id="uploadForm">
         <label for="files">Select files:</label>
         <input type="file" id="files" name="files" multiple /><br /><br />
+        <label for="entity">Note:</label>
+        <input type="text" name="entity" id="entity" placeholder="Note about the files" />
+        <br /><br />
+        <input type="submit" />
+      </form>
+    </div>
+    <div id="uploadImages">
+      <h3>Upload images</h3>
+      <form id="uploadImages">
+        <label for="filesImg">Select files:</label>
+        <input type="file" id="filesImg" name="filesImg" multiple /><br /><br />
         <label for="entity">Note:</label>
         <input type="text" name="entity" id="entity" placeholder="Note about the files" />
         <br /><br />

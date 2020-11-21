@@ -8,6 +8,10 @@ services:
       - type: volume
         source: backend
         target: /code
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - type: volume
+        source: shared_images
+        target: /images
     tmpfs:
       /tmp/translations
     ports:
@@ -110,6 +114,12 @@ volumes:
     driver_opts:
       type: none
       device: $PWD/git_data
+      o: bind
+  shared_images:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/shared_images
       o: bind
 
            
