@@ -50,6 +50,13 @@ export class Ratings extends Entity {
   })
   value?: number;
 
+  @property({
+    type: 'date',
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  date?: string;
+
   // Define well-known properties here
 
   // Indexer property to allow additional data
