@@ -81,7 +81,7 @@ export class ImageUploaderController {
   })
   async listImages (
   ): Promise<object> {
-    return fs.promises.readdir("file:/images/")
+    return fs.promises.readdir("/images/")
     /*
       .then(filenames => {
         for (let filename of filenames) {
