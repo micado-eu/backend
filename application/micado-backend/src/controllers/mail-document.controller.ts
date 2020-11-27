@@ -45,10 +45,10 @@ export class MailDocumentController {
   ): Promise<any> {
 
     const client = new SMTPClient({
-      user: 'development@micadoproject.eu',
-      password: 'sq!WRVLC5ing',
-      host: 'smtp.micadoproject.eu',
-      ssl: false,
+      user: process.env.WEBLATE_EMAIL_HOST_USER,
+      password: process.env.WEBLATE_EMAIL_HOST_PASSWORD,
+      host: process.env.WEBLATE_EMAIL_HOST,
+      ssl: (process.env.WEBLATE_EMAIL_HOST_SSL == 'true' ? true : false),
     });
 
     let pictures = await this.documentPicturesRepository.find({
@@ -63,7 +63,7 @@ export class MailDocumentController {
 
     const message = new Message({
       text: 'i hope this works',
-      from: 'development@micadoproject.eu',
+      from: process.env.WEBLATE_EMAIL_HOST,
       to: email,
       subject: 'testing emailjs2',
     });

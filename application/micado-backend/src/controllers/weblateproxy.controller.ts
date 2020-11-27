@@ -17,8 +17,17 @@ export class WeblateproxyController {
   ): Promise<any> {
     //Preconditions
 
-    return this.weblateService.translations();
+    return this.weblateService.translations(this.calcAuth(), process.env.TRANSLATION_HOSTNAME);
 
   }
+
+  calcAuth () {
+    var b = Buffer.from(process.env.WEBLATE_ADMIN_NAME + ':' + process.env.WEBLATE_ADMIN_PASSWORD);
+    // If we don't use toString(), JavaScript assumes we want to convert the object to utf8.
+    // We can make it convert to other formats by passing the encoding type to toString().
+    var s = b.toString('base64');
+    return s
+  }
+
 
 }

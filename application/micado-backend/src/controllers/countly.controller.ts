@@ -10,6 +10,7 @@ import { inject } from '@loopback/context';
 
 const COUNTLY_MIGRANTS_API_KEY = process.env.COUNTLY_MIGRANTS_API_KEY || '';
 const COUNTLY_MIGRANTS_APP_ID = process.env.COUNTLY_MIGRANTS_APP_ID || '';
+const ANALYTIC_HOSTNAME = process.env.ANALYTIC_HOSTNAME || '';
 
 
 export class CountlyController {
@@ -25,7 +26,16 @@ export class CountlyController {
 
     return this.countlyService.dashboard(
       COUNTLY_MIGRANTS_API_KEY,
-      COUNTLY_MIGRANTS_APP_ID
+      COUNTLY_MIGRANTS_APP_ID,
+      this.calcAuth(),
+      ANALYTIC_HOSTNAME
     );
+  }
+  calcAuth () {
+    var b = Buffer.from(process.env.COUNTLY_ADMIN + ':' + process.env.COUNTLY_ADMIN_PWD);
+    // If we don't use toString(), JavaScript assumes we want to convert the object to utf8.
+    // We can make it convert to other formats by passing the encoding type to toString().
+    var s = b.toString('base64');
+    return s
   }
 }

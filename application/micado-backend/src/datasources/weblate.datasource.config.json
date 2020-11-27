@@ -1,7 +1,7 @@
 {
   "name": "weblate",
   "connector": "rest",
-  "baseURL": "https://translate.micadoproject.eu",
+  "baseURL": "https://{baseurl}",
   "debug": true,
   "options": {
     "headers": {
@@ -16,7 +16,12 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://translate.micadoproject.eu/api/translations",
+        "url": "https://{baseurl}/api/translations",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Basic {auth}"
+        },
         "query": {
           "limit": 10,
           "offset": 0
@@ -27,30 +32,45 @@
         }
       },
       "functions": {
-        "translations": []
+        "translations": [
+          "auth",
+          "baseurl"
+        ]
       }
     },
     {
       "template": {
         "method": "GET",
-        "url": "/api/projects/{project}/components",
-        "query": {
+        "url": "https://{baseurl}/api/projects/{project}/components",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Basic {auth}"
         },
+        "query": {},
         "options": {
           "strictSSL": false,
           "useQuerystring": true
         }
       },
       "functions": {
-        "components": ["project"]
+        "components": [
+          "project",
+          "auth",
+          "baseurl"
+        ]
       }
     },
     {
       "template": {
         "method": "POST",
-        "url": "/api/components/{project}/{component}/lock/",
-        "query": {
+        "url": "https://{baseurl}/api/components/{project}/{component}/lock/",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Basic {auth}"
         },
+        "query": {},
         "body": {
           "lock": "{lock}"
         },
@@ -60,15 +80,25 @@
         }
       },
       "functions": {
-        "lock": ["project", "component", "lock"]
+        "lock": [
+          "project",
+          "component",
+          "lock",
+          "auth",
+          "baseurl"
+        ]
       }
     },
     {
       "template": {
         "method": "POST",
-        "url": "/api/projects/{project}/repository/",
-        "query": {
+        "url": "https://{baseurl}/api/projects/{project}/repository/",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Basic {auth}"
         },
+        "query": {},
         "body": {
           "operation": "{operation}"
         },
@@ -78,7 +108,12 @@
         }
       },
       "functions": {
-        "git": ["project", "operation"]
+        "git": [
+          "project",
+          "operation",
+          "auth",
+          "baseurl"
+        ]
       }
     }
   ]

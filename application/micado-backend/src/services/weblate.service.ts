@@ -6,10 +6,10 @@ export interface WeblateService {
   // this is where you define the Node.js methods that will be
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.
-  translations (): Promise<any>;
-  components (project: string): Promise<any>;
-  lock(project: string, component: string, lock: boolean): Promise<any>;
-  git(project: string, operation: string): Promise<any>;
+  translations (auth: string, baseurl: any): Promise<any>;
+  components (project: string, auth: string, baseurl: any): Promise<any>;
+  lock (project: string, component: string, lock: boolean, auth: string, baseurl: any): Promise<any>;
+  git (project: string, operation: string, auth: string, baseurl: any): Promise<any>;
 }
 
 export class WeblateProvider implements Provider<WeblateService> {

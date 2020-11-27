@@ -25,8 +25,8 @@ export class IdentityproxyController {
     return this.identityService.consent(
       tenant,
       principal,
-      "YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA=",
-      "identity.micadoproject.eu:9443"
+      this.calcAuth(),
+      process.env.IDENTITY_HOSTNAME + ":9443"
     );
 
   }
@@ -38,12 +38,21 @@ export class IdentityproxyController {
     //Preconditions
     console.log("in the identity controller")
     console.log(receipt)
+    //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
     return this.identityService.receipt(
       receipt,
-      "YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA=",
-      "identity.micadoproject.eu:9443"
+      this.calcAuth(),
+      process.env.IDENTITY_HOSTNAME + ":9443"
     );
 
+  }
+
+  calcAuth () {
+    var b = Buffer.from(process.env.WSO2_IDENTITY_ADMIN_USER + ':' + process.env.WSO2_IDENTITY_ADMIN_PWD);
+    // If we don't use toString(), JavaScript assumes we want to convert the object to utf8.
+    // We can make it convert to other formats by passing the encoding type to toString().
+    var s = b.toString('base64');
+    return s
   }
 
 }
