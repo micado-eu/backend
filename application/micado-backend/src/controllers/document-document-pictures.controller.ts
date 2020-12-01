@@ -17,7 +17,7 @@ import {
 } from '@loopback/rest';
 import {
   Document,
-  DocumentPictures,
+  DocumentPictures
 } from '../models';
 import {DocumentRepository} from '../repositories';
 
@@ -67,7 +67,9 @@ export class DocumentDocumentPicturesController {
       },
     }) documentPictures: Omit<DocumentPictures, 'id'>,
   ): Promise<DocumentPictures> {
+    this.encrypt(documentPictures)
     return this.documentRepository.pictures(id).create(documentPictures);
+   
   }
 
   @patch('/documents/{id}/document-pictures', {
@@ -90,6 +92,7 @@ export class DocumentDocumentPicturesController {
     documentPictures: Partial<DocumentPictures>,
     @param.query.object('where', getWhereSchemaFor(DocumentPictures)) where?: Where<DocumentPictures>,
   ): Promise<Count> {
+    this.encrypt(documentPictures)
     return this.documentRepository.pictures(id).patch(documentPictures, where);
   }
 
@@ -106,5 +109,20 @@ export class DocumentDocumentPicturesController {
     @param.query.object('where', getWhereSchemaFor(DocumentPictures)) where?: Where<DocumentPictures>,
   ): Promise<Count> {
     return this.documentRepository.pictures(id).delete(where);
+  }
+
+  encrypt (docPicture: any) {
+    const crypto = require('crypto');
+    const algorithm = process.env.ALGORITHM;
+    const password = process.env.ALGORITHM_PASSWORD;
+    // First, we'll generate the key. The key length is dependent on the algorithm.
+    const key = crypto.scryptSync(password, process.env.SALT, Number(process.env.KEY_LENGTH)) 
+    const iv = Buffer.alloc(Number(process.env.BUFFER_0), Number(process.env.BUFFER_1));
+    const cipher = crypto.createCipheriv(algorithm, key, iv);
+    let encrypted = cipher.update(docPicture.picture, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    console.log(encrypted);
+    docPicture.picture=encrypted
+    return docPicture
   }
 }

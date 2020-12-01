@@ -16,6 +16,7 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
+import { threadId } from 'worker_threads';
 import {Document} from '../models';
 import {DocumentRepository} from '../repositories';
 
@@ -81,7 +82,20 @@ export class DocumentController {
   async find(
     @param.filter(Document) filter?: Filter<Document>,
   ): Promise<Document[]> {
-    return this.documentRepository.find(filter);
+    let documents:any
+    await this.documentRepository.find(filter).then((promise_return)=>{
+      documents = promise_return
+    })
+    documents.forEach((doc:any) => {
+      if(doc.pictures){
+        doc.pictures.forEach((picture:any) => {
+          this.decipher(picture)
+        });
+      }
+      
+    });
+    return documents
+
   }
 
   @patch('/documents', {
@@ -122,7 +136,16 @@ export class DocumentController {
     @param.path.number('id') id: number,
     @param.filter(Document, {exclude: 'where'}) filter?: FilterExcludingWhere<Document>
   ): Promise<Document> {
-    return this.documentRepository.findById(id, filter);
+    let document:any
+     await this.documentRepository.findById(id, filter).then((promise_return)=>{
+      document = promise_return
+    })
+    document.pictures.forEach((picture:any) => {
+      this.decipher(picture)
+    });
+    return document
+    
+   
   }
 
   @patch('/documents/{id}', {
@@ -169,5 +192,18 @@ export class DocumentController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.documentRepository.deleteById(id);
+  }
+
+  decipher(picture:any){
+    const crypto = require('crypto');
+    const algorithm = process.env.ALGORITHM;
+    const password = process.env.ALGORITHM_PASSWORD;
+    const key = crypto.scryptSync(password, process.env.SALT, Number(process.env.KEY_LENGTH));
+    const iv = Buffer.alloc(Number(process.env.BUFFER_0), Number(process.env.BUFFER_1));
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(picture.picture, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    picture.picture = decrypted    
+    return picture
   }
 }

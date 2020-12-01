@@ -41,6 +41,12 @@ services:
       - ANALYTIC_HOSTNAME=${ANALYTIC_HOSTNAME} 
       - COUNTLY_ADMIN=${COUNTLY_ADMIN} 
       - COUNTLY_ADMIN_PWD=${COUNTLY_ADMIN_PWD} 
+      - ALGORITHM=${ALGORITHM}
+      - SALT=${SALT}
+      - KEY_LENGTH=${KEY_LENGTH}
+      - BUFFER_0=${BUFFER_0}
+      - BUFFER_1=${BUFFER_1}
+      - ALGORITHM_PASSWORD=${ALGORITHM_PASSWORD} 
     networks:
       - micado_net
 
