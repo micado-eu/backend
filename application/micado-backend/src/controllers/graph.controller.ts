@@ -62,7 +62,7 @@ export class GraphController {
         const saveTranslations = async () => {
           await this.asyncForEach(nstep.translations, async (transl: any) => {
 
-            let savingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description']));
+            let savingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description', 'translationState']));
             let trid = nstep.id
             console.log(savingTranslation)
 
@@ -130,7 +130,7 @@ export class GraphController {
         const editTranslations = async () => {
           await this.asyncForEach(cstep.translations, async (transl: any) => {
 
-            let editingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description']));
+            let editingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description', 'translationState']));
             let trid = cstep.id
             console.log(editingTranslation)
             let where = {
