@@ -170,4 +170,17 @@ export class StepController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.stepRepository.deleteById(id);
   }
+
+  @get('/steps/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.string('id') id:string,
+  ): Promise<void> {
+    return this.stepRepository.dataSource.execute("insert into step_translation_prod(id, lang ,step , description ,translation_date) select step_translation.id, step_translation.lang, step_translation.step, step_translation.description , step_translation.translation_date from step_translation  where "+'"translationState"'+" >= '2' and id='" + id+ "'");
+  }
 }

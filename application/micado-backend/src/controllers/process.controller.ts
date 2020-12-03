@@ -188,4 +188,19 @@ export class ProcessController {
       "' and t.id not in (select t.id from process t inner join process_translation tt on t.id = tt.id and tt.lang = '" +
       currentlang + "')");
   }
+
+  @get('/processes/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    return this.processRepository.dataSource.execute("insert into process_translation_prod(id, lang ,process , description ,translation_date) select process_translation.id, process_translation.lang, process_translation.process, process_translation.description , process_translation.translation_date from process_translation  where "+'"translationState"'+" >= '2' and id=" + id);
+  }
 }
+
+
