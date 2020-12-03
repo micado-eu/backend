@@ -1,12 +1,10 @@
 import {DefaultCrudRepository, Entity} from '@loopback/repository';
-import { del } from '@loopback/rest';
-import { cpuUsage } from 'process';
 
-export abstract class BaseTranslationRepository <
-    E extends Entity,
-    IdType,
-    Relations extends object
-> extends DefaultCrudRepository<E, IdType, Relations> {
+export abstract class BaseTranslationRepository<
+  E extends Entity,
+  IdType,
+  Relations extends object
+  > extends DefaultCrudRepository<E, IdType, Relations> {
 
   getIdColumnName(): string {
     return 'id';
@@ -23,10 +21,10 @@ export abstract class BaseTranslationRepository <
 
   public async getBaseLanguageTranslatables(language: string): Promise<any> {
     const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().map(c => `"${c}"`).join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
-    let results = await this.dataSource.execute(q, [language]);
+    const results = await this.dataSource.execute(q, [language]);
 
-    for(let i = 0; i < results.length; i++) {
-      let strings: any = {};
+    for (let i = 0; i < results.length; i++) {
+      const strings: any = {};
       this.getTranslatableColumnNames().forEach((columnName) => {
         strings[columnName] = results[i][columnName];
         delete results[i][columnName];
@@ -44,18 +42,18 @@ export abstract class BaseTranslationRepository <
 
   /**
    * Update strings in the translating state to translated if they are non empty and changed.
-   * @parambaseLanguage: The base language.
-   * @param translations: dictionary of {1: {en: "house", nl: "huis"}} 
+   * @param baseLanguage: The base language.
+   * @param translations: dictionary of {1: {en: "house", nl: "huis"}}
    */
   public async updateToTranslated(baseLanguage: string, translations: {[id: number]: {[language: string]: {[columnName: string]: string}}}) {
-    let columnsAssign = this.getTranslatableColumnNames();
-    for(let i = 0; i < columnsAssign.length; i++) {
-      columnsAssign[i] = columnsAssign[i] + '=' + '$' + (i+1).toString();
+    const columnsAssign = this.getTranslatableColumnNames();
+    for (let i = 0; i < columnsAssign.length; i++) {
+      columnsAssign[i] = columnsAssign[i] + '=' + '$' + (i + 1).toString();
     }
 
-    let columnsUpdated = this.getTranslatableColumnNames();
-    for(let i = 0; i < columnsUpdated.length; i++) {
-      columnsUpdated[i] = '(t1.' + columnsUpdated[i] + ' != $' + (i+1).toString() + ' OR t1.' + columnsUpdated[i] + ' ISNULL)';
+    const columnsUpdated = this.getTranslatableColumnNames();
+    for (let i = 0; i < columnsUpdated.length; i++) {
+      columnsUpdated[i] = '(t1.' + columnsUpdated[i] + ' != $' + (i + 1).toString() + ' OR t1.' + columnsUpdated[i] + ' ISNULL)';
     }
 
 
@@ -64,33 +62,33 @@ export abstract class BaseTranslationRepository <
     SET ` + columnsAssign.join(', ') + `,
     "translationState" = 3
     WHERE "translationState" = 2
-    AND "lang" = $` + (columnsAssign.length+1).toString() + `
-    AND "` + this.getIdColumnName() + `" = $` + (columnsAssign.length+2).toString() + `
+    AND "lang" = $` + (columnsAssign.length + 1).toString() + `
+    AND "` + this.getIdColumnName() + `" = $` + (columnsAssign.length + 2).toString() + `
     AND ` + columnsUpdated.join(' AND ') + `;
     `;
 
-    for(const id in translations) {
-      for(const language in translations[id]) {
-        let args: Array<any> = [];
+    for (const id in translations) {
+      for (const language in translations[id]) {
+        const args: Array<any> = [];
         this.getTranslatableColumnNames().forEach((columnName) => {
-          if(!translations[id][language].hasOwnProperty(columnName)) {
+          if (!translations[id][language].hasOwnProperty(columnName)) {
             return;
           }
 
           let text = translations[id][language][columnName];
-          if(text === null) {
+          if (text === null) {
             return;
           }
-  
+
           text = text.trim();
-          if(text.length === 0) {
+          if (text.length === 0) {
             return;
           }
 
           args.push(text);
         });
 
-        if(args.length !== this.getTranslatableColumnNames().length) {
+        if (args.length !== this.getTranslatableColumnNames().length) {
           // Some columns are empty or null. So we don't update this.
           continue;
         }
@@ -112,13 +110,13 @@ export abstract class BaseTranslationRepository <
    * @param translatables: Array of [{translationState: 1, id: 1}, ...]
    */
   public async updateToTranlating(translatables: [{translationState: number, id: number}]) {
-    let ids = translatables.filter((t: any) => (t.translationState === 1)).map((t: any) => t.id);
+    const ids = translatables.filter((t: any) => (t.translationState === 1)).map((t: any) => t.id);
 
-    if(ids.length === 0) {
+    if (ids.length === 0) {
       return;
     }
 
-    const q = 'UPDATE ' + this.getTableName() + ' SET "translationState" = 2 WHERE "translationState" = 1 AND "' + this.getIdColumnName() + '" in ( ' + ids.join(',') + ' );';
-    await this.dataSource.execute(q);
+    const q = 'UPDATE ' + this.getTableName() + ' SET "translationState" = 2 WHERE "translationState" = 1 AND "' + this.getIdColumnName() + '" in ( ' + ids.map((id, i) => '$' + (i + 1).toString()).join(',') + ' );';
+    await this.dataSource.execute(q, ids);
   }
 }
