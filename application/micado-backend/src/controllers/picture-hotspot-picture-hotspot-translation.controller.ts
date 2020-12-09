@@ -108,4 +108,17 @@ export class PictureHotspotPictureHotspotTranslationController {
   ): Promise<Count> {
     return this.pictureHotspotRepository.translations(id).delete(where);
   }
+
+  @get('/picture-hotspots/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('pht_id') pht_id:number,
+  ): Promise<void> {
+    return this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" >= '2' and pht_id=" + pht_id);
+  }
 }

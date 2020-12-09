@@ -188,4 +188,17 @@ export class InterventionCategoryController {
       "' and t.id not in (select t.id from intervention_category t inner join intervention_category_translation tt on t.id = tt.id and tt.lang = '" +
       currentlang + "')");
   }
+
+  @get('/intervention-categories/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    return this.interventionCategoryRepository.dataSource.execute("insert into intervention_category_translation_prod(id, lang ,title,translation_date) select intervention_category_translation.id, intervention_category_translation.lang, intervention_category_translation.title, intervention_category_translation.translation_date from intervention_category_translation  where "+'"translationState"'+" >= '2' and id=" + id);
+  }
 }

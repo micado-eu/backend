@@ -217,4 +217,17 @@ export class DocumentTypeController {
       })
     return arrRet
   }
+
+  @get('/document-types/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    return this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" >= '2' and id=" + id);
+  }
 }

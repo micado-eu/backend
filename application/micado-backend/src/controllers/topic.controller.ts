@@ -190,4 +190,17 @@ export class TopicController {
       "' and t.id not in (select t.id from topic t inner join topic_translation tt on t.id = tt.id and tt.lang = '" +
       currentlang + "')");
   }
+
+  @get('/topics/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    return this.topicRepository.dataSource.execute("insert into topic_translation_prod(id, lang ,topic,translation_date) select topic_translation.id, topic_translation.lang, topic_translation.topic, topic_translation.translation_date from topic_translation  where "+'"translationState"'+" >= '2' and id=" + id);
+  }
 }

@@ -170,4 +170,17 @@ export class InterventionTypesController {
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.interventionTypesRepository.deleteById(id);
   }
+
+  @get('/intervention-types/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    return this.interventionTypesRepository.dataSource.execute("insert into intervention_types_translation_prod(id, lang ,intervention_title,description,translation_date) select intervention_types_translation.id, intervention_types_translation.lang, intervention_types_translation.intervention_title, intervention_types_translation.description, intervention_types_translation.translation_date from intervention_types_translation  where "+'"translationState"'+" >= '2' and id=" + id);
+  }
 }

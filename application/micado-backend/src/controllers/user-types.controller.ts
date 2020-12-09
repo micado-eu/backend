@@ -188,4 +188,17 @@ export class UserTypesController {
       "' and t.id not in (select t.id from user_types t inner join user_types_translation tt on t.id = tt.id and tt.lang = '" +
       currentlang + "')");
   }
+
+  @get('/user-types/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    return this.userTypesRepository.dataSource.execute("insert into user_types_translation_prod(id, lang ,user_type, description,translation_date) select user_types_translation.id, user_types_translation.lang, user_types_translation.user_type, user_types_translation.description, user_types_translation.translation_date from user_types_translation  where "+'"translationState"'+" >= '2' and id=" + id);
+  }
 }
