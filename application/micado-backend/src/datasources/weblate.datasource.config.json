@@ -7,7 +7,7 @@
     "headers": {
       "accept": "*/*",
       "content-type": "application/json",
-      "Authorization": "Basic YWRtaW46bWljYWRvYWRtMjAyMA=="
+      "Authorization": "Basic {auth}"
     },
     "strictSSL": false
   },
