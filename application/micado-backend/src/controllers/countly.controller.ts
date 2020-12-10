@@ -23,6 +23,10 @@ export class CountlyController {
   ): Promise<any> {
     console.log(COUNTLY_MIGRANTS_API_KEY)
     console.log(COUNTLY_MIGRANTS_APP_ID)
+    console.log(process.env.COUNTLY_ADMIN)
+    console.log(process.env.COUNTLY_ADMIN_PWD)
+    console.log(this.calcAuth())
+
 
     return this.countlyService.dashboard(
       COUNTLY_MIGRANTS_API_KEY,
