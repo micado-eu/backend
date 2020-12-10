@@ -18,11 +18,14 @@ import {
 } from '@loopback/rest';
 import {InterventionTypes} from '../models';
 import {InterventionTypesRepository} from '../repositories';
+import { SettingsRepository } from '../repositories';
+import { LanguagesRepository } from '../repositories';
 
 export class InterventionTypesController {
   constructor(
-    @repository(InterventionTypesRepository)
-    public interventionTypesRepository : InterventionTypesRepository,
+    @repository(InterventionTypesRepository) public interventionTypesRepository : InterventionTypesRepository,
+    @repository(SettingsRepository) protected settingsRepository: SettingsRepository,
+    @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
   ) {}
 
   @post('/intervention-types', {
@@ -181,6 +184,15 @@ export class InterventionTypesController {
   async publish (
     @param.query.number('id') id:number,
   ): Promise<void> {
-    return this.interventionTypesRepository.dataSource.execute("insert into intervention_types_translation_prod(id, lang ,intervention_title,description,translation_date) select intervention_types_translation.id, intervention_types_translation.lang, intervention_types_translation.intervention_title, intervention_types_translation.description, intervention_types_translation.translation_date from intervention_types_translation  where "+'"translationState"'+" >= '2' and id=" + id);
+    let settings = await this.settingsRepository.find({});
+    //   let lang_filter = { where: { active: true } }
+    let languages = await this.languagesRepository.find({ where: { active: true } });
+    let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
+    let idx = languages.findIndex(el => el.lang == def_lang.value)
+    languages.splice(idx, 1)
+    this.interventionTypesRepository.dataSource.execute("insert into intervention_types_translation_prod(id, lang ,intervention_title,description,translation_date) select intervention_types_translation.id, intervention_types_translation.lang, intervention_types_translation.intervention_title, intervention_types_translation.description, intervention_types_translation.translation_date from intervention_types_translation  where "+'"translationState"'+" >= '2' and id=" + id+ "and lang='" + def_lang.value+"'");
+    languages.forEach((lang:any)=>{
+      this.interventionTypesRepository.dataSource.execute("insert into intervention_types_translation_prod(id, lang ,intervention_title,description,translation_date) select intervention_types_translation.id, intervention_types_translation.lang, intervention_types_translation.intervention_title, intervention_types_translation.description, intervention_types_translation.translation_date from intervention_types_translation  where "+'"translationState"'+" > '2' and id=" + id+ "and lang='" + lang.lang+"'");
+    })
   }
 }
