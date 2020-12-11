@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   backend:
     image: micadoproject/micado_backend
@@ -12,12 +12,11 @@ services:
       - type: volume
         source: shared_images
         target: /images
-    tmpfs:
-      /tmp/translations
+    tmpfs: /tmp/translations
     ports:
-     - "3000:3000"
-#     - "8080:8080"
-#    command: /bin/sh -c "cd backend && npm start"
+      - "3000:3000"
+    #     - "8080:8080"
+    #    command: /bin/sh -c "cd backend && npm start"
     command: /bin/sh -c "bash"
     env_file:
       - .env
@@ -27,26 +26,28 @@ services:
       # don't use the /tmp/translations from tmpfs because it gives a permission error (have to fix this).
       - MICADO_TRANSLATIONS_DIR=/tmp/translations-repo
       - POSTGRES_DB=${POSTGRES_DB}
-      - MICADO_DB_PWD=${MICADO_DB_PWD} 
-      - MICADO_DB_USER=${MICADO_DB_USER} 
-      - MICADO_DB_SCHEMA=${MICADO_DB_SCHEMA} 
-      - WSO2_IDENTITY_ADMIN_PWD=${WSO2_IDENTITY_ADMIN_PWD} 
-      - WSO2_IDENTITY_ADMIN_USER=${WSO2_IDENTITY_ADMIN_USER} 
-      - MICADO_ENV=${MICADO_ENV} 
-      - IDENTITY_HOSTNAME=${IDENTITY_HOSTNAME} 
-      - WEBLATE_EMAIL_HOST=${WEBLATE_EMAIL_HOST} 
-      - WEBLATE_EMAIL_HOST_USER=${WEBLATE_EMAIL_HOST_USER} 
-      - WEBLATE_EMAIL_HOST_SSL=${WEBLATE_EMAIL_HOST_SSL} 
-      - WEBLATE_EMAIL_HOST_PASSWORD=${WEBLATE_EMAIL_HOST_PASSWORD} 
-      - ANALYTIC_HOSTNAME=${ANALYTIC_HOSTNAME} 
-      - COUNTLY_ADMIN=${COUNTLY_ADMIN} 
-      - COUNTLY_ADMIN_PWD=${COUNTLY_ADMIN_PWD} 
+      - MICADO_DB_PWD=${MICADO_DB_PWD}
+      - MICADO_DB_USER=${MICADO_DB_USER}
+      - MICADO_DB_SCHEMA=${MICADO_DB_SCHEMA}
+      - WSO2_IDENTITY_ADMIN_PWD=${WSO2_IDENTITY_ADMIN_PWD}
+      - WSO2_IDENTITY_ADMIN_USER=${WSO2_IDENTITY_ADMIN_USER}
+      - MICADO_ENV=${MICADO_ENV}
+      - IDENTITY_HOSTNAME=${IDENTITY_HOSTNAME}
+      - WEBLATE_EMAIL_HOST=${WEBLATE_EMAIL_HOST}
+      - WEBLATE_EMAIL_HOST_USER=${WEBLATE_EMAIL_HOST_USER}
+      - WEBLATE_EMAIL_HOST_SSL=${WEBLATE_EMAIL_HOST_SSL}
+      - WEBLATE_EMAIL_HOST_PASSWORD=${WEBLATE_EMAIL_HOST_PASSWORD}
+      - ANALYTIC_HOSTNAME=${ANALYTIC_HOSTNAME}
+      - COUNTLY_MIGRANTS_APP_ID=${COUNTLY_MIGRANTS_APP_ID}
+      - COUNTLY_MIGRANTS_API_KEY=${COUNTLY_MIGRANTS_API_KEY}
+      - COUNTLY_ADMIN=${COUNTLY_ADMIN}
+      - COUNTLY_ADMIN_PWD=${COUNTLY_ADMIN_PWD}
       - ALGORITHM=${ALGORITHM}
       - SALT=${SALT}
       - KEY_LENGTH=${KEY_LENGTH}
       - BUFFER_0=${BUFFER_0}
       - BUFFER_1=${BUFFER_1}
-      - ALGORITHM_PASSWORD=${ALGORITHM_PASSWORD} 
+      - ALGORITHM_PASSWORD=${ALGORITHM_PASSWORD}
     networks:
       - micado_net
 
@@ -94,7 +95,7 @@ services:
       - git_data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-#    command: "sh -c '/bin/s6-svscan /etc/s6 && /app/gitea/gitea admin create-user --name=gitea --password=gitea --email=test@xx.com --admin --must-change-password=false'"
+  #    command: "sh -c '/bin/s6-svscan /etc/s6 && /app/gitea/gitea admin create-user --name=gitea --password=gitea --email=test@xx.com --admin --must-change-password=false'"
 
   testnode:
     image: micadoproject/backend
@@ -136,8 +137,7 @@ volumes:
       device: $PWD/shared_images
       o: bind
 
-           
 networks:
   micado_net:
-#    driver: bridge
+    #    driver: bridge
     external: true

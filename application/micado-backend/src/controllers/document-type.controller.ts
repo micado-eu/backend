@@ -19,11 +19,14 @@ import {
 import { DocumentType } from '../models';
 import { DocumentTypeRepository } from '../repositories';
 import { JSONArray } from '@loopback/core';
+import { SettingsRepository } from '../repositories';
+import { LanguagesRepository } from '../repositories';
 
 export class DocumentTypeController {
   constructor(
-    @repository(DocumentTypeRepository)
-    public documentTypeRepository: DocumentTypeRepository,
+    @repository(DocumentTypeRepository) public documentTypeRepository: DocumentTypeRepository,
+    @repository(SettingsRepository) protected settingsRepository: SettingsRepository,
+    @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
   ) { }
 
   @post('/document-types', {
@@ -228,6 +231,15 @@ export class DocumentTypeController {
   async publish (
     @param.query.number('id') id:number,
   ): Promise<void> {
-    return this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" >= '2' and id=" + id);
+    let settings = await this.settingsRepository.find({});
+    //   let lang_filter = { where: { active: true } }
+    let languages = await this.languagesRepository.find({ where: { active: true } });
+    let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
+    let idx = languages.findIndex(el => el.lang == def_lang.value)
+    languages.splice(idx, 1)
+    this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" >= '2' and id=" + id+ "and lang='" + def_lang.value+"'");
+    languages.forEach((lang:any)=>{
+      this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" > '2' and id=" + id+ "and lang='" + lang.lang+"'");
+    })
   }
 }
