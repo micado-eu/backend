@@ -360,7 +360,7 @@ export class TranslationService {
 
     const repo = this.componentRepos[componentName];
 
-    const data: {[id: number]: {[language: string]: {[columnName: string]: string}}} = {};
+    const data: {[id: string]: {[language: string]: {[columnName: string]: string}}} = {};
 
     const files = readdirSync(MICADO_TRANSLATIONS_DIR).filter(fn => (fn.startsWith(componentName) && fn.endsWith('.json')));
     files.forEach((filename) => {
@@ -370,7 +370,7 @@ export class TranslationService {
 
       for (const key in componentLanguageData) {
         const dotIndex = key.indexOf('.');
-        const id = parseInt(key.substr(0, dotIndex));
+        const id = key.substr(0, dotIndex);
         if (!data.hasOwnProperty(id)) {
           data[id] = {};
         }

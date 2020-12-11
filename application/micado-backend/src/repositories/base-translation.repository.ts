@@ -43,9 +43,9 @@ export abstract class BaseTranslationRepository<
   /**
    * Update strings in the translating state to translated if they are non empty and changed.
    * @param baseLanguage: The base language.
-   * @param translations: dictionary of {1: {en: "house", nl: "huis"}}
+   * @param translations: dictionary of {"1": {en: "house", nl: "huis"}}
    */
-  public async updateToTranslated(baseLanguage: string, translations: {[id: number]: {[language: string]: {[columnName: string]: string}}}) {
+  public async updateToTranslated(baseLanguage: string, translations: {[id: string]: {[language: string]: {[columnName: string]: string}}}) {
     const columnsAssign = this.getTranslatableColumnNames();
     for (let i = 0; i < columnsAssign.length; i++) {
       columnsAssign[i] = columnsAssign[i] + '=' + '$' + (i + 1).toString();
