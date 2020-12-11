@@ -9,7 +9,11 @@ export interface IdentityService {
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.
   consent (tenant: String, principal: String, auth: String, baseurl: String): Promise<String>;
-  receipt (receipt: String, auth: String, baseurl: String): Promise<any>;
+  receipt (receipt: String, auth: String, baseurl: String, tenant: String): Promise<any>;
+  addGroups (role: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
+  getGroup (role: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
+  createUser (username: String, password: String, name: String, surname: String, email: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
+  addToGroups (groupid: String, username: String, userid: String, location: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
 }
 
 export class IdentityProvider implements Provider<IdentityService> {

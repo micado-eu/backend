@@ -1,7 +1,7 @@
 {
   "name": "identityserver",
   "connector": "rest",
-  "baseURL": "https://identity.micadoproject.eu",
+  "baseURL": "",
   "debug": true,
   "options": {
     "strictSSL": false
@@ -11,7 +11,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://{baseurl}/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents",
+        "url": "https://{baseurl}/t/{tenant}/api/identity/consent-mgt/v1.0/consents",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -41,7 +41,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://{baseurl}/t/migrants.micado.eu/api/identity/consent-mgt/v1.0/consents/receipts/{receipt}",
+        "url": "https://{baseurl}/t/{tenant}/api/identity/consent-mgt/v1.0/consents/receipts/{receipt}",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -56,7 +56,149 @@
         "receipt": [
           "receipt",
           "auth",
-          "baseurl"
+          "baseurl",
+          "tenant"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Groups?filter=displayName+eq+{role}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getGroup": [
+          "role",
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "POST",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Groups",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "body": {
+          "displayName": "{role}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "addGroups": [
+          "role",
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "PATCH",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Groups/{groupid}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "add",
+              "value": {
+                "members": [
+                  {
+                    "display": "{username}",
+                    "$ref": "{location}",
+                    "value": "{userid}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "addToGroups": [
+          "groupid",
+          "username",
+          "userid",
+          "location",
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "POST",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Users",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "body": {
+          "schemas": [],
+          "name": {
+            "familyName": "{surname}",
+            "givenName": "{name}"
+          },
+          "userName": "{username}",
+          "password": "{password}",
+          "emails": [
+            {
+              "primary": true,
+              "value": "{email}",
+              "type": "work"
+            }
+          ]
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "createUser": [
+          "username",
+          "password",
+          "name",
+          "surname",
+          "email",
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
         ]
       }
     }

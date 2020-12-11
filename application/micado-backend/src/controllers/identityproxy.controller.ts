@@ -22,11 +22,13 @@ export class IdentityproxyController {
     console.log("in the identity controller")
     console.log(tenant)
     console.log(principal)
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+
     return this.identityService.consent(
       tenant,
       principal,
       this.calcAuth(),
-      process.env.IDENTITY_HOSTNAME + ":9443"
+      process.env.IDENTITY_HOSTNAME + innerPort
     );
 
   }
@@ -34,15 +36,19 @@ export class IdentityproxyController {
   @get('/receipt/{receipt}')
   async receipt (
     @param.path.string('receipt') receipt: string,
+    @param.query.string('tenant') tenant = 'super'
   ): Promise<any> {
     //Preconditions
     console.log("in the identity controller")
     console.log(receipt)
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+
     //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
     return this.identityService.receipt(
       receipt,
       this.calcAuth(),
-      process.env.IDENTITY_HOSTNAME + ":9443"
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      tenant
     );
 
   }
