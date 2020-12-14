@@ -65,7 +65,8 @@
     "showdown": "^1.9.1",
     "simple-git": "^2.20.1",
     "soap": "^0.33.0",
-    "tslib": "^1.13.0"
+    "tslib": "^1.13.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@loopback/build": "^5.4.1",
@@ -74,6 +75,7 @@
     "@types/jsdom": "^16.2.5",
     "@types/node": "^10.17.24",
     "@types/showdown": "^1.9.3",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "eslint": "^6.8.0",

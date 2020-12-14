@@ -19,10 +19,7 @@ import {
   RestBindings,
 } from '@loopback/rest';
 import { ImageUploadService, IMAGE_UPLOAD_SERVICE } from '../services/image-upload-service.service'
-import csv from 'csv-parser'
 import fs from 'fs';
-import path from 'path';
-
 
 
 export class ImageUploaderController {
@@ -104,9 +101,9 @@ export class ImageUploaderController {
     const mapper = (f: globalThis.Express.Multer.File) => ({
       fieldname: f.fieldname,
       originalname: f.originalname,
-      encoding: f.encoding,
       mimetype: f.mimetype,
       size: f.size,
+      filename: f.filename
     });
     let files: object[] = [];
     if (Array.isArray(uploadedFiles)) {
