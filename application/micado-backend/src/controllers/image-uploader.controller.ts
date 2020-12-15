@@ -53,9 +53,6 @@ export class ImageUploaderController {
         else {
 
           let uploadedPayload: any = ImageUploaderController.getFilesAndFields(request)
-          console.log(uploadedPayload)
-          console.log(uploadedPayload.fields.entity)
-          console.log(uploadedPayload.files[0].originalname)
           resolve(uploadedPayload);
         }
       });
