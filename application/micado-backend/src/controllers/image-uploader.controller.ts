@@ -102,6 +102,7 @@ export class ImageUploaderController {
       fieldname: f.fieldname,
       mimetype: f.mimetype,
       size: f.size,
+      new_filename: f.filename
     });
     let files: object[] = [];
     if (Array.isArray(uploadedFiles)) {
