@@ -56,9 +56,6 @@ export class ImageUploaderController {
         else {
 
           let uploadedPayload: any = ImageUploaderController.getFilesAndFields(request)
-          console.log(uploadedPayload)
-          console.log(uploadedPayload.fields.entity)
-          console.log(uploadedPayload.files[0].originalname)
           resolve(uploadedPayload);
         }
       });
@@ -103,8 +100,6 @@ export class ImageUploaderController {
     const uploadedFiles = request.files;
     const mapper = (f: globalThis.Express.Multer.File) => ({
       fieldname: f.fieldname,
-      originalname: f.originalname,
-      encoding: f.encoding,
       mimetype: f.mimetype,
       size: f.size,
     });
