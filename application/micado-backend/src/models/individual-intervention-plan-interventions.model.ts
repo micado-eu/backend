@@ -51,6 +51,7 @@ export class IndividualInterventionPlanInterventions extends Entity {
   @property({
     type: 'number',
     scale: 0,
+    jsonSchema: { nullable: true },
     postgresql: {columnName: 'validating_user_id', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
   validatingUserId?: number;
@@ -58,6 +59,7 @@ export class IndividualInterventionPlanInterventions extends Entity {
   @property({
     type: 'number',
     scale: 0,
+    jsonSchema: { nullable: true },
     postgresql: {columnName: 'validating_user_tenant', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
   validatingUserTenant?: number;
