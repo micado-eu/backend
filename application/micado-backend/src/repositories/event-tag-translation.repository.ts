@@ -1,8 +1,7 @@
-import { DefaultCrudRepository } from '@loopback/repository';
-import { EventTagTranslation, EventTagTranslationRelations } from '../models';
-import { MicadoDsDataSource } from '../datasources';
-import { inject } from '@loopback/core';
-import { BaseTranslationRepository } from './base-translation.repository';
+import {inject} from '@loopback/core';
+import {MicadoDsDataSource} from '../datasources';
+import {EventTagTranslation, EventTagTranslationRelations} from '../models';
+import {BaseTranslationRepository} from './base-translation.repository';
 
 export class EventTagTranslationRepository extends BaseTranslationRepository<
     EventTagTranslation,
@@ -17,5 +16,17 @@ export class EventTagTranslationRepository extends BaseTranslationRepository<
 
     getTranslatableColumnNames(): Array<string> {
         return ['tag'];
+    }
+
+    public getProdModelName(): string {
+        return 'EventTagsTranslationProd';
+    }
+
+    public getProdModelModuleName(): string {
+        return 'event-tags-translation-prod';
+    }
+
+    public getProdModelTableName(): string {
+        return 'event_tags_translation';
     }
 }

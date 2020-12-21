@@ -46,16 +46,16 @@ export class TranslationService {
       'event_category': this.eventCategoryTranslationRepository,
       'event_tag': this.eventTagTranslationRepository,
       'event': this.eventTranslationRepository,
-      'features_flags': this.featuresFlagsTranslationRepository,
+      //'features_flags': this.featuresFlagsTranslationRepository,
       'glossary': this.glossaryTranslationRepository,
       'information_category': this.informationCategoryTranslationRepository,
-      'information': this.informationTranslationRepository,
+      //'information': this.informationTranslationRepository,
       'intervention_category': this.interventionCategoryTranslationRepository,
       'intervention_types': this.interventionTypesTranslationRepository,
-      'picture_hotspot': this.pictureHotspotTranslationRepository,
+      //'picture_hotspot': this.pictureHotspotTranslationRepository,
       'process': this.processTranslationRepository,
-      'step_link': this.stepLinkTranslationRepository,
-      'step': this.stepTranslationRepository,
+      //'step_link': this.stepLinkTranslationRepository,
+      //'step': this.stepTranslationRepository,
       'topic': this.topicTranslationRepository,
       'user_types': this.userTypesTranslationRepository,
     };
@@ -385,6 +385,7 @@ export class TranslationService {
     });
 
     await repo.updateToTranslated(MICADO_SOURCE_LANGUAGE, data);
+    await repo.updateToProduction();
   }
 
   private generateFiles(componentName: string, fileDict: any) {

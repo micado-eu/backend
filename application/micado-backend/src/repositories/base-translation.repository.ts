@@ -10,6 +10,10 @@ export abstract class BaseTranslationRepository<
     return 'id';
   }
 
+  getBaseModelIdColumnName(): string {
+    return 'id';
+  }
+
   getTranslatableColumnNames(): Array<string> {
     const tableName = this.getTableName();
     return [tableName.replace(/\_translation$/, "")];
@@ -17,6 +21,28 @@ export abstract class BaseTranslationRepository<
 
   public getTableName(): string {
     return (<any>(this.modelClass)).settings.postgresql.table;
+  }
+
+  public getProdModelTableName(): string {
+    const transTableName = this.getTableName();
+    return transTableName + '_prod';
+  }
+
+  public getBaseModelTableName(): string {
+    const transTableName = this.getTableName();
+    return transTableName.substring(0, transTableName.lastIndexOf("_translation"));
+  }
+
+  public getProdModelName(): string {
+    const translationModelName = (<any>this.modelClass).definition.name;
+    const translationProdModelName = translationModelName + 'Prod';
+    return translationProdModelName;
+  }
+
+  public getProdModelModuleName(): string {
+    const translationProdModelName = this.getProdModelName();
+    const prodModelModuleName = translationProdModelName.replace(/[A-Z]/g, m => '-' + m.toLowerCase()).substring(1);
+    return prodModelModuleName;
   }
 
   public async getBaseLanguageTranslatables(language: string): Promise<any> {
@@ -103,6 +129,34 @@ export abstract class BaseTranslationRepository<
     // we update them here if all their siblings are translated.
     q = 'UPDATE ' + this.getTableName() + ' AS t1 SET "translationState" = 3 WHERE "translationState" = 2 AND "lang" = $1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" != 2) > 1;';
     await this.dataSource.execute(q, [baseLanguage]);
+  }
+
+  /**
+ * Update all translation strings to the production table (if they are published).
+ */
+  public async updateToProduction() {
+    const prodModelModuleName = this.getProdModelModuleName();
+
+    const prodTranslationModelModule = await import('../models/' + prodModelModuleName + '.model');
+
+    const prodTranslationModelFields = Object.keys(prodTranslationModelModule[this.getProdModelName()].definition.properties).map(
+      (key: string) => prodTranslationModelModule[this.getProdModelName()].definition.properties[key].postgresql.columnName
+    );
+    const valuesPlaceholder = prodTranslationModelFields.map((f: any, id: number) => '$' + (id + 1).toString());
+    const updateFieldValues = [];
+    for (let i = 0; i < prodTranslationModelFields.length; i++) {
+      updateFieldValues.push('"' + prodTranslationModelFields[i] + '" = ' + valuesPlaceholder[i]);
+    }
+
+    let q = `
+    INSERT INTO ` + this.getProdModelTableName() + `(` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"';}).join(',') + `)
+      SELECT ` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"';}).join(',') + `
+      FROM ` + this.getTableName() + ` t1
+      WHERE t1."translationState" = 3 AND t1."` + this.getIdColumnName() + `"
+      IN (SELECT t2."` + this.getBaseModelIdColumnName() + `" FROM ` + this.getBaseModelTableName() + ` t2 WHERE t2.published=TRUE)
+    ON CONFLICT ("` + this.getIdColumnName() + `", "lang") DO UPDATE SET ` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"=EXCLUDED."' + f + '"';}).join(',') + `
+  `;
+    await this.dataSource.execute(q);
   }
 
   /**
