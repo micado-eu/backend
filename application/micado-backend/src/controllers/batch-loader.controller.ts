@@ -27,6 +27,8 @@ import { GlossaryTranslationRepository } from '../repositories';
 import { GlossaryRepository } from '../repositories';
 import { EventTranslationRepository } from '../repositories';
 import { EventRepository } from '../repositories';
+import { ProcessTranslationRepository } from '../repositories';
+import { ProcessRepository } from '../repositories';
 import { InterventionCategoryRepository } from '../repositories';
 import { InterventionCategoryTranslationRepository } from '../repositories';
 import { LanguagesRepository } from '../repositories';
@@ -38,6 +40,8 @@ export class BatchLoaderController {
     @repository(SettingsRepository) protected settingsRepository: SettingsRepository,
     @repository(GlossaryTranslationRepository) protected glossaryTranslationRepository: GlossaryTranslationRepository,
     @repository(GlossaryRepository) protected glossaryRepository: GlossaryRepository,
+    @repository(ProcessTranslationRepository) protected processTranslationRepository: ProcessTranslationRepository,
+    @repository(ProcessRepository) protected processRepository: ProcessRepository,
     @repository(EventTranslationRepository) protected eventTranslationRepository: EventTranslationRepository,
     @repository(EventRepository) protected eventRepository: EventRepository,
     @repository(InterventionCategoryRepository) protected interventionCategoryRepository: InterventionCategoryRepository,
@@ -148,6 +152,38 @@ export class BatchLoaderController {
                 } else {
                   let empty = { lang: alang.lang, id: newEntity.id, title: '', description: '' }
                   this.glossaryTranslationRepository.create(empty)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                }
+              });
+            })
+
+        });
+        break;
+      case "process":
+        csv.forEach((element: any) => {
+          //var creatingEntity: any = { startDate: element.start_date, endDate: element.end_date, category: 0 }
+          this.processRepository.create({})
+            .then(newEntity => {
+              console.log(newEntity)
+
+              console.log("ready to add languages")
+              console.log(def_lang)
+              //              element.lang = def_lang
+              //              element.id = newEntity.id
+              console.log(element)
+              let newTransl = { lang: def_lang, id: newEntity.id, process: element.title, description: element.description }
+
+              act_lang.forEach((alang: any) => {
+                if (alang.lang === def_lang) {
+                  this.processTranslationRepository.create(newTransl)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                } else {
+                  let empty = { lang: alang.lang, id: newEntity.id, process: '', description: '' }
+                  this.processTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
                     })
