@@ -142,7 +142,39 @@ export class BatchLoaderController {
                       console.log(newTranslation)
                     })
                 } else {
-                  let empty = { lang: alang.lang, id: newEntity.id }
+                  let empty = { lang: alang.lang, id: newEntity.id, title: '', description: '' }
+                  this.glossaryTranslationRepository.create(empty)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                }
+              });
+            })
+
+        });
+        break;
+      case "event":
+        csv.forEach((element: any) => {
+          var creatingEntity: any = { startDate: element.start_date, endDate: element.end_date, category: 0 }
+          this.glossaryRepository.create(creatingEntity)
+            .then(newEntity => {
+              console.log(newEntity)
+
+              console.log("ready to add languages")
+              console.log(def_lang)
+              //              element.lang = def_lang
+              //              element.id = newEntity.id
+              console.log(element)
+              let newTransl = { lang: def_lang, id: newEntity.id, event: element.title, description: element.description }
+
+              act_lang.forEach((alang: any) => {
+                if (alang.lang === def_lang) {
+                  this.glossaryTranslationRepository.create(newTransl)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                } else {
+                  let empty = { lang: alang.lang, id: newEntity.id, event: '', description: '' }
                   this.glossaryTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
@@ -155,6 +187,7 @@ export class BatchLoaderController {
         break;
       case "intervention_category":
         csv.forEach((element: any) => {
+          // TODO check if external_id has a value and in that case add to the create
           this.interventionCategoryRepository.create({})
             .then(newEntity => {
               console.log(newEntity)
@@ -171,7 +204,7 @@ export class BatchLoaderController {
                       console.log(newTranslation)
                     })
                 } else {
-                  let empty = { lang: alang.lang, id: newEntity.id }
+                  let empty = { lang: alang.lang, id: newEntity.id, title: '' }
                   this.interventionCategoryTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
