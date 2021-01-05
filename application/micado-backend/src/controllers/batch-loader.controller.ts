@@ -25,6 +25,8 @@ import path from 'path';
 import { SettingsRepository } from '../repositories';
 import { GlossaryTranslationRepository } from '../repositories';
 import { GlossaryRepository } from '../repositories';
+import { EventTranslationRepository } from '../repositories';
+import { EventRepository } from '../repositories';
 import { InterventionCategoryRepository } from '../repositories';
 import { InterventionCategoryTranslationRepository } from '../repositories';
 import { LanguagesRepository } from '../repositories';
@@ -36,6 +38,8 @@ export class BatchLoaderController {
     @repository(SettingsRepository) protected settingsRepository: SettingsRepository,
     @repository(GlossaryTranslationRepository) protected glossaryTranslationRepository: GlossaryTranslationRepository,
     @repository(GlossaryRepository) protected glossaryRepository: GlossaryRepository,
+    @repository(EventTranslationRepository) protected eventTranslationRepository: EventTranslationRepository,
+    @repository(EventRepository) protected eventRepository: EventRepository,
     @repository(InterventionCategoryRepository) protected interventionCategoryRepository: InterventionCategoryRepository,
     @repository(InterventionCategoryTranslationRepository) protected interventionCategoryTranslationRepository: InterventionCategoryTranslationRepository,
     @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
@@ -156,7 +160,7 @@ export class BatchLoaderController {
       case "event":
         csv.forEach((element: any) => {
           var creatingEntity: any = { startDate: element.start_date, endDate: element.end_date, category: 0 }
-          this.glossaryRepository.create(creatingEntity)
+          this.eventRepository.create(creatingEntity)
             .then(newEntity => {
               console.log(newEntity)
 
@@ -169,13 +173,13 @@ export class BatchLoaderController {
 
               act_lang.forEach((alang: any) => {
                 if (alang.lang === def_lang) {
-                  this.glossaryTranslationRepository.create(newTransl)
+                  this.eventTranslationRepository.create(newTransl)
                     .then(newTranslation => {
                       console.log(newTranslation)
                     })
                 } else {
                   let empty = { lang: alang.lang, id: newEntity.id, event: '', description: '' }
-                  this.glossaryTranslationRepository.create(empty)
+                  this.eventTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
                     })
