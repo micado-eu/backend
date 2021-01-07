@@ -156,6 +156,7 @@ export class BatchLoaderController {
               console.log(def_lang)
               element.lang = def_lang
               element.id = newEntity.id
+              element.translationDate = new Date().toISOString()
               console.log(element)
               act_lang.forEach((alang: any) => {
                 if (alang.lang === def_lang) {
@@ -164,7 +165,13 @@ export class BatchLoaderController {
                       console.log(newTranslation)
                     })
                 } else {
-                  let empty = { lang: alang.lang, id: newEntity.id, title: '', description: '' }
+                  let empty = {
+                    lang: alang.lang,
+                    id: newEntity.id,
+                    title: '',
+                    description: '',
+                    translationDate: new Date().toISOString()
+                  }
                   this.glossaryTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
@@ -219,7 +226,13 @@ export class BatchLoaderController {
               //              element.lang = def_lang
               //              element.id = newEntity.id
               console.log(element)
-              let newTransl = { lang: def_lang, id: newEntity.id, event: element.title, description: element.description }
+              let newTransl = {
+                lang: def_lang,
+                id: newEntity.id,
+                event: element.title,
+                description: element.description,
+                translationDate: new Date().toISOString()
+              }
 
               act_lang.forEach((alang: any) => {
                 if (alang.lang === def_lang) {
@@ -228,7 +241,13 @@ export class BatchLoaderController {
                       console.log(newTranslation)
                     })
                 } else {
-                  let empty = { lang: alang.lang, id: newEntity.id, event: '', description: '' }
+                  let empty = {
+                    lang: alang.lang,
+                    id: newEntity.id,
+                    event: '',
+                    description: '',
+                    translationDate: new Date().toISOString()
+                  }
                   this.eventTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
@@ -250,7 +269,13 @@ export class BatchLoaderController {
               //              element.lang = def_lang
               //              element.id = newEntity.id
               console.log(element)
-              let newTransl = { lang: def_lang, id: newEntity.id, information: element.title, description: element.description }
+              let newTransl = {
+                lang: def_lang,
+                id: newEntity.id,
+                information: element.title,
+                description: element.description,
+                translationDate: new Date().toISOString()
+              }
 
               act_lang.forEach((alang: any) => {
                 if (alang.lang === def_lang) {
@@ -281,7 +306,13 @@ export class BatchLoaderController {
               //              element.lang = def_lang
               //              element.id = newEntity.id
               console.log(element)
-              let newTransl = { lang: def_lang, id: newEntity.id, informationCategory: element.title, translationState: 0 }
+              let newTransl = {
+                lang: def_lang,
+                id: newEntity.id,
+                informationCategory: element.title,
+                translationState: 0,
+                translationDate: new Date().toISOString()
+              }
 
               act_lang.forEach((alang: any) => {
                 if (alang.lang === def_lang) {
@@ -290,7 +321,13 @@ export class BatchLoaderController {
                       console.log(newTranslation)
                     })
                 } else {
-                  let empty = { lang: alang.lang, id: newEntity.id, informationCategory: '', translationState: 0 }
+                  let empty = {
+                    lang: alang.lang,
+                    id: newEntity.id,
+                    informationCategory: '',
+                    translationState: 0,
+                    translationDate: new Date().toISOString()
+                  }
                   this.informationCategoryTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
@@ -312,7 +349,13 @@ export class BatchLoaderController {
               //              element.lang = def_lang
               //              element.id = newEntity.id
               console.log(element)
-              let newTransl = { lang: def_lang, id: newEntity.id, eventCategory: element.title, translationState: 0 }
+              let newTransl = {
+                lang: def_lang,
+                id: newEntity.id,
+                eventCategory: element.title,
+                translationState: 0,
+                translationDate: new Date().toISOString()
+              }
 
               act_lang.forEach((alang: any) => {
                 if (alang.lang === def_lang) {
@@ -321,7 +364,13 @@ export class BatchLoaderController {
                       console.log(newTranslation)
                     })
                 } else {
-                  let empty = { lang: alang.lang, id: newEntity.id, eventCategory: '', translationState: 0 }
+                  let empty = {
+                    lang: alang.lang,
+                    id: newEntity.id,
+                    eventCategory: '',
+                    translationState: 0,
+                    translationDate: new Date().toISOString()
+                  }
                   this.eventCategoryTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
