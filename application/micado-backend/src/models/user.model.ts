@@ -65,7 +65,7 @@ export class User extends Entity {
   @hasOne(() => UmTenant, {keyTo: 'umId', keyFrom: 'umTenantId'})
   tenant: UmTenant;
 
-  @hasOne(() => UserPictures, {keyTo: 'id'})
+  @hasOne(() => UserPictures, {keyTo: 'userId'})
   userPicture: UserPictures;
   // Define well-known properties here
 
