@@ -15,7 +15,7 @@ export class Settings extends Entity {
   @property({
     type: 'string',
     length: 1500,
-    postgresql: { columnName: 'value', dataType: 'character varying', dataLength: 1500, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'value', dataType: 'text', dataLength: 1500, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   value?: string;
 
