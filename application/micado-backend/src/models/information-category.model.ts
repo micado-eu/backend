@@ -26,11 +26,11 @@ export class InformationCategory extends Entity {
     type: 'boolean',
     postgresql: { columnName: 'link_integration_plan', dataType: 'bool', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
-  link_integration_plan?: string;
+  link_integration_plan?: boolean;
 
   @property({
     type: 'boolean',
-    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'published', dataType: 'bool', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   published?: boolean;
 

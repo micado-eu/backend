@@ -22,16 +22,24 @@ import csv from 'csv-parser'
 import fs from 'fs';
 import path from 'path';
 
-import { SettingsRepository } from '../repositories';
-import { GlossaryTranslationRepository } from '../repositories';
-import { GlossaryRepository } from '../repositories';
-import { EventTranslationRepository } from '../repositories';
-import { EventRepository } from '../repositories';
-import { ProcessTranslationRepository } from '../repositories';
-import { ProcessRepository } from '../repositories';
-import { InterventionCategoryRepository } from '../repositories';
-import { InterventionCategoryTranslationRepository } from '../repositories';
-import { LanguagesRepository } from '../repositories';
+import {
+  EventCategoryRepository,
+  EventCategoryTranslationRepository,
+  EventRepository,
+  EventTranslationRepository,
+  GlossaryRepository,
+  GlossaryTranslationRepository,
+  InformationCategoryRepository,
+  InformationCategoryTranslationRepository,
+  InformationRepository,
+  InformationTranslationRepository,
+  InterventionCategoryRepository,
+  InterventionCategoryTranslationRepository,
+  LanguagesRepository,
+  ProcessRepository,
+  ProcessTranslationRepository,
+  SettingsRepository
+} from '../repositories';
 
 
 export class BatchLoaderController {
@@ -44,6 +52,12 @@ export class BatchLoaderController {
     @repository(ProcessRepository) protected processRepository: ProcessRepository,
     @repository(EventTranslationRepository) protected eventTranslationRepository: EventTranslationRepository,
     @repository(EventRepository) protected eventRepository: EventRepository,
+    @repository(InformationTranslationRepository) protected informationTranslationRepository: InformationTranslationRepository,
+    @repository(InformationRepository) protected informationRepository: InformationRepository,
+    @repository(InformationCategoryTranslationRepository) protected informationCategoryTranslationRepository: InformationCategoryTranslationRepository,
+    @repository(InformationCategoryRepository) protected informationCategoryRepository: InformationCategoryRepository,
+    @repository(EventCategoryTranslationRepository) protected eventCategoryTranslationRepository: EventCategoryTranslationRepository,
+    @repository(EventCategoryRepository) protected eventCategoryRepository: EventCategoryRepository,
     @repository(InterventionCategoryRepository) protected interventionCategoryRepository: InterventionCategoryRepository,
     @repository(InterventionCategoryTranslationRepository) protected interventionCategoryTranslationRepository: InterventionCategoryTranslationRepository,
     @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
@@ -64,7 +78,7 @@ export class BatchLoaderController {
       },
     },
   })
-  async fileUpload (
+  async fileUpload(
     @requestBody.file()
     request: Request,
     @inject(RestBindings.Http.RESPONSE) response: Response,
@@ -108,7 +122,7 @@ export class BatchLoaderController {
    * Get files and fields for the request
    * @param request - Http request
    */
-  private static getFilesAndFields (request: Request) {
+  private static getFilesAndFields(request: Request) {
     const uploadedFiles = request.files;
     const mapper = (f: globalThis.Express.Multer.File) => ({
       fieldname: f.fieldname,
@@ -128,7 +142,7 @@ export class BatchLoaderController {
     return { files, fields: request.body };
   }
 
-  private loadData (entity: string, csv: any, def_lang: any, act_lang: any) {
+  private loadData(entity: string, csv: any, def_lang: any, act_lang: any) {
     console.log("in load data")
     console.log(csv)
     switch (entity) {
@@ -195,7 +209,7 @@ export class BatchLoaderController {
         break;
       case "event":
         csv.forEach((element: any) => {
-          var creatingEntity: any = { startDate: element.start_date, endDate: element.end_date, category: 0 }
+          var creatingEntity: any = { startDate: element.start_date, endDate: element.end_date }
           this.eventRepository.create(creatingEntity)
             .then(newEntity => {
               console.log(newEntity)
@@ -216,6 +230,99 @@ export class BatchLoaderController {
                 } else {
                   let empty = { lang: alang.lang, id: newEntity.id, event: '', description: '' }
                   this.eventTranslationRepository.create(empty)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                }
+              });
+            })
+
+        });
+        break;
+      case "information":
+        csv.forEach((element: any) => {
+          this.informationRepository.create({})
+            .then(newEntity => {
+              console.log(newEntity)
+
+              console.log("ready to add languages")
+              console.log(def_lang)
+              //              element.lang = def_lang
+              //              element.id = newEntity.id
+              console.log(element)
+              let newTransl = { lang: def_lang, id: newEntity.id, information: element.title, description: element.description }
+
+              act_lang.forEach((alang: any) => {
+                if (alang.lang === def_lang) {
+                  this.informationTranslationRepository.create(newTransl)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                } else {
+                  let empty = { lang: alang.lang, id: newEntity.id, information: '', description: '' }
+                  this.informationTranslationRepository.create(empty)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                }
+              });
+            })
+
+        });
+        break;
+      case "information_category":
+        csv.forEach((element: any) => {
+          this.informationCategoryRepository.create({ link_integration_plan: false })
+            .then(newEntity => {
+              console.log(newEntity)
+
+              console.log("ready to add languages")
+              console.log(def_lang)
+              //              element.lang = def_lang
+              //              element.id = newEntity.id
+              console.log(element)
+              let newTransl = { lang: def_lang, id: newEntity.id, informationCategory: element.title, translationState: 0 }
+
+              act_lang.forEach((alang: any) => {
+                if (alang.lang === def_lang) {
+                  this.informationCategoryTranslationRepository.create(newTransl)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                } else {
+                  let empty = { lang: alang.lang, id: newEntity.id, informationCategory: '', translationState: 0 }
+                  this.informationCategoryTranslationRepository.create(empty)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                }
+              });
+            })
+
+        });
+        break;
+      case "event_category":
+        csv.forEach((element: any) => {
+          this.eventCategoryRepository.create({ link_integration_plan: false })
+            .then(newEntity => {
+              console.log(newEntity)
+
+              console.log("ready to add languages")
+              console.log(def_lang)
+              //              element.lang = def_lang
+              //              element.id = newEntity.id
+              console.log(element)
+              let newTransl = { lang: def_lang, id: newEntity.id, eventCategory: element.title, translationState: 0 }
+
+              act_lang.forEach((alang: any) => {
+                if (alang.lang === def_lang) {
+                  this.eventCategoryTranslationRepository.create(newTransl)
+                    .then(newTranslation => {
+                      console.log(newTranslation)
+                    })
+                } else {
+                  let empty = { lang: alang.lang, id: newEntity.id, eventCategory: '', translationState: 0 }
+                  this.eventCategoryTranslationRepository.create(empty)
                     .then(newTranslation => {
                       console.log(newTranslation)
                     })
