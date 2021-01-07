@@ -80,3 +80,4 @@ export * from './tenant.repository';
 export * from './process-produced-documents.repository';
 export * from './document-type-validator.repository';
 export * from './completed-intervention-document.repository';
+export * from './user-pictures.repository';

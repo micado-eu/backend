@@ -84,7 +84,7 @@ export * from './topic-translation-prod.model';
 export * from './user-types-translation-prod.model';
 export * from './glossary-translation-prod.model';
 export * from './um-tenant.model';
-
+export * from './user-pictures.model';
 export * from './tenant.model';
 export * from './process-produced-documents.model';
 //export * from './tenant-mgt-admin-service.model';
