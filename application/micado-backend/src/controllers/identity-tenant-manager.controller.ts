@@ -358,6 +358,53 @@ export class IdentityTenantManagerController {
     );
 
   }
+  @patch('/updateUser')
+  async updateUser (
+    @param.query.string('userid') userid: string,
+    @param.query.string('username') username: string,
+    @param.query.string('givenName') givenName: string,
+    @param.query.string('familyName') familyName: string,
+    @param.query.string('phoneNumber') phoneNumber: string,
+    //@param.query.string('country') country: string,
+    //@param.query.string('gender') gender: string,
+    @param.query.string('tenant') tenant: string,
+    @param.query.string('admin') admin = (process.env.WSO2_IDENTITY_ADMIN_USER != null ? process.env.WSO2_IDENTITY_ADMIN_USER : ''),
+    @param.query.string('adminpwd') adminpwd = (process.env.WSO2_IDENTITY_ADMIN_PWD != null ? process.env.WSO2_IDENTITY_ADMIN_PWD : ''),
+    @param.query.string('authType') authType = 'Basic',
+    @param.query.string('authToken') authToken: string = ''
+  ): Promise<any> {
+    //This function can be called either passing the credentials of the admin of with the access token from a logged user
+    // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
+    console.log("in the identity controller updateUser")
+    console.log(userid)
+    console.log(tenant)
+    console.log(admin)
+    console.log(adminpwd)
+    console.log(authType)
+
+    let auth: String
+    if (authType === 'Basic') {
+      auth = this.calcAuth(admin, adminpwd)
+    } else {
+      auth = authToken
+    }
+    console.log(auth)
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+
+    //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
+    return this.identityService.updateUsers(
+      userid,
+      username,
+      givenName,
+      familyName,
+      phoneNumber,
+      auth,
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      tenant,
+      authType
+    );
+
+  }
 
   @post('/wso2User')
   async addUser (

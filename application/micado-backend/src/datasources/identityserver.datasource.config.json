@@ -160,6 +160,58 @@
     },
     {
       "template": {
+        "method": "PATCH",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Users/{userid}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "add",
+              "value": {
+                "name":
+                  {
+                    "givenName": "{givenName}",
+                    "familyName": "{familyName}"
+                  },
+                  "userName": "{username}",
+                  "phoneNumbers": [
+                    {
+                        "type": "mobile",
+                        "value": "{phoneNumber}"
+                    }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "updateUsers": [
+          "userid",
+          "username",
+          "givenName",
+          "familyName",
+          "phoneNumber",
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
+        ]
+      }
+    },
+    {
+      "template": {
         "method": "POST",
         "url": "https://{baseurl}/t/{tenant}/scim2/Users",
         "headers": {
