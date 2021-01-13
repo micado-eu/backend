@@ -175,6 +175,9 @@
             {
               "op": "add",
               "value": {
+                "emails": [
+                  "{email}"
+              ],
                 "name":
                   {
                     "givenName": "{givenName}",
@@ -186,7 +189,12 @@
                         "type": "mobile",
                         "value": "{phoneNumber}"
                     }
-                ]
+                ],
+                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+                  "country": "{country}",
+                  "gender": "{gender}",
+                  "dob": "{dob}"
+              }
               }
             }
           ]
@@ -203,6 +211,10 @@
           "givenName",
           "familyName",
           "phoneNumber",
+          "country",
+          "gender",
+          "dob",
+          "email",
           "auth",
           "baseurl",
           "tenant",
