@@ -176,7 +176,9 @@
               "op": "add",
               "value": {
                 "emails": [
-                  "{email}"
+                  {
+                    "value":"{email}"
+                  }
               ],
                 "name":
                   {
