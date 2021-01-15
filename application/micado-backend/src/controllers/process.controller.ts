@@ -186,10 +186,10 @@ export class ProcessController {
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<void> {
-    return this.processRepository.dataSource.execute("select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' union select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation tt on t.id = tt.id and tt.lang = '" +
+    return this.processRepository.dataSource.execute("select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id=tt.id and tt.lang='" +
+      currentlang + "' union select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = '" +
       defaultlang +
-      "' and t.id not in (select t.id from process t inner join process_translation tt on t.id = tt.id and tt.lang = '" +
+      "' and t.id not in (select t.id from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = '" +
       currentlang + "')");
   }
 
