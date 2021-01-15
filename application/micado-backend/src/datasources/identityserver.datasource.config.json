@@ -167,40 +167,7 @@
           "content-type": "application/json",
           "Authorization": "{authType} {auth}"
         },
-        "body": {
-          "schemas": [
-            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-          ],
-          "Operations": [
-            {
-              "op": "add",
-              "value": {
-                "emails": [
-                  {
-                    "value":"{email}"
-                  }
-              ],
-                "name":
-                  {
-                    "givenName": "{givenName}",
-                    "familyName": "{familyName}"
-                  },
-                  "userName": "{username}",
-                  "phoneNumbers": [
-                    {
-                        "type": "mobile",
-                        "value": "{phoneNumber}"
-                    }
-                ],
-                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
-                  "country": "{country}",
-                  "gender": "{gender}",
-                  "dob": "{dob}"
-              }
-              }
-            }
-          ]
-        },
+        "body": "{payload}",
         "options": {
           "strictSSL": false,
           "useQuerystring": true
@@ -209,14 +176,7 @@
       "functions": {
         "updateUsers": [
           "userid",
-          "username",
-          "givenName",
-          "familyName",
-          "phoneNumber",
-          "country",
-          "gender",
-          "dob",
-          "email",
+          "payload",
           "auth",
           "baseurl",
           "tenant",
