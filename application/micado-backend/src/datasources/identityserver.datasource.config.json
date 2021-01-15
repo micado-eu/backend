@@ -161,7 +161,7 @@
     {
       "template": {
         "method": "PATCH",
-        "url": "https://{baseurl}/t/{tenant}/scim2/Users/{userid}",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Me",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -175,7 +175,6 @@
       },
       "functions": {
         "updateUsers": [
-          "userid",
           "payload",
           "auth",
           "baseurl",

@@ -360,7 +360,7 @@ export class IdentityTenantManagerController {
   }
   @patch('/updateUser')
   async updateUser (
-    @param.query.string('userid') userid: string,
+    //@param.query.string('userid') userid: string,
     /*@param.query.string('username') username: string,
     @param.query.string('givenName') givenName: string,
     @param.query.string('familyName') familyName: string,
@@ -506,7 +506,6 @@ export class IdentityTenantManagerController {
     console.log(working_payload)
     //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
     return this.identityService.updateUsers(
-      userid,
       working_payload,
       auth,
       process.env.IDENTITY_HOSTNAME + innerPort,
