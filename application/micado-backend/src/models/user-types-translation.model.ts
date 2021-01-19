@@ -27,7 +27,7 @@ export class UserTypesTranslation extends Entity {
   @property({
     type: 'string',
     length: 20,
-    postgresql: {columnName: 'user_type', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'user_type', dataType: 'character varying', dataLength: 40, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   userType?: string;
 

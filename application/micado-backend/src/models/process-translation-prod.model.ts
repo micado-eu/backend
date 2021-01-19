@@ -27,7 +27,7 @@ export class ProcessTranslationProd extends Entity {
   @property({
     type: 'string',
     length: 50,
-    postgresql: {columnName: 'process', dataType: 'character varying', dataLength: 50, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'process', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   process?: string;
 
