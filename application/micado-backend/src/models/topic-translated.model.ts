@@ -31,7 +31,7 @@ export class TopicTranslated extends Entity {
   @property({
     type: 'string',
     length: 20,
-    postgresql: { columnName: 'topic', dataType: 'character varying', dataLength: 20, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'topic', dataType: 'character varying', dataLength: 40, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   topic?: string;
 

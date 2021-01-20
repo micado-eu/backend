@@ -37,7 +37,7 @@ export class FeaturesFlagsTranslated extends Entity {
   @property({
     type: 'string',
     length: 30,
-    postgresql: { columnName: 'feature', dataType: 'character varying', dataLength: 30, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'feature', dataType: 'character varying', dataLength: 50, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   feature?: string;
 
