@@ -121,3 +121,5 @@ export * from './intervention-category-intervention-types.controller';
 export * from './document-type-step-document.controller';
 export * from './user-user-pictures.controller';
 export * from './user-pictures.controller';
+export * from './process-topic.controller';
+export * from './process-users.controller';
