@@ -55,6 +55,7 @@ export * from './charts.controller';
 export * from './document-type.controller';
 
 export * from './graph.controller';
+export * from './rasa-micado.controller';
 export * from './rasa.controller';
 export * from './process-process-comments.controller';
 export * from './comments-comments-translation.controller';
