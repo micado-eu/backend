@@ -46,6 +46,12 @@ export class Event extends Entity {
   endDate?: string;
 
   @property({
+    type: 'string',
+    postgresql: { columnName: 'location', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  location?: string;
+
+  @property({
     type: 'boolean',
     postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
