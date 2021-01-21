@@ -374,7 +374,8 @@ export class IdentityTenantManagerController {
     @param.query.string('admin') admin = (process.env.WSO2_IDENTITY_ADMIN_USER != null ? process.env.WSO2_IDENTITY_ADMIN_USER : ''),
     @param.query.string('adminpwd') adminpwd = (process.env.WSO2_IDENTITY_ADMIN_PWD != null ? process.env.WSO2_IDENTITY_ADMIN_PWD : ''),
     @param.query.string('authType') authType = 'Basic',
-    @param.query.string('authToken') authToken: string = ''
+    @param.query.string('authToken') authToken: string = '',
+    @param.query.number('isPswd') isPswd: number = 0
   ): Promise<any> {
     //This function can be called either passing the credentials of the admin of with the access token from a logged user
     // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
@@ -388,6 +389,11 @@ export class IdentityTenantManagerController {
     let paylodJSON:any = JSON.parse(payload)
     console.log(paylodJSON)
     let working_payload:any
+    if(isPswd){
+      console.log("I'm saving a password")
+      working_payload = {"schemas":[],"Operations":[{"op":"add","value":{"password":paylodJSON.password}}]}
+    }
+    else{
     if(tenant=='carbon.super'){
       console.log(payload.username)
       console.log("in migrant tenant")
@@ -492,7 +498,7 @@ export class IdentityTenantManagerController {
         ]
       }
     }
-    
+  }
     
     let auth: String
     if (authType === 'Basic') {
