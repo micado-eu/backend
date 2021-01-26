@@ -581,7 +581,7 @@ export class IdentityTenantManagerController {
     //This function can be called either passing the credentials of the admin of with the access token from a logged user
     // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
     console.log("in the identity controller")
-    let rolesArr = roles.split(',')
+    let rolesArr = JSON.parse(roles)
     console.log(rolesArr)
     console.log(authType)
     let possibleRoles: string[] = ['micado_ngo_migrant_manager', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
@@ -596,8 +596,8 @@ export class IdentityTenantManagerController {
     // I need to create the user
     let userRet = await this.addUser(username, password, name, surname, email, tenant, admin, adminpwd, authType, authToken)
     console.log(userRet)
-    // need to get useid and location
-    rolesArr.forEach(element => {
+    // need to get useid and location 
+    rolesArr.forEach((element: any) => {
       console.log(element)
       if (possibleRoles.includes(element)) {
         console.log("role included")
