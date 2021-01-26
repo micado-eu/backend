@@ -1,3 +1,24 @@
 select * from topic t inner join topic_translation tt on t.id=tt.id and tt.lang='de'
 union
 select * from topic t inner join topic_translation tt on t.id=tt.id and tt.lang='en' and t.id not in (select t.id from topic t inner join topic_translation tt on t.id=tt.id and tt.lang='de')
+
+
+
+
+select p.*,(select ptp.process from process_translation_prod ptp where ptp.id=p.id and ptp.lang='en'),(select dttp.document from document_type_translation_prod dttp where dttp.id in (select ppd.id_document from process_produced_documents ppd where ppd.id_process=p.id) and dttp.lang = 'en') from process p where p.published=true
+
+select dttp.document from document_type_translation_prod dttp where dttp.id in (select ppd.id_document from process_produced_documents ppd where ppd.id_process=127) and dttp.lang = 'en'
+
+select distinct dttp.document from document_type_translation_prod dttp, process p where p.published = true and dttp.id in (select ppd.id_document from process_produced_documents ppd where ppd.id_process=p.id) and dttp.lang = 'en'
+
+
+
+INSERT INTO "micadoapp"."process_translation_prod" (id,lang,process,description,translation_date) VALUES (127,'en' ,'process test','desc',{ts '2021-01-22 18:58:10.691'});
+
+
+
+
+INSERT INTO "micadoapp"."document_type_translation_prod" (id,lang,document,description,translation_date) VALUES (59 ,'en' ,'second document','desc',{ts '2021-01-22 19:04:41.766'});
+
+
+select p.*,(select ptp.process from process_translation_prod ptp where ptp.id=p.id and ptp.lang='en'),(select dttp.document from document_type_translation_prod dttp where dttp.id in (select ppd.id_document from process_produced_documents ppd where ppd.id_process=p.id) and dttp.lang = 'en') from process p where p.published=true

@@ -185,10 +185,10 @@ export class UserTypesController {
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<void> {
-    return this.userTypesRepository.dataSource.execute("select * from user_types t inner join user_types_translation tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' union select * from user_types t inner join user_types_translation tt on t.id = tt.id and tt.lang = '" +
+    return this.userTypesRepository.dataSource.execute("select * from user_types t inner join user_types_translation_prod tt on t.id=tt.id and tt.lang='" +
+      currentlang + "' union select * from user_types t inner join user_types_translation_prod tt on t.id = tt.id and tt.lang = '" +
       defaultlang +
-      "' and t.id not in (select t.id from user_types t inner join user_types_translation tt on t.id = tt.id and tt.lang = '" +
+      "' and t.id not in (select t.id from user_types t inner join user_types_translation_prod tt on t.id = tt.id and tt.lang = '" +
       currentlang + "')");
   }
 

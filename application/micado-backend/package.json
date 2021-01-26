@@ -11,7 +11,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "lb-tsc",
+    "build": "lb-tsc --copy-resources",
     "build:watch": "lb-tsc --watch",
     "lint": "npm run prettier:check && npm run eslint",
     "lint:fix": "npm run eslint:fix && npm run prettier:fix",

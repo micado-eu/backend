@@ -26,7 +26,7 @@ export class DocumentTypeTranslation extends Entity {
   @property({
     type: 'string',
     length: 50,
-    postgresql: { columnName: 'document', dataType: 'character varying', dataLength: 50, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'document', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   document?: string;
 

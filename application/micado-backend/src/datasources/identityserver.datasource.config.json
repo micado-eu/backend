@@ -160,6 +160,31 @@
     },
     {
       "template": {
+        "method": "PATCH",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Me",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "body": "{payload}",
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "updateUsers": [
+          "payload",
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
+        ]
+      }
+    },
+    {
+      "template": {
         "method": "POST",
         "url": "https://{baseurl}/t/{tenant}/scim2/Users",
         "headers": {

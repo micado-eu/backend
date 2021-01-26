@@ -55,6 +55,7 @@ export * from './charts.controller';
 export * from './document-type.controller';
 
 export * from './graph.controller';
+export * from './rasa-micado.controller';
 export * from './rasa.controller';
 export * from './process-process-comments.controller';
 export * from './comments-comments-translation.controller';
@@ -121,3 +122,5 @@ export * from './intervention-category-intervention-types.controller';
 export * from './document-type-step-document.controller';
 export * from './user-user-pictures.controller';
 export * from './user-pictures.controller';
+export * from './process-topic.controller';
+export * from './process-users.controller';
