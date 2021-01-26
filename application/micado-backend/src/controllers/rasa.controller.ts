@@ -18,6 +18,9 @@ import fs from 'fs';
 import { DocumentTypeRepository } from '../repositories';
 import { DocumentTypeTranslationRepository } from '../repositories';
 import { ProcessRepository } from '../repositories';
+import { createSentence, Template, WeightedEntry } from 'sentence-engine';
+import { Sentence } from 'sentence-engine';
+import voc from '../rasa/vocabulary.json'
 
 // import {inject} from '@loopback/context';
 
@@ -69,9 +72,26 @@ export class RasaController {
       ]
     }
 
+    //let sentences = [`- Yo %s1!`, `- %s1`, `- I'm {search} for %s1`, `- I {want} %s1`, `- How {can} I {get} %s1`, `- {Can} I {get} %s1`, `- I must have %s1`]
+    let sentences = require("../rasa/sentences.json")
+
+    //let sentences = [{ template: "- I'm {search} for %s1", dictionary: { "search": ["looking", "searching"] } },
+    //{ template: "- I {want} %s1", dictionary: { "want": ["need", "want"] } }]
     this.processRepository.dataSource.execute(document_query)
-      .then(processes => {
-        console.log(processes)
+      .then(documents => {
+        console.log(documents)
+        // here we need to cycle through templates and append lines in 
+        documents.forEach((doc: any) => {
+          let newSentences: string[] = []
+          sentences.forEach((sentence: string) => {
+            console.log(sentence)
+            //        let voc = sentence.dictionary
+            let sentenceInstance = createSentence(sentence, voc, { capitalize: true });
+            newSentences.push(sentenceInstance.value.replace(`%s1`, '[' + doc.document + '](document)'))
+
+          });
+          console.log(newSentences)
+        });
       })
 
     /*
