@@ -2,7 +2,7 @@ import {bind, BindingScope} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {existsSync, mkdirSync, promises as fsAsync, readdirSync, readFileSync, unlinkSync} from 'fs';
 import simpleGit, {SimpleGit} from 'simple-git';
-import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, FeaturesFlagsTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, UserTypesTranslationRepository} from '../repositories';
+import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, UserTypesTranslationRepository} from '../repositories';
 
 
 // Should come from a config file or the database.
@@ -23,7 +23,6 @@ export class TranslationService {
     @repository(EventCategoryTranslationRepository) public eventCategoryTranslationRepository: EventCategoryTranslationRepository,
     @repository(EventTagTranslationRepository) public eventTagTranslationRepository: EventTagTranslationRepository,
     @repository(EventTranslationRepository) public eventTranslationRepository: EventTranslationRepository,
-    @repository(FeaturesFlagsTranslationRepository) public featuresFlagsTranslationRepository: FeaturesFlagsTranslationRepository,
     @repository(GlossaryTranslationRepository) public glossaryTranslationRepository: GlossaryTranslationRepository,
     @repository(InformationCategoryTranslationRepository) public informationCategoryTranslationRepository: InformationCategoryTranslationRepository,
     @repository(InformationTagTranslationRepository) public informationTagTranslationRepository: InformationTagTranslationRepository,
@@ -46,16 +45,15 @@ export class TranslationService {
       'event_category': this.eventCategoryTranslationRepository,
       'event_tag': this.eventTagTranslationRepository,
       'event': this.eventTranslationRepository,
-      //'features_flags': this.featuresFlagsTranslationRepository,
       'glossary': this.glossaryTranslationRepository,
       'information_category': this.informationCategoryTranslationRepository,
-      //'information': this.informationTranslationRepository,
+      'information': this.informationTranslationRepository,
       'intervention_category': this.interventionCategoryTranslationRepository,
       'intervention_types': this.interventionTypesTranslationRepository,
       //'picture_hotspot': this.pictureHotspotTranslationRepository,
       'process': this.processTranslationRepository,
-      //'step_link': this.stepLinkTranslationRepository,
-      //'step': this.stepTranslationRepository,
+      'step_link': this.stepLinkTranslationRepository,
+      'step': this.stepTranslationRepository,
       'topic': this.topicTranslationRepository,
       'user_types': this.userTypesTranslationRepository,
     };
