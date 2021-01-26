@@ -1,9 +1,14 @@
 [
-    "- Yo %s1!",
+    "- Give me %s1!",
     "- %s1",
-    "- I'm {search} for %s1",
+    "- I'm {searchg} for %s1",
+    "- {search} %s1 for me",
+    "- {whw} {can} I {search} %s1",
     "- I {want} %s1",
-    "- How {can} I {get} %s1",
+    "- Help me {search} %s1",
+    "- Help me {get} %s1",
+    "- I do not know {whw} to {get} %s1",
+    "- {whw} {can} I {get} %s1",
     "- {can} I {get} %s1",
     "- I must have %s1"
 ]

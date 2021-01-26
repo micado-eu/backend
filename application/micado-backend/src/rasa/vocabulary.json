@@ -3,16 +3,27 @@
         "need",
         "want"
     ],
-    "search": [
+    "searchg": [
         "looking",
         "searching"
     ],
+    "search": [
+        "look for",
+        "find",
+        "search"
+    ],
     "get": [
         "get",
+        "find",
         "obtain"
     ],
     "can": [
         "can",
+        "may",
         "could"
+    ],
+    "whw": [
+        "how",
+        "where"
     ]
 }
