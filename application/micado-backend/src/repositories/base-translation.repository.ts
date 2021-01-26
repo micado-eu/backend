@@ -61,6 +61,10 @@ export abstract class BaseTranslationRepository<
     return results;
   }
 
+  getLinkedTable(): {tableName: string, idColumn: string, foreignKey: string} | null {
+    return null;
+  }
+
   public getTranslatableLanguages(): any {
     const q = 'SELECT DISTINCT "lang" FROM ' + this.getTableName() + ' t1 WHERE (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
     return this.dataSource.execute(q);
@@ -131,10 +135,7 @@ export abstract class BaseTranslationRepository<
     await this.dataSource.execute(q, [baseLanguage]);
   }
 
-  /**
- * Update all translation strings to the production table (if they are published).
- */
-  public async updateToProduction() {
+  protected async getUpdateToProductionQuery(): Promise<string> {
     const prodModelModuleName = this.getProdModelModuleName();
 
     const prodTranslationModelModule = await import('../models/' + prodModelModuleName + '.model');
@@ -148,7 +149,11 @@ export abstract class BaseTranslationRepository<
       updateFieldValues.push('"' + prodTranslationModelFields[i] + '" = ' + valuesPlaceholder[i]);
     }
 
-    let q = `
+
+    const linkedTable = this.getLinkedTable();
+    let q = '';
+    if (linkedTable === null) {
+      q = `
     INSERT INTO ` + this.getProdModelTableName() + `(` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"';}).join(',') + `)
       SELECT ` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"';}).join(',') + `
       FROM ` + this.getTableName() + ` t1
@@ -156,6 +161,24 @@ export abstract class BaseTranslationRepository<
       IN (SELECT t2."` + this.getBaseModelIdColumnName() + `" FROM ` + this.getBaseModelTableName() + ` t2 WHERE t2.published=TRUE)
     ON CONFLICT ("` + this.getIdColumnName() + `", "lang") DO UPDATE SET ` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"=EXCLUDED."' + f + '"';}).join(',') + `
   `;
+    } else {
+      q = `
+      INSERT INTO ` + this.getProdModelTableName() + `(` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"';}).join(',') + `)
+        SELECT ` + prodTranslationModelFields.map((f: any) => {return 't1."' + f + '"';}).join(',') + `
+        FROM ` + this.getTableName() + ` t1, ` + linkedTable.tableName + ` t2
+        WHERE t1."translationState" = 3 AND t2."published" = TRUE AND t2."` + linkedTable.idColumn + `" = (SELECT "` + linkedTable.foreignKey + `" FROM ` + this.getBaseModelTableName() + ` WHERE "` + this.getBaseModelIdColumnName() + `" = t1."` + this.getIdColumnName() + `")
+      ON CONFLICT ("` + this.getIdColumnName() + `", "lang") DO UPDATE SET ` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"=EXCLUDED."' + f + '"';}).join(',') + `
+    `;
+    }
+
+    return q;
+  }
+
+  /**
+ * Update all translation strings to the production table (if they are published).
+ */
+  public async updateToProduction() {
+    const q = await this.getUpdateToProductionQuery();
     await this.dataSource.execute(q);
   }
 
