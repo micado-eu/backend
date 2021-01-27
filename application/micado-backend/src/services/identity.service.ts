@@ -12,9 +12,11 @@ export interface IdentityService {
   receipt (receipt: String, auth: String, baseurl: String, tenant: String): Promise<any>;
   addGroups (role: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   getGroup (role: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
+  getAllGroups (auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   createUser (username: String, password: String, name: String, surname: String, email: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   addToGroups (groupid: String, username: String, userid: String, location: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
-  updateUsers (payload:any, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
+  removeFromGroups (groupid: String, username: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
+  updateUsers (payload: any, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
 }
 
 export class IdentityProvider implements Provider<IdentityService> {

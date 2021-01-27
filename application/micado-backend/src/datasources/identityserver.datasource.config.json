@@ -87,6 +87,29 @@
     },
     {
       "template": {
+        "method": "GET",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Groups",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getAllGroups": [
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
+        ]
+      }
+    },
+    {
+      "template": {
         "method": "POST",
         "url": "https://{baseurl}/t/{tenant}/scim2/Groups",
         "headers": {
@@ -151,6 +174,42 @@
           "username",
           "userid",
           "location",
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "PATCH",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Groups/{groupid}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "remove",
+              "path": "members[display eq {username}]"
+            }
+          ]
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "removeFromGroups": [
+          "groupid",
+          "username",
           "auth",
           "baseurl",
           "tenant",
