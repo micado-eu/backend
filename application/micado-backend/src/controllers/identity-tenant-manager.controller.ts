@@ -367,12 +367,16 @@ export class IdentityTenantManagerController {
   ): Promise<any> {
     //This function can be called either passing the credentials of the admin of with the access token from a logged user
     // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
-    console.log("in the identity controller getGroup")
+    console.log("in the identity controller addtogroup")
     console.log(groupid)
     console.log(tenant)
     console.log(admin)
     console.log(adminpwd)
     console.log(authType)
+    console.log(groupid)
+    console.log(username)
+    console.log(location)
+    console.log(userid)
 
     let auth: String
     if (authType === 'Basic') {
@@ -413,7 +417,8 @@ export class IdentityTenantManagerController {
     @param.query.string('adminpwd') adminpwd = (process.env.WSO2_IDENTITY_ADMIN_PWD != null ? process.env.WSO2_IDENTITY_ADMIN_PWD : ''),
     @param.query.string('authType') authType = 'Basic',
     @param.query.string('authToken') authToken: string = '',
-    @param.query.number('isPswd') isPswd: number = 0
+    @param.query.number('isPswd') isPswd: number = 0,
+    @param.query.number('isAdmin') isAdmin: number = 0
   ): Promise<any> {
     //This function can be called either passing the credentials of the admin of with the access token from a logged user
     // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
@@ -427,6 +432,7 @@ export class IdentityTenantManagerController {
     let paylodJSON: any = JSON.parse(payload)
     console.log(paylodJSON)
     let working_payload: any
+    let possibleRoles: string[] = ['micado_ngo_migrant_manager', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
     if (isPswd) {
       console.log("I'm saving a password")
       working_payload = { "schemas": [], "Operations": [{ "op": "add", "value": { "password": paylodJSON.password } }] }
@@ -549,9 +555,96 @@ export class IdentityTenantManagerController {
     console.log("before calling update")
     console.log(working_payload)
     //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
-    return this.identityService.updateUsers(
-      working_payload,
-      auth,
+    if(!isAdmin){
+      return this.identityService.updateUsers(
+        working_payload,
+        auth,
+        process.env.IDENTITY_HOSTNAME + innerPort,
+        tenant,
+        authType
+      );
+    }
+    else{
+      let rolesArr = paylodJSON.roles
+      possibleRoles.forEach((element: any) => {
+      console.log(element)
+      if (possibleRoles.includes(element)) {
+        console.log("role removal")
+        // need to get the role
+        this.getGroup(element, tenant, admin, adminpwd, authType, authToken)
+          .then((theGroup) => {
+            console.log("found group")
+            console.log(theGroup)
+            if (theGroup.totalResults > 0) {
+              console.log("before group removal")
+              console.log(theGroup.Resources[0].id)
+              //         
+              this.removeFromGroups(theGroup.Resources[0].id, paylodJSON.username, tenant, admin, adminpwd, authType, authToken)
+            }
+          })
+
+      }
+    });
+      let userRet = await this.updateUserByAdmin(paylodJSON.userid, working_payload, tenant, authType, authToken)
+      console.log("i am user return")
+      console.log(userRet)
+      // need to get useid and location 
+      rolesArr.forEach((element: any) => {
+        console.log(element)
+        if (possibleRoles.includes(element)) {
+          console.log("role included")
+          // need to get the role
+          this.getGroup(element, tenant, admin, adminpwd, authType, authToken)
+            .then((theGroup) => {
+              console.log("group found")
+
+              console.log(theGroup)
+              if (theGroup.totalResults > 0) {
+                console.log(theGroup.Resources[0].id)
+                console.log("adding to group")
+                //         
+                this.addToGroup(theGroup.Resources[0].id, paylodJSON.username, paylodJSON.userid, userRet.meta.location, tenant, admin, adminpwd, authType, authToken)
+              }
+            })
+  
+        }
+      })
+    }
+
+  
+  }
+  @patch('/updateUserByAdmin')
+  async updateUserByAdmin (
+    @param.query.string('userid') userid: string,
+    /*@param.query.string('username') username: string,
+    @param.query.string('givenName') givenName: string,
+    @param.query.string('familyName') familyName: string,
+    @param.query.string('phoneNumber') phoneNumber: string,
+    @param.query.string('country') country: string,
+    @param.query.string('gender') gender: string,
+    @param.query.string('dob') dob: string,
+    @param.query.string('email') email: string,*/
+    @param.query.string('payload') payload: any,
+    @param.query.string('tenant') tenant: string,
+    //@param.query.string('admin') admin = (process.env.WSO2_IDENTITY_ADMIN_USER != null ? process.env.WSO2_IDENTITY_ADMIN_USER : ''),
+    //@param.query.string('adminpwd') adminpwd = (process.env.WSO2_IDENTITY_ADMIN_PWD != null ? process.env.WSO2_IDENTITY_ADMIN_PWD : ''),
+    @param.query.string('authType') authType = 'Bearer',
+    @param.query.string('authToken') authToken: string = '',
+  ): Promise<any> {
+    //This function can be called either passing the credentials of the admin of with the access token from a logged user
+    // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
+    console.log("in the identity controller updateUser")
+    //console.log(userid)
+    console.log(tenant)
+    console.log("I am payload in update user by admin")
+    console.log(payload)
+    console.log(authType)
+    console.log("before update by admin invocation")
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+    return this.identityService.updateUsersByAdmin(
+      userid,
+      payload,
+      authToken,
       process.env.IDENTITY_HOSTNAME + innerPort,
       tenant,
       authType
@@ -654,6 +747,47 @@ export class IdentityTenantManagerController {
     });
     // I need to get the roles id for the requested roles
     return null
+  }
+  @patch('/wso2RoleRemoval')
+  async removeFromGroups (
+    @param.query.string('groupid') groupid: string,
+    @param.query.string('username') username: string,
+    //@param.query.string('userid') userid: string,
+    //@param.query.string('location') location: string,
+    @param.query.string('tenant') tenant = 'super',
+    @param.query.string('admin') admin = (process.env.WSO2_IDENTITY_ADMIN_USER != null ? process.env.WSO2_IDENTITY_ADMIN_USER : ''),
+    @param.query.string('adminpwd') adminpwd = (process.env.WSO2_IDENTITY_ADMIN_PWD != null ? process.env.WSO2_IDENTITY_ADMIN_PWD : ''),
+    @param.query.string('authType') authType = 'Basic',
+    @param.query.string('authToken') authToken: string = ''
+  ): Promise<any> {
+    //This function can be called either passing the credentials of the admin of with the access token from a logged user
+    // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
+    console.log("in the identity controller getGroup")
+    console.log(groupid)
+    console.log(tenant)
+    console.log(admin)
+    console.log(adminpwd)
+    console.log(authType)
+
+    let auth: String
+    if (authType === 'Basic') {
+      auth = this.calcAuth(admin, adminpwd)
+    } else {
+      auth = authToken
+    }
+    console.log(auth)
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+
+    //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
+    return this.identityService.removeFromGroups(
+      groupid,
+      username,
+      auth,
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      tenant,
+      authType
+    );
+
   }
 
   calcAuth (admin: string, adminpwd: String) {

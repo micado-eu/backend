@@ -18,6 +18,7 @@ export interface IdentityService {
   addToGroups (groupid: String, username: String, userid: String, location: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   removeFromGroups (groupid: String, username: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   updateUsers (payload: any, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
+  updateUsersByAdmin (userid:String, payload: any, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
 }
 
 export class IdentityProvider implements Provider<IdentityService> {
