@@ -490,6 +490,7 @@ export class IdentityTenantManagerController {
               "value": {
                 "emails": [
                   {
+                    "type":"work",
                     "value": paylodJSON.email
                   }
                 ],
@@ -522,6 +523,7 @@ export class IdentityTenantManagerController {
               "value": {
                 "emails": [
                   {
+                    "type":"work",
                     "value": paylodJSON.email
                   }
                 ],
