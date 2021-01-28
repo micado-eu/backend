@@ -88,6 +88,30 @@
     {
       "template": {
         "method": "GET",
+        "url": "https://{baseurl}/t/{tenant}/scim2/Groups?filter=members.display+eq+{user}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "{authType} {auth}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getUserGroups": [
+          "user",
+          "auth",
+          "baseurl",
+          "tenant",
+          "authType"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
         "url": "https://{baseurl}/t/{tenant}/scim2/Groups",
         "headers": {
           "accept": "*/*",

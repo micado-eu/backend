@@ -315,6 +315,44 @@ export class IdentityTenantManagerController {
 
   }
 
+  @get('/wso2UserRoles')
+  async getUserGroups (
+    @param.query.string('user') user: string,
+    @param.query.string('tenant') tenant = 'super',
+    @param.query.string('admin') admin = (process.env.WSO2_IDENTITY_ADMIN_USER != null ? process.env.WSO2_IDENTITY_ADMIN_USER : ''),
+    @param.query.string('adminpwd') adminpwd = (process.env.WSO2_IDENTITY_ADMIN_PWD != null ? process.env.WSO2_IDENTITY_ADMIN_PWD : ''),
+    @param.query.string('authType') authType = 'Basic',
+    @param.query.string('authToken') authToken: string = ''
+  ): Promise<any> {
+    //This function can be called either passing the credentials of the admin of with the access token from a logged user
+    // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
+    console.log("in the identity controller getGroup")
+    console.log(user)
+    console.log(tenant)
+    console.log(admin)
+    console.log(adminpwd)
+    console.log(authType)
+
+    let auth: String
+    if (authType === 'Basic') {
+      auth = this.calcAuth(admin, adminpwd)
+    } else {
+      auth = authToken
+    }
+    console.log(auth)
+    var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
+
+    //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
+    return this.identityService.getUserGroups(
+      user,
+      auth,
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      tenant,
+      authType
+    );
+
+  }
+
   @patch('/wso2Role')
   async addToGroup (
     @param.query.string('groupid') groupid: string,
@@ -386,31 +424,31 @@ export class IdentityTenantManagerController {
     console.log(adminpwd)
     console.log(authType)
     console.log(payload)
-    let paylodJSON:any = JSON.parse(payload)
+    let paylodJSON: any = JSON.parse(payload)
     console.log(paylodJSON)
-    let working_payload:any
-    if(isPswd){
+    let working_payload: any
+    if (isPswd) {
       console.log("I'm saving a password")
-      working_payload = {"schemas":[],"Operations":[{"op":"add","value":{"password":paylodJSON.password}}]}
+      working_payload = { "schemas": [], "Operations": [{ "op": "add", "value": { "password": paylodJSON.password } }] }
     }
-    else{
-    if(tenant=='carbon.super'){
-      console.log(payload.username)
-      console.log("in migrant tenant")
-      working_payload ={
-        "schemas": [
-          "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-        ],
-        "Operations": [
-          {
-            "op": "add",
-            "value": {
-              "emails": [
-                {
-                  "value":paylodJSON.email
-                }
-            ],
-              "name":
+    else {
+      if (tenant == 'carbon.super') {
+        console.log(payload.username)
+        console.log("in migrant tenant")
+        working_payload = {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "add",
+              "value": {
+                "emails": [
+                  {
+                    "value": paylodJSON.email
+                  }
+                ],
+                "name":
                 {
                   "givenName": paylodJSON.givenName,
                   "familyName": paylodJSON.familyName
@@ -418,38 +456,38 @@ export class IdentityTenantManagerController {
                 "userName": paylodJSON.username,
                 "phoneNumbers": [
                   {
-                      "type": "mobile",
-                      "value": paylodJSON.phoneNumber
+                    "type": "mobile",
+                    "value": paylodJSON.phoneNumber
                   }
-              ],
-              "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
-                "country": paylodJSON.nationality,
-                "gender": paylodJSON.gender,
-                "dob": paylodJSON.date_of_birth
-            }
-            }
-          }
-        ]
-      }
-      console.log("after assigning payload")
-      console.log(working_payload.Operations[0].value)
-    }
-    else if(tenant == 'pa.micado.eu'){
-      console.log("in PA tenant")
-      working_payload ={
-        "schemas": [
-          "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-        ],
-        "Operations": [
-          {
-            "op": "add",
-            "value": {
-              "emails": [
-                {
-                  "value":paylodJSON.email
+                ],
+                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+                  "country": paylodJSON.nationality,
+                  "gender": paylodJSON.gender,
+                  "dob": paylodJSON.date_of_birth
                 }
-            ],
-              "name":
+              }
+            }
+          ]
+        }
+        console.log("after assigning payload")
+        console.log(working_payload.Operations[0].value)
+      }
+      else if (tenant == 'pa.micado.eu') {
+        console.log("in PA tenant")
+        working_payload = {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "add",
+              "value": {
+                "emails": [
+                  {
+                    "value": paylodJSON.email
+                  }
+                ],
+                "name":
                 {
                   "givenName": paylodJSON.givenName,
                   "familyName": paylodJSON.familyName
@@ -457,31 +495,31 @@ export class IdentityTenantManagerController {
                 "userName": paylodJSON.username,
                 "phoneNumbers": [
                   {
-                      "type": "mobile",
-                      "value":  paylodJSON.phoneNumber
+                    "type": "mobile",
+                    "value": paylodJSON.phoneNumber
                   }
-              ]
+                ]
+              }
             }
-          }
-        ]
+          ]
+        }
       }
-    }
-    else{
-      console.log("in NGO tenant")
-      working_payload ={
-        "schemas": [
-          "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-        ],
-        "Operations": [
-          {
-            "op": "add",
-            "value": {
-              "emails": [
-                {
-                  "value":paylodJSON.email
-                }
-            ],
-              "name":
+      else {
+        console.log("in NGO tenant")
+        working_payload = {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "add",
+              "value": {
+                "emails": [
+                  {
+                    "value": paylodJSON.email
+                  }
+                ],
+                "name":
                 {
                   "givenName": paylodJSON.givenName,
                   "familyName": paylodJSON.familyName
@@ -489,17 +527,17 @@ export class IdentityTenantManagerController {
                 "userName": paylodJSON.username,
                 "phoneNumbers": [
                   {
-                      "type": "mobile",
-                      "value":  paylodJSON.phoneNumber
+                    "type": "mobile",
+                    "value": paylodJSON.phoneNumber
                   }
-              ]
+                ]
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     }
-  }
-    
+
     let auth: String
     if (authType === 'Basic') {
       auth = this.calcAuth(admin, adminpwd)

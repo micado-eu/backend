@@ -12,6 +12,7 @@ export interface IdentityService {
   receipt (receipt: String, auth: String, baseurl: String, tenant: String): Promise<any>;
   addGroups (role: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   getGroup (role: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
+  getUserGroups (user: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   getAllGroups (auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   createUser (username: String, password: String, name: String, surname: String, email: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
   addToGroups (groupid: String, username: String, userid: String, location: String, auth: String, baseurl: String, tenant: String, authType: String): Promise<any>;
