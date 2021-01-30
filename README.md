@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/micado-eu/backend/badge)](https://www.codefactor.io/repository/github/micado-eu/backend)
+
 # Micado backend application
 This is the backend application of the MICADO project.  This is where all the business application logic will reside:
 - API
