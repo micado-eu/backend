@@ -37,7 +37,7 @@ export class TranslationService {
     @repository(UserTypesTranslationRepository) public userTypesTranslationRepository: UserTypesTranslationRepository,
   ) {
     this.gitInitialized = false;
-
+    
     // Map component names to their repos. TODO: should be done automatically.
     this.componentRepos = {
       'comments': this.commentsTranslationRepository,
@@ -50,7 +50,7 @@ export class TranslationService {
       'information': this.informationTranslationRepository,
       'intervention_category': this.interventionCategoryTranslationRepository,
       'intervention_types': this.interventionTypesTranslationRepository,
-      //'picture_hotspot': this.pictureHotspotTranslationRepository,
+      'picture_hotspot': this.pictureHotspotTranslationRepository,
       'process': this.processTranslationRepository,
       'step_link': this.stepLinkTranslationRepository,
       'step': this.stepTranslationRepository,
