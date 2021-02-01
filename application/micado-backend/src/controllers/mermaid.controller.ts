@@ -61,7 +61,7 @@ export class MermaidController {
 
       include: [
         {
-          relation: "translations"
+          relation: "translations_prod"
         },
         {
           relation: "documents"
@@ -85,7 +85,13 @@ export class MermaidController {
       await this.asyncForEach(steps, async (astep: any) => {
         console.log("nel primo asynforeach")
         console.log(astep)
-        let curTransl = astep.translations.filter(function (atransl: any) { return atransl.lang == lang }, lang)[0]
+        let curTransl = astep.translations_prod.filter(function (atransl: any) { return atransl.lang == lang }, lang)[0]
+        console.log("I AM CURTRANSLA AFTER RESEARCH")
+        console.log(curTransl)
+        if(!curTransl){
+          console.log("inside if")
+          curTransl = astep.translations_prod.filter(function (atransl: any) { return atransl.lang == defaultlang }, defaultlang)[0]
+        }
         let docarray = JSON.parse("[]")
 
         if (astep.documents != null) {
