@@ -432,7 +432,7 @@ export class IdentityTenantManagerController {
     let paylodJSON: any = JSON.parse(payload)
     console.log(paylodJSON)
     let working_payload: any
-    let possibleRoles: string[] = ['micado_ngo_migrant_manager', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
+    let possibleRoles: string[] = ['micado_ngo_migrant_manager','micado_ngo_admin', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
     if (isPswd) {
       console.log("I'm saving a password")
       working_payload = { "schemas": [], "Operations": [{ "op": "add", "value": { "password": paylodJSON.password } }] }
