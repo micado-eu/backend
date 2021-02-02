@@ -86,26 +86,26 @@ export class GlossaryController {
     return this.glossaryRepository.find(filter);
   }
 
- /* @get('/glossaries/published', {
-    responses: {
-      '200': {
-        description: 'Array of Published Glossary model instances',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'array',
-              items: getModelSchemaRef(Glossary, { includeRelations: true }),
-            },
-          },
-        },
-      },
-    },
-  })
-  async findPublished(
-    @param.filter(Glossary) filter?: Filter<Glossary>,
-  ): Promise<Glossary[]> {
-    return this.glossaryRepository.findPublished(filter);
-  }*/
+  /* @get('/glossaries/published', {
+     responses: {
+       '200': {
+         description: 'Array of Published Glossary model instances',
+         content: {
+           'application/json': {
+             schema: {
+               type: 'array',
+               items: getModelSchemaRef(Glossary, { includeRelations: true }),
+             },
+           },
+         },
+       },
+     },
+   })
+   async findPublished(
+     @param.filter(Glossary) filter?: Filter<Glossary>,
+   ): Promise<Glossary[]> {
+     return this.glossaryRepository.findPublished(filter);
+   }*/
 
   @patch('/glossaries', {
     responses: {
@@ -192,5 +192,43 @@ export class GlossaryController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.glossaryRepository.deleteById(id);
+  }
+
+  @get('/production-glossary', {
+    responses: {
+      '200': {
+        description: 'Gets published glossary entries with translation (prod)',
+      },
+    },
+  })
+  async translatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.glossaryRepository.dataSource.execute(`
+    select
+      *
+    from
+      glossary t
+    inner join glossary_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    union
+    select
+      *
+    from
+      glossary t
+    inner join glossary_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+        glossary t
+      inner join glossary_translation_prod tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
   }
 }
