@@ -112,27 +112,27 @@ export class EventController {
     return this.eventRepository.find(filter);
   }
 
- /* @get('/events/published', {
-    responses: {
-      '200': {
-        description: 'Array of Published Event model instances',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'array',
-              items: getModelSchemaRef(Event, { includeRelations: true }),
-            },
-          },
-        },
-      },
-    },
-  })
-  
-  async findPublished(
-    @param.filter(Event) filter?: Filter<Event>,
-  ): Promise<Event[]> {
-    return this.eventRepository.findPublished(filter);
-  }*/
+  /* @get('/events/published', {
+     responses: {
+       '200': {
+         description: 'Array of Published Event model instances',
+         content: {
+           'application/json': {
+             schema: {
+               type: 'array',
+               items: getModelSchemaRef(Event, { includeRelations: true }),
+             },
+           },
+         },
+       },
+     },
+   })
+   
+   async findPublished(
+     @param.filter(Event) filter?: Filter<Event>,
+   ): Promise<Event[]> {
+     return this.eventRepository.findPublished(filter);
+   }*/
 
   @patch('/events', {
     responses: {
@@ -241,5 +241,71 @@ export class EventController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.eventRepository.deleteById(id);
+  }
+
+  @get('/production-events', {
+    responses: {
+      '200': {
+        description: 'Gets published events with topics, user types, and translation (prod)',
+      },
+    },
+  })
+  async translatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.eventRepository.dataSource.execute(`
+      select
+        *,
+        (
+        select
+          to_jsonb(array_agg(it.id_topic))
+        from
+          event_topic it
+        where
+          it.id_event = t.id) as topics,
+        (
+        select
+          to_jsonb(array_agg(iu.id_user_types))
+        from
+          event_user_types iu
+        where
+          iu.id_event = t.id) as users
+      from
+        event t
+      inner join event_translation_prod tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}'
+      union
+      select
+        *,
+        (
+        select
+          to_jsonb(array_agg(it.id_topic))
+        from
+          event_topic it
+        where
+          it.id_event = t.id) as topics,
+        (
+        select
+          to_jsonb(array_agg(iu.id_user_types))
+        from
+          event_user_types iu
+        where
+          iu.id_event = t.id) as users
+      from
+        event t
+      inner join event_translation_prod tt on
+        t.id = tt.id
+        and tt.lang = '${defaultlang}'
+        and t.id not in (
+        select
+          t.id
+        from
+          event t
+        inner join event_translation_prod tt on
+          t.id = tt.id
+          and tt.lang = '${currentlang}')
+    `);
   }
 }
