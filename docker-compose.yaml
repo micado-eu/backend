@@ -22,7 +22,10 @@ services:
       - .env
       - prod.env
     environment:
-      - MICADO_GIT_URL=http://test.org/
+      - MICADO_GIT_URL=${MICADO_GIT_URL}
+      - ROCKETCHAT_HOSTNAME=${ROCKETCHAT_HOSTNAME}
+      - ROCKETCHAT_ADMIN=${ROCKETCHAT_ADMIN}
+      - ROCKETCHAT_ADMIN_PWD=${ROCKETCHAT_ADMIN_PWD}
       # don't use the /tmp/translations from tmpfs because it gives a permission error (have to fix this).
       - MICADO_TRANSLATIONS_DIR=/tmp/translations-repo
       - POSTGRES_DB=${POSTGRES_DB}
