@@ -57,6 +57,13 @@ export class Event extends Entity {
   })
   published?: boolean;
 
+  @property({
+    type: 'string',
+    postgresql: { columnName: 'creator', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  creator?: string;
+
+
   @hasMany(() => EventTranslation, { keyTo: 'id' })
   translations: EventTranslation[];
 

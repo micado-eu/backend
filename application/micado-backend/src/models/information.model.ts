@@ -38,6 +38,13 @@ export class Information extends Entity {
   })
   published?: boolean;
 
+  @property({
+    type: 'string',
+    postgresql: { columnName: 'creator', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  creator?: string;
+
+
   @hasMany(() => InformationTranslation, { keyTo: 'id' })
   translations: InformationTranslation[];
 
