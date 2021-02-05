@@ -124,3 +124,4 @@ export * from './user-user-pictures.controller';
 export * from './user-pictures.controller';
 export * from './process-topic.controller';
 export * from './process-users.controller';
+export * from './create-rocketchat-user.controller'
