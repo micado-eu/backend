@@ -31,6 +31,13 @@ export class Comments extends Entity {
     postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   published?: boolean;
+  
+  @property({
+    type: 'date',
+    jsonSchema: {nullable: true},
+    postgresql: {columnName: 'published_date', dataType: 'date', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  publishedDate?: string;
 
   @hasMany(() => CommentsTranslation, {keyTo: 'id'})
   translations: CommentsTranslation[];
