@@ -22,6 +22,12 @@ export class Glossary extends Entity {
   })
   published?: boolean;
 
+  @property({
+    type: 'string',
+    postgresql: { columnName: 'creator', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  creator?: string;
+
   /*
   @property({
     type: 'string',
