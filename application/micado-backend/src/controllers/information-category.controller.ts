@@ -170,4 +170,163 @@ export class InformationCategoryController {
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.informationCategoryRepository.deleteById(id);
   }
+  
+  @get('/temp-information-categories', {
+    responses: {
+      '200': {
+        description: 'Gets published information category entries with translation (temp)',
+      },
+    },
+  })
+  async temptranslatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.informationCategoryRepository.dataSource.execute(`
+    select
+      *
+    from
+      information_category t
+    inner join information_category_translation tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    union
+    select
+      *
+    from
+    information_category t
+    inner join information_category_translation tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+      information_category t
+      inner join information_category_translation tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
+  }
+
+  @get('/temp-information-category', {
+    responses: {
+      '200': {
+        description: 'Gets published information category with translation (temp)',
+      },
+    },
+  })
+  async temptranslatedunionsingle(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en',
+    @param.query.string('id') id = -1
+  ): Promise<void> {
+    return this.informationCategoryRepository.dataSource.execute(`
+    select
+      *
+    from
+      information_category t
+    inner join information_category_translation tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    where
+      t.id = ${id}
+    union
+    select
+      *
+    from
+      information_category t
+    inner join information_category_translation tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+        information_category t
+      inner join information_category_translation tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
+
+
+  }
+  @get('/production-information-categories', {
+    responses: {
+      '200': {
+        description: 'Gets published information category entries with translation (prod)',
+      },
+    },
+  })
+  async translatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.informationCategoryRepository.dataSource.execute(`
+    select
+      *
+    from
+      information_category t
+    inner join information_category_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    union
+    select
+      *
+    from
+    information_category t
+    inner join information_category_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+      information_category t
+      inner join information_category_translation_prod tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
+  }
+
+  @get('/production-information-category', {
+    responses: {
+      '200': {
+        description: 'Gets published information category with translation (prod)',
+      },
+    },
+  })
+  async translatedunionsingle(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en',
+    @param.query.string('id') id = -1
+  ): Promise<void> {
+    return this.informationCategoryRepository.dataSource.execute(`
+    select
+      *
+    from
+      information_category t
+    inner join information_category_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    where
+      t.id = ${id}
+    union
+    select
+      *
+    from
+      information_category t
+    inner join information_category_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+        information_category t
+      inner join information_category_translation_prod tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
+  }
 }

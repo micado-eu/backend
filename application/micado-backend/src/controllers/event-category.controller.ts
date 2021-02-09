@@ -16,20 +16,20 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {EventCategory} from '../models';
-import {EventCategoryRepository} from '../repositories';
+import { EventCategory } from '../models';
+import { EventCategoryRepository } from '../repositories';
 
 export class EventCategoryController {
   constructor(
     @repository(EventCategoryRepository)
-    public eventCategoryRepository : EventCategoryRepository,
-  ) {}
+    public eventCategoryRepository: EventCategoryRepository,
+  ) { }
 
   @post('/event-categories', {
     responses: {
       '200': {
         description: 'EventCategory model instance',
-        content: {'application/json': {schema: getModelSchemaRef(EventCategory)}},
+        content: { 'application/json': { schema: getModelSchemaRef(EventCategory) } },
       },
     },
   })
@@ -53,7 +53,7 @@ export class EventCategoryController {
     responses: {
       '200': {
         description: 'EventCategory model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -71,7 +71,7 @@ export class EventCategoryController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(EventCategory, {includeRelations: true}),
+              items: getModelSchemaRef(EventCategory, { includeRelations: true }),
             },
           },
         },
@@ -88,7 +88,7 @@ export class EventCategoryController {
     responses: {
       '200': {
         description: 'EventCategory PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -96,7 +96,7 @@ export class EventCategoryController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(EventCategory, {partial: true}),
+          schema: getModelSchemaRef(EventCategory, { partial: true }),
         },
       },
     })
@@ -112,7 +112,7 @@ export class EventCategoryController {
         description: 'EventCategory model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(EventCategory, {includeRelations: true}),
+            schema: getModelSchemaRef(EventCategory, { includeRelations: true }),
           },
         },
       },
@@ -120,7 +120,7 @@ export class EventCategoryController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(EventCategory, {exclude: 'where'}) filter?: FilterExcludingWhere<EventCategory>
+    @param.filter(EventCategory, { exclude: 'where' }) filter?: FilterExcludingWhere<EventCategory>
   ): Promise<EventCategory> {
     return this.eventCategoryRepository.findById(id, filter);
   }
@@ -137,7 +137,7 @@ export class EventCategoryController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(EventCategory, {partial: true}),
+          schema: getModelSchemaRef(EventCategory, { partial: true }),
         },
       },
     })
@@ -169,5 +169,164 @@ export class EventCategoryController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.eventCategoryRepository.deleteById(id);
+  }
+
+  @get('/temp-event-categories', {
+    responses: {
+      '200': {
+        description: 'Gets published event category entries with translation (temp)',
+      },
+    },
+  })
+  async temptranslatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.eventCategoryRepository.dataSource.execute(`
+    select
+      *
+    from
+      event_category t
+    inner join event_category_translation tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    union
+    select
+      *
+    from
+    event_category t
+    inner join event_category_translation tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+      event_category t
+      inner join event_category_translation tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
+  }
+
+  @get('/temp-event-category', {
+    responses: {
+      '200': {
+        description: 'Gets published event category with translation (temp)',
+      },
+    },
+  })
+  async temptranslatedunionsingle(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en',
+    @param.query.string('id') id = -1
+  ): Promise<void> {
+    return this.eventCategoryRepository.dataSource.execute(`
+    select
+      *
+    from
+      event_category t
+    inner join event_category_translation tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    where
+      t.id = ${id}
+    union
+    select
+      *
+    from
+      event_category t
+    inner join event_category_translation tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+        event_category t
+      inner join event_category_translation tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
+
+
+  }
+  @get('/production-event-categories', {
+    responses: {
+      '200': {
+        description: 'Gets published event category entries with translation (prod)',
+      },
+    },
+  })
+  async translatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.eventCategoryRepository.dataSource.execute(`
+    select
+      *
+    from
+      event_category t
+    inner join event_category_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    union
+    select
+      *
+    from
+    event_category t
+    inner join event_category_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+      event_category t
+      inner join event_category_translation_prod tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
+  }
+
+  @get('/production-event-category', {
+    responses: {
+      '200': {
+        description: 'Gets published event category with translation (prod)',
+      },
+    },
+  })
+  async translatedunionsingle(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en',
+    @param.query.string('id') id = -1
+  ): Promise<void> {
+    return this.eventCategoryRepository.dataSource.execute(`
+    select
+      *
+    from
+      event_category t
+    inner join event_category_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    where
+      t.id = ${id}
+    union
+    select
+      *
+    from
+      event_category t
+    inner join event_category_translation_prod tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+        event_category t
+      inner join event_category_translation_prod tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
   }
 }
