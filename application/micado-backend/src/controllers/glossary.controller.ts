@@ -19,7 +19,6 @@ import {
 } from '@loopback/rest';
 import { Glossary } from '../models';
 import { GlossaryRepository } from '../repositories';
-import { MarkdownConverterService } from '../services/markdown-converter.service';
 
 export class GlossaryController {
   constructor(
@@ -227,6 +226,44 @@ export class GlossaryController {
       from
         glossary t
       inner join glossary_translation_prod tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}')
+    `);
+  }
+
+  @get('/temp-glossary', {
+    responses: {
+      '200': {
+        description: 'Gets published glossary entries with translation (prod)',
+      },
+    },
+  })
+  async temptranslatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.glossaryRepository.dataSource.execute(`
+    select
+      *
+    from
+      glossary t
+    inner join glossary_translation tt on
+      t.id = tt.id
+      and tt.lang = '${currentlang}'
+    union
+    select
+      *
+    from
+      glossary t
+    inner join glossary_translation tt on
+      t.id = tt.id
+      and tt.lang = '${defaultlang}'
+      and t.id not in (
+      select
+        t.id
+      from
+        glossary t
+      inner join glossary_translation tt on
         t.id = tt.id
         and tt.lang = '${currentlang}')
     `);

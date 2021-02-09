@@ -19,7 +19,6 @@ import {
 } from '@loopback/rest';
 import { Event } from '../models';
 import { EventRepository } from '../repositories';
-import { MarkdownConverterService } from '../services/markdown-converter.service';
 
 export class EventController {
   constructor(
@@ -304,6 +303,72 @@ export class EventController {
         from
           event t
         inner join event_translation_prod tt on
+          t.id = tt.id
+          and tt.lang = '${currentlang}')
+    `);
+  }
+
+  @get('/temp-events', {
+    responses: {
+      '200': {
+        description: 'Gets published events with topics, user types, and translation (temp)',
+      },
+    },
+  })
+  async temptranslatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.eventRepository.dataSource.execute(`
+      select
+        *,
+        (
+        select
+          to_jsonb(array_agg(it.id_topic))
+        from
+          event_topic it
+        where
+          it.id_event = t.id) as topics,
+        (
+        select
+          to_jsonb(array_agg(iu.id_user_types))
+        from
+          event_user_types iu
+        where
+          iu.id_event = t.id) as users
+      from
+        event t
+      inner join event_translation tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}'
+      union
+      select
+        *,
+        (
+        select
+          to_jsonb(array_agg(it.id_topic))
+        from
+          event_topic it
+        where
+          it.id_event = t.id) as topics,
+        (
+        select
+          to_jsonb(array_agg(iu.id_user_types))
+        from
+          event_user_types iu
+        where
+          iu.id_event = t.id) as users
+      from
+        event t
+      inner join event_translation tt on
+        t.id = tt.id
+        and tt.lang = '${defaultlang}'
+        and t.id not in (
+        select
+          t.id
+        from
+          event t
+        inner join event_translation tt on
           t.id = tt.id
           and tt.lang = '${currentlang}')
     `);

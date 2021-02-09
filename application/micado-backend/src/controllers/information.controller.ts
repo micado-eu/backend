@@ -305,5 +305,72 @@ export class InformationController {
           t.id = tt.id
           and tt.lang = '${currentlang}')
     `);
+
+    
+  }
+  @get('/temp-information', {
+    responses: {
+      '200': {
+        description: 'Gets published information with topics, user types, and translation (temp)',
+      },
+    },
+  })
+  async temptranslatedunion(
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en'
+  ): Promise<void> {
+    return this.informationRepository.dataSource.execute(`
+      select
+        *,
+        (
+        select
+          to_jsonb(array_agg(it.id_topic))
+        from
+          information_topic it
+        where
+          it.id_information = t.id) as topics,
+        (
+        select
+          to_jsonb(array_agg(iu.id_user_types))
+        from
+          information_user_types iu
+        where
+          iu.id_information = t.id) as users
+      from
+        information t
+      inner join information_translation tt on
+        t.id = tt.id
+        and tt.lang = '${currentlang}'
+      union
+      select
+        *,
+        (
+        select
+          to_jsonb(array_agg(it.id_topic))
+        from
+          information_topic it
+        where
+          it.id_information = t.id) as topics,
+        (
+        select
+          to_jsonb(array_agg(iu.id_user_types))
+        from
+          information_user_types iu
+        where
+          iu.id_information = t.id) as users
+      from
+        information t
+      inner join information_translation tt on
+        t.id = tt.id
+        and tt.lang = '${defaultlang}'
+        and t.id not in (
+        select
+          t.id
+        from
+          information t
+        inner join information_translation tt on
+          t.id = tt.id
+          and tt.lang = '${currentlang}')
+    `);
   }
 }
