@@ -114,6 +114,35 @@ export class PictureHotspotPictureHotspotTranslationController {
     return this.pictureHotspotRepository.translations(id).delete(where);
   }
 
+  @get('/picture-hotspots-migrant', {
+    responses: {
+      '200': {
+        description: 'picture hotspots GET for the frontend',
+      },
+    },
+  })
+  async translatedunion (
+    @param.query.string('defaultlang') defaultlang = 'en',
+    @param.query.string('currentlang') currentlang = 'en',
+    @param.query.number('pictureId') pictureId:number
+  ): Promise<void> {
+    let selected_spot:any
+    await this.pictureHotspotRepository.dataSource.execute("select * from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id=tt.pht_id and tt.lang='" +
+      currentlang + "' union select * from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id = tt.pht_id and tt.lang = '" +
+      defaultlang +
+      "' and t.id not in (select t.id from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id = tt.pht_id and tt.lang = '" +
+      currentlang + "')").then((spots)=>{
+        console.log("i a spots")
+        console.log(spots)
+        selected_spot =  spots.filter((sp:any)=>{
+          return sp.picture_id == pictureId
+        })
+        console.log(selected_spot)
+        
+      })
+      return selected_spot
+  }
+
   @get('/picture-hotspots/to-production', {
     responses: {
       '200': {

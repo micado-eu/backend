@@ -170,4 +170,6 @@ export class PictureHotspotController {
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.pictureHotspotRepository.deleteById(id);
   }
+
+ 
 }
