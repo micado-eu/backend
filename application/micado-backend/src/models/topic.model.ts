@@ -32,7 +32,8 @@ export class Topic extends Entity {
   @property({
     type: 'Number',
     scale: 0,
-    //    postgresql: {columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    jsonSchema: { nullable: true },
+    postgresql: {columnName: 'father', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
   father: number;
 
