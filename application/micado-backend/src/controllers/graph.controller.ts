@@ -49,7 +49,7 @@ export class GraphController {
       await this.asyncForEach(new_steps, async (nstep: any) => {
 
         // filter only needed data
-        let savingStep = JSON.parse(JSON.stringify(nstep, ['id', 'cost', 'locationSpecific', 'location', 'locationLon', 'locationLat', 'idProcess']));
+        let savingStep = JSON.parse(JSON.stringify(nstep, ['id', 'cost', 'locationSpecific', 'location', 'locationLon', 'locationLat', 'idProcess','link']));
         // save new step
         await this.stepRepository.create(savingStep)
           .then(
@@ -117,7 +117,7 @@ export class GraphController {
       await this.asyncForEach(changed_steps, async (cstep: any) => {
 
         // filter only needed data
-        let editingStep = JSON.parse(JSON.stringify(cstep, ['id', 'cost', 'locationSpecific', 'location', 'locationLon', 'locationLat', 'idProcess']));
+        let editingStep = JSON.parse(JSON.stringify(cstep, ['id', 'cost', 'locationSpecific', 'location', 'locationLon', 'locationLat', 'idProcess','link']));
         // save new step
         await this.stepRepository.updateById(editingStep.id, editingStep)
           .then(
