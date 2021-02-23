@@ -3,13 +3,18 @@ import {repository} from '@loopback/repository';
 import {existsSync, mkdirSync, promises as fsAsync, readdirSync, readFileSync, unlinkSync} from 'fs';
 import simpleGit, {SimpleGit} from 'simple-git';
 import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, UserTypesTranslationRepository} from '../repositories';
-
+import {
+  WeblateService
+} from '../services/weblate.service'
+import { inject } from '@loopback/context';
 
 // Should come from a config file or the database.
 const MICADO_SOURCE_LANGUAGE = process.env.MICADO_SOURCE_LANGUAGE ?? 'en';
 const MICADO_GIT_URL = process.env.MICADO_GIT_URL ?? '';
 const MICADO_TRANSLATIONS_DIR = process.env.MICADO_TRANSLATIONS_DIR ?? '/tmp/translations';
-
+const MICADO_WEBLATE_PROJECT = process.env.MICADO_WEBLATE_PROJECT ?? '';
+const TRANSLATION_HOSTNAME = process.env.TRANSLATION_HOSTNAME ?? '';
+const MICADO_WEBLATE_KEY = process.env.MICADO_WEBLATE_KEY ?? '';
 
 @bind({scope: BindingScope.SINGLETON})
 export class TranslationService {
@@ -18,23 +23,24 @@ export class TranslationService {
   private git: SimpleGit;
 
   constructor(
-    @repository(CommentsTranslationRepository) public commentsTranslationRepository: CommentsTranslationRepository,
-    @repository(DocumentTypeTranslationRepository) public documentTypeTranslationRepository: DocumentTypeTranslationRepository,
-    @repository(EventCategoryTranslationRepository) public eventCategoryTranslationRepository: EventCategoryTranslationRepository,
-    @repository(EventTagTranslationRepository) public eventTagTranslationRepository: EventTagTranslationRepository,
-    @repository(EventTranslationRepository) public eventTranslationRepository: EventTranslationRepository,
-    @repository(GlossaryTranslationRepository) public glossaryTranslationRepository: GlossaryTranslationRepository,
-    @repository(InformationCategoryTranslationRepository) public informationCategoryTranslationRepository: InformationCategoryTranslationRepository,
-    @repository(InformationTagTranslationRepository) public informationTagTranslationRepository: InformationTagTranslationRepository,
-    @repository(InformationTranslationRepository) public informationTranslationRepository: InformationTranslationRepository,
-    @repository(InterventionCategoryTranslationRepository) public interventionCategoryTranslationRepository: InterventionCategoryTranslationRepository,
-    @repository(InterventionTypesTranslationRepository) public interventionTypesTranslationRepository: InterventionTypesTranslationRepository,
-    @repository(PictureHotspotTranslationRepository) public pictureHotspotTranslationRepository: PictureHotspotTranslationRepository,
-    @repository(ProcessTranslationRepository) public processTranslationRepository: ProcessTranslationRepository,
-    @repository(StepLinkTranslationRepository) public stepLinkTranslationRepository: StepLinkTranslationRepository,
-    @repository(StepTranslationRepository) public stepTranslationRepository: StepTranslationRepository,
-    @repository(TopicTranslationRepository) public topicTranslationRepository: TopicTranslationRepository,
-    @repository(UserTypesTranslationRepository) public userTypesTranslationRepository: UserTypesTranslationRepository,
+    @repository(CommentsTranslationRepository) protected commentsTranslationRepository: CommentsTranslationRepository,
+    @repository(DocumentTypeTranslationRepository) protected documentTypeTranslationRepository: DocumentTypeTranslationRepository,
+    @repository(EventCategoryTranslationRepository) protected eventCategoryTranslationRepository: EventCategoryTranslationRepository,
+    @repository(EventTagTranslationRepository) protected eventTagTranslationRepository: EventTagTranslationRepository,
+    @repository(EventTranslationRepository) protected eventTranslationRepository: EventTranslationRepository,
+    @repository(GlossaryTranslationRepository) protected glossaryTranslationRepository: GlossaryTranslationRepository,
+    @repository(InformationCategoryTranslationRepository) protected informationCategoryTranslationRepository: InformationCategoryTranslationRepository,
+    @repository(InformationTagTranslationRepository) protected informationTagTranslationRepository: InformationTagTranslationRepository,
+    @repository(InformationTranslationRepository) protected informationTranslationRepository: InformationTranslationRepository,
+    @repository(InterventionCategoryTranslationRepository) protected interventionCategoryTranslationRepository: InterventionCategoryTranslationRepository,
+    @repository(InterventionTypesTranslationRepository) protected interventionTypesTranslationRepository: InterventionTypesTranslationRepository,
+    @repository(PictureHotspotTranslationRepository) protected pictureHotspotTranslationRepository: PictureHotspotTranslationRepository,
+    @repository(ProcessTranslationRepository) protected processTranslationRepository: ProcessTranslationRepository,
+    @repository(StepLinkTranslationRepository) protected stepLinkTranslationRepository: StepLinkTranslationRepository,
+    @repository(StepTranslationRepository) protected stepTranslationRepository: StepTranslationRepository,
+    @repository(TopicTranslationRepository) protected topicTranslationRepository: TopicTranslationRepository,
+    @repository(UserTypesTranslationRepository) protected userTypesTranslationRepository: UserTypesTranslationRepository,
+    @inject('services.Weblate') protected weblateService: WeblateService,
   ) {
     this.gitInitialized = false;
     
@@ -154,6 +160,8 @@ export class TranslationService {
 
     */
 
+    await this.weblateService.git(MICADO_WEBLATE_PROJECT, 'commit', MICADO_WEBLATE_KEY, TRANSLATION_HOSTNAME);
+    await this.weblateService.git(MICADO_WEBLATE_PROJECT, 'push', MICADO_WEBLATE_KEY, TRANSLATION_HOSTNAME);
 
     await this.git.pull('origin', 'master');
 

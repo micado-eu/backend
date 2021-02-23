@@ -23,7 +23,7 @@ export class MicadoDsDataSource extends juggler.DataSource
     dsConfig.user = process.env.MICADO_DB_USER
     dsConfig.database = process.env.POSTGRES_DB
     dsConfig.schema = process.env.MICADO_DB_SCHEMA
-    dsConfig.url = "postgres://"+process.env.MICADO_DB_USER + ":" + process.env.MICADO_DB_PWD + "@micado_db/" +  process.env.POSTGRES_DB
+    dsConfig.url = "postgres://"+process.env.MICADO_DB_USER + ":password@micado_db/" +  process.env.POSTGRES_DB
 
     console.log(dsConfig)
     super(dsConfig);
