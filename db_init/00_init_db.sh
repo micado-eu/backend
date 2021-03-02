@@ -111,7 +111,9 @@ echo "\nCreated MICADO apps components, now adding tables\n"
 psql -U $MICADO_DB_USER -d $POSTGRES_DB -a -q -f /docker-entrypoint-initdb.d/Micado_DB_Schema.sql.txt
 
 #CREATE indexes for full text searches for PGROONGA
-#psql -c "CREATE INDEX pgroonga_content_index ON $MICADO_DB_SCHEMA.event_translation_prod USING pgroonga (content);"
+psql -c "CREATE INDEX event_translation_prod_pgroonga_index ON micadoapp.event_translation_prod USING PGroonga ((ARRAY[event, description]));"
+psql -c "CREATE INDEX information_translation_prod_pgroonga_index ON micadoapp.information_translation_prod USING PGroonga ((ARRAY[information, description]));"
+psql -c "CREATE INDEX process_translation_prod_pgroonga_index ON micadoapp.process_translation_prod USING PGroonga ((ARRAY[process, description]));"
 
 
 echo "\nCreating WEBLATE components\n"
