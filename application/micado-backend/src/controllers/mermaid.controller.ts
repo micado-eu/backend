@@ -151,6 +151,7 @@ export class MermaidController {
           data: {
             location: astep.location,
             cost: astep.cost,
+            url:astep.link,
             longitude: astep.locationLon,
             latitude: astep.locationLat,
             documents: docarray
