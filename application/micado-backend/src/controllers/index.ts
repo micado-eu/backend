@@ -127,3 +127,4 @@ export * from './process-users.controller';
 export * from './create-rocketchat-user.controller'
 export * from './feedback.controller';
 export * from './unified-search.controller';
+export * from './search.controller';
