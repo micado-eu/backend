@@ -36,6 +36,12 @@ export class SearchController {
     @param.query.string('words') words: string
   ) {
     let search = ""
+    if (!words) {
+      throw {
+        status: 400,
+        message: "Please include text in the words query parameter"
+      }
+    }
     const wordsToSearch = words.split(',')
     // Append the terms to search with OR operator
     wordsToSearch.forEach((word, index, array) => {
