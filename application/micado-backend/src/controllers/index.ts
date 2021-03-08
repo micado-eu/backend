@@ -128,3 +128,4 @@ export * from './create-rocketchat-user.controller'
 export * from './feedback.controller';
 export * from './unified-search.controller';
 export * from './search.controller';
+export * from './user-user-preferences.controller';

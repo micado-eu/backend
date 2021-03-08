@@ -91,3 +91,4 @@ export * from './process-produced-documents.model';
 export * from './completed-intervention-document.model';
 export * from './feedback.model';
 
+export * from './user-preferences.model';

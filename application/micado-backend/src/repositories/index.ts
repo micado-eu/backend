@@ -82,3 +82,4 @@ export * from './document-type-validator.repository';
 export * from './completed-intervention-document.repository';
 export * from './user-pictures.repository';
 export * from './feedback.repository';
+export * from './user-preferences.repository';

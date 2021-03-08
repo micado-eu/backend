@@ -1,11 +1,12 @@
 import {DefaultCrudRepository, repository, HasManyRepositoryFactory, HasOneRepositoryFactory} from '@loopback/repository';
-import {User, UserRelations, UserAttribute, IndividualInterventionPlan, UmTenant, UserPictures} from '../models';
+import {User, UserRelations, UserAttribute, IndividualInterventionPlan, UmTenant, UserPictures, UserPreferences} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject, Getter} from '@loopback/core';
 import {UserAttributeRepository} from './user-attribute.repository';
 import {IndividualInterventionPlanRepository} from './individual-intervention-plan.repository';
 import {UmTenantRepository} from './um-tenant.repository';
 import {UserPicturesRepository} from './user-pictures.repository';
+import {UserPreferencesRepository} from './user-preferences.repository';
 
 export class UserRepository extends DefaultCrudRepository<
   User,
@@ -21,10 +22,14 @@ export class UserRepository extends DefaultCrudRepository<
 
   public readonly userPicture: HasOneRepositoryFactory<UserPictures, typeof User.prototype.umId>;
 
+  public readonly userPreferences: HasManyRepositoryFactory<UserPreferences, typeof User.prototype.umId>;
+
   constructor(
-    @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('UserAttributeRepository') protected userAttributeRepositoryGetter: Getter<UserAttributeRepository>, @repository.getter('IndividualInterventionPlanRepository') protected individualInterventionPlanRepositoryGetter: Getter<IndividualInterventionPlanRepository>, @repository.getter('UmTenantRepository') protected tenantRepositoryGetter: Getter<UmTenantRepository>, @repository.getter('UserPicturesRepository') protected userPicturesRepositoryGetter: Getter<UserPicturesRepository>,
+    @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('UserAttributeRepository') protected userAttributeRepositoryGetter: Getter<UserAttributeRepository>, @repository.getter('IndividualInterventionPlanRepository') protected individualInterventionPlanRepositoryGetter: Getter<IndividualInterventionPlanRepository>, @repository.getter('UmTenantRepository') protected tenantRepositoryGetter: Getter<UmTenantRepository>, @repository.getter('UserPicturesRepository') protected userPicturesRepositoryGetter: Getter<UserPicturesRepository>, @repository.getter('UserPreferencesRepository') protected userPreferencesRepositoryGetter: Getter<UserPreferencesRepository>,
   ) {
     super(User, dataSource);
+    this.userPreferences = this.createHasManyRepositoryFactoryFor('userPreferences', userPreferencesRepositoryGetter,);
+    this.registerInclusionResolver('userPreferences', this.userPreferences.inclusionResolver);
     this.userPicture = this.createHasOneRepositoryFactoryFor('userPicture', userPicturesRepositoryGetter);
     this.registerInclusionResolver('userPicture', this.userPicture.inclusionResolver);
     this.tenant = this.createHasOneRepositoryFactoryFor('tenant', tenantRepositoryGetter);
