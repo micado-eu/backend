@@ -129,3 +129,5 @@ export * from './feedback.controller';
 export * from './unified-search.controller';
 export * from './search.controller';
 export * from './user-user-preferences.controller';
+export * from './user-consent.controller';
+export * from './user-user-consent.controller';

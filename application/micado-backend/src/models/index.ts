@@ -90,5 +90,5 @@ export * from './process-produced-documents.model';
 //export * from './tenant-mgt-admin-service.model';
 export * from './completed-intervention-document.model';
 export * from './feedback.model';
-
+export * from './user-consent.model';
 export * from './user-preferences.model';
