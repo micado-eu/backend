@@ -145,6 +145,10 @@ export class TranslationService {
     });
   }
 
+  public async getStatistics(): Promise<any> {
+    return this.weblateService.statistics(MICADO_WEBLATE_PROJECT, MICADO_WEBLATE_KEY, TRANSLATION_HOSTNAME);
+  }
+
   public async updateTranslatables() {
     /*// Get all components
     let resp = await this.weblateService.components('micado-english');

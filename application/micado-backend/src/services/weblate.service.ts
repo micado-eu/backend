@@ -10,6 +10,7 @@ export interface WeblateService {
   components (project: string, auth: string, baseurl: any): Promise<any>;
   lock (project: string, component: string, lock: boolean, auth: string, baseurl: any): Promise<any>;
   git (project: string, operation: string, auth: string, baseurl: any): Promise<any>;
+  statistics (project: string, auth: string, baseurl: any): Promise<any>;
 }
 
 export class WeblateProvider implements Provider<WeblateService> {

@@ -115,6 +115,31 @@
           "baseurl"
         ]
       }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "https://{baseurl}/api/projects/{project}/languages/",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Token {auth}"
+        },
+        "query": {},
+        "body": {
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "statistics": [
+          "project",
+          "auth",
+          "baseurl"
+        ]
+      }
     }
   ]
 }

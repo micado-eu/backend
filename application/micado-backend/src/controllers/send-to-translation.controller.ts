@@ -27,7 +27,7 @@ import fs from 'fs';
 import simpleGit, {SimpleGit} from 'simple-git';
 import { TranslationService } from '../services';
 
-export class SendToTranslationController {
+export class TranslationController {
   constructor(
     @repository(TopicTranslationRepository) public topicTranslationRepository: TopicTranslationRepository,
     @service() public translationService: TranslationService,
@@ -51,5 +51,19 @@ export class SendToTranslationController {
     await this.translationService.updateTranslatables();
     //await this.translationService.initializeService();
     //this.translationService.uploadTranslatables();
+  }
+
+  @get('/translation-statistics', {
+    responses: {
+      '200': {
+        description: 'Statistics of the translations',
+        content: { 'application/json': { schema: AnyType } },
+      },
+    },
+  })
+  async status (
+
+  ): Promise<any> {
+    return this.translationService.getStatistics();
   }
 }
