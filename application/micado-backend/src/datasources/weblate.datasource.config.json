@@ -96,7 +96,7 @@
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
-          "Authorization": "Basic {auth}"
+          "Authorization": "Token {auth}"
         },
         "query": {},
         "body": {
