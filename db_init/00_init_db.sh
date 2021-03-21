@@ -97,6 +97,8 @@ psql -c "GRANT SELECT, REFERENCES ON $WSO2_SHARED_SCHEMA.um_user_attribute TO $M
 psql -c "GRANT SELECT, REFERENCES ON $WSO2_SHARED_SCHEMA.um_tenant TO $MICADO_DB_USER;"
 psql -c "create extension \"uuid-ossp\" schema $MICADO_DB_SCHEMA"
 psql -c "create extension \"pgcrypto\" schema $MICADO_DB_SCHEMA"
+psql -c "create extension \"pgroonga\" schema $MICADO_DB_SCHEMA"
+
 
 # THIS IS TEMPORARY UNTILL LOOPBACK GET OUR PATCH
 psql -c "GRANT CREATE ON DATABASE $POSTGRES_DB TO $MICADO_DB_USER;"
@@ -108,6 +110,10 @@ echo "\nCreated MICADO apps components, now adding tables\n"
 #UNCOMMENT THIS IF YOU WANT TO HAVE THE DB WITH THE TABLES 
 psql -U $MICADO_DB_USER -d $POSTGRES_DB -a -q -f /docker-entrypoint-initdb.d/Micado_DB_Schema.sql.txt
 
+#CREATE indexes for full text searches for PGROONGA
+psql -c "CREATE INDEX event_translation_prod_pgroonga_index ON micadoapp.event_translation_prod USING PGroonga ((ARRAY[event, description]));"
+psql -c "CREATE INDEX information_translation_prod_pgroonga_index ON micadoapp.information_translation_prod USING PGroonga ((ARRAY[information, description]));"
+psql -c "CREATE INDEX process_translation_prod_pgroonga_index ON micadoapp.process_translation_prod USING PGroonga ((ARRAY[process, description]));"
 
 
 echo "\nCreating WEBLATE components\n"

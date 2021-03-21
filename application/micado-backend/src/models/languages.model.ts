@@ -35,6 +35,13 @@ export class Languages extends Entity {
   active: boolean;
 
   @property({
+    type: 'boolean',
+    required: true,
+    postgresql: { columnName: 'is_default', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO' },
+  })
+  isDefault: boolean;
+
+  @property({
     type: 'string',
     length: 25,
     postgresql: { columnName: 'voice_string', dataType: 'character varying', dataLength: 50, dataPrecision: null, dataScale: null, nullable: 'YES' },

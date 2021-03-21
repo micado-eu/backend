@@ -126,3 +126,14 @@ export * from './process-topic.controller';
 export * from './process-users.controller';
 export * from './create-rocketchat-user.controller'
 export * from './feedback.controller';
+export * from './unified-search.controller';
+export * from './search.controller';
+export * from './user-user-preferences.controller';
+export * from './user-consent.controller';
+export * from './user-user-consent.controller';
+export * from './t-settings-t-settings-translation.controller';
+export * from './t-settings-t-settings-translation-prod.controller';
+export * from './survey-survey-answers.controller';
+export * from './t-settings.controller';
+export * from './survey.controller';
+export * from './step-icon.controller';

@@ -56,6 +56,19 @@ export class Step extends Entity {
   })
   idProcess: number;
 
+   @property({
+    type: 'number',
+    scale: 0,
+    postgresql: { columnName: 'step_icon', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES' },
+  })
+  stepIcon: number;
+
+  @property({
+    type: 'string',
+    postgresql: { columnName: 'link', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  link?: string;
+
   @hasMany(() => StepTranslation, {keyTo: 'id'})
   translations: StepTranslation[];
 

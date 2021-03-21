@@ -29,6 +29,14 @@ export class Topic extends Entity {
   })
   published?: boolean;
 
+  @property({
+    type: 'Number',
+    scale: 0,
+    jsonSchema: { nullable: true },
+    postgresql: {columnName: 'father', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+  })
+  father: number;
+
   @hasMany(() => TopicTranslation, { keyTo: 'id' })
   translations: TopicTranslation[];
 

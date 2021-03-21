@@ -55,7 +55,7 @@ services:
       - micado_net
 
   micado_db:
-    image: mdillon/postgis:11-alpine
+    image: groonga/pgroonga:2.2.6-alpine-11-slim
     env_file:
       - .env
       - prod.env

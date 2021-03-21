@@ -3,6 +3,8 @@ import {UserAttribute} from './user-attribute.model';
 import {IndividualInterventionPlan} from './individual-intervention-plan.model';
 import {UmTenant} from './um-tenant.model';
 import {UserPictures} from './user-pictures.model';
+import {UserPreferences} from './user-preferences.model';
+import {UserConsent} from './user-consent.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'wso2_shared', table: 'um_user' } }
@@ -67,6 +69,12 @@ export class User extends Entity {
 
   @hasOne(() => UserPictures, {keyTo: 'userId'})
   userPicture: UserPictures;
+
+  @hasMany(() => UserPreferences, {keyTo: 'idUser'})
+  userPreferences: UserPreferences[];
+
+  @hasOne(() => UserConsent, {keyTo: 'idUser'})
+  userConsent: UserConsent;
   // Define well-known properties here
 
   // Indexer property to allow additional data

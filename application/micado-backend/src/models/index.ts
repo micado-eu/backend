@@ -90,4 +90,11 @@ export * from './process-produced-documents.model';
 //export * from './tenant-mgt-admin-service.model';
 export * from './completed-intervention-document.model';
 export * from './feedback.model';
-
+export * from './user-consent.model';
+export * from './user-preferences.model';
+export * from './t-settings-translation.model';
+export * from './t-settings.model';
+export * from './t-settings-translation-prod.model';
+export * from './step-icon.model';
+export * from './survey.model';
+export * from './survey-answers.model';
