@@ -18,11 +18,15 @@ import {
 } from '@loopback/rest';
 import {StepLink} from '../models';
 import {StepLinkRepository} from '../repositories';
+import { SettingsRepository } from '../repositories';
+import { LanguagesRepository } from '../repositories';
 
 export class StepLinkController {
   constructor(
     @repository(StepLinkRepository)
     public stepLinkRepository : StepLinkRepository,
+    @repository(SettingsRepository) protected settingsRepository: SettingsRepository,
+    @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
   ) {}
 
   @post('/step-links', {
@@ -170,4 +174,27 @@ export class StepLinkController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.stepLinkRepository.deleteById(id);
   }
+
+  @get('/step-links/to-production', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.string('id') id:string,
+  ): Promise<void> {
+    let settings = await this.settingsRepository.find({});
+    //   let lang_filter = { where: { active: true } }
+    let languages = await this.languagesRepository.find({ where: { active: true } });
+    let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
+    let idx = languages.findIndex(el => el.lang == def_lang.value)
+    languages.splice(idx, 1)
+    this.stepLinkRepository.dataSource.execute("insert into step_link_translation_prod(id, lang , description ) select step_link_translation.id, step_link_translation.lang, step_link_translation.description  from step_link_translation  where "+'"translationState"'+" >= '2' and id='" + id+ "' and lang='" + def_lang.value+"'");
+    languages.forEach((lang:any)=>{
+      this.stepLinkRepository.dataSource.execute("insert into step_link_translation_prod(id, lang , description ) select step_link_translation.id, step_link_translation.lang, step_link_translation.description  from step_link_translation  where "+'"translationState"'+" > '2' and id='" + id+ "' and lang='" + lang.lang+"'");
+    })
+  }
+
 }
