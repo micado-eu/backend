@@ -218,14 +218,61 @@ export class GraphController {
       });
     }
     await saveStepsLinks()
+    let changed_step_links = data.steplinks.filter((step: any) => { return (step.is_edited != null && (step.is_edited && !step.is_new)) })
+    console.log("changed_steps")
+    console.log(changed_step_links)
+    const editStepLinks = async () => {
+      await this.asyncForEach(changed_step_links, async (cstep: any) => {
+
+        // filter only needed data
+        let editingStep = JSON.parse(JSON.stringify(cstep, ['id', 'fromStep', 'toStep', 'idProcess']));
+        // save new step
+        await this.stepLinkRepository.updateById(editingStep.id, editingStep)
+          .then(
+            result => {
+              console.log("edited step")
+              console.log(result)
+            }
+          )
+        // save translations
+        const editTranslationsLinks = async () => {
+          await this.asyncForEach(cstep.translations, async (transl: any) => {
+
+            let editingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description', 'translationState']));
+            let trid = cstep.id
+            console.log(editingTranslation)
+            let where = {
+              id: { eq: editingTranslation.id }, lang: { eq: editingTranslation.lang }
+            }
+            this.stepLinkRepository.translations(trid).patch(editingTranslation, where)
+              .then((trres) => {
+                console.log("saved translation")
+                console.log(trres)
+              }).catch(error => {
+                console.log(error)
+              })
+
+          });
+        }
+        await editTranslationsLinks()
+      })
+    }
+    
+    await editStepLinks()
+
+        
     // edit steplinks
-    let changed_step_links = data.steplinks.filter((steplink: any) => { return (steplink.is_edited != null && (steplink.is_edited && !steplink.is_new)) })
+   /* let changed_step_links = data.steplinks.filter((steplink: any) => { return (steplink.is_edited != null && (steplink.is_edited && !steplink.is_new)) })
     console.log("changed_steplinks")
-    console.log(changed_steps)
+    console.log(changed_step_links)
     const editLinkTranslations = async () => {
       if(changed_step_links.length != 0){
-      await this.asyncForEach(changed_step_links.translations, async (transl: any) => {
+        console.log("I AM TRANSLATIONS")
+        console.log(changed_step_links)
 
+      await this.asyncForEach(changed_step_links.translations, async (transl: any) => {
+        console.log("I AM TRANLS")
+        console.log(transl)
         let editingLinkTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description']));
         let trid = changed_step_links.id
         console.log(editingLinkTranslation)
@@ -242,8 +289,8 @@ export class GraphController {
 
       });
     }
-  }
-    await editLinkTranslations()
+  }*/
+    //await editLinkTranslations()
     
     // delete step links
     let deleting_step_links = data.steplinks.filter((steplink: any) => { return (steplink.to_delete != null && steplink.to_delete) })
