@@ -95,6 +95,6 @@ export * from './user-preferences.model';
 export * from './t-settings-translation.model';
 export * from './t-settings.model';
 export * from './t-settings-translation-prod.model';
-export * from './step-icon.model';
+export * from './mixed-icons.model';
 export * from './survey.model';
 export * from './survey-answers.model';

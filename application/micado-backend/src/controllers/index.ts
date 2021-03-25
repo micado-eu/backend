@@ -136,4 +136,5 @@ export * from './t-settings-t-settings-translation-prod.controller';
 export * from './survey-survey-answers.controller';
 export * from './t-settings.controller';
 export * from './survey.controller';
-export * from './step-icon.controller';
+export * from './mixed-icons.controller';
+export * from './step-mixed-icons.controller';

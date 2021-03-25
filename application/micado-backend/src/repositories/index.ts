@@ -84,7 +84,7 @@ export * from './user-pictures.repository';
 export * from './feedback.repository';
 export * from './user-preferences.repository';
 export * from './user-consent.repository';
-export * from './step-icon.repository';
+export * from './mixed-icons.repository';
 export * from './survey-answers.repository';
 export * from './survey.repository';
 export * from './t-settings-translation-prod.repository';

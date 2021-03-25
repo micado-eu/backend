@@ -1,7 +1,8 @@
-import { Entity, model, property, hasMany } from '@loopback/repository';
+import { Entity, model, property, hasMany, hasOne} from '@loopback/repository';
 import { StepTranslation } from './step-translation.model';
 import {StepDocument} from './step-document.model';
 import {StepTranslationProd} from './step-translation-prod.model';
+import {MixedIcons} from './mixed-icons.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'step' } }
@@ -77,6 +78,9 @@ export class Step extends Entity {
 
   @hasMany(() => StepTranslationProd, {keyTo: 'id'})
   translations_prod: StepTranslationProd[];
+
+  @hasOne(() => MixedIcons, {keyTo: 'id', keyFrom:'stepIcon'})
+  icon: MixedIcons;
   // Define well-known properties here
 
   // Indexer property to allow additional data
