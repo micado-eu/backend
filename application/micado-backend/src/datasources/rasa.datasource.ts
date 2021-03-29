@@ -10,7 +10,7 @@ import config from './rasa.datasource.config.json';
 @lifeCycleObserver('datasource')
 export class RasaDataSource extends juggler.DataSource
   implements LifeCycleObserver {
-  static dataSourceName = 'countly';
+  static dataSourceName = 'rasa';
 
   constructor(
     @inject('datasources.config.rasa', { optional: true })
