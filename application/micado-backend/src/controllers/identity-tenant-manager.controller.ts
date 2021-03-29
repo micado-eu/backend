@@ -69,6 +69,8 @@ export class IdentityTenantManagerController {
     //Preconditions
     console.log("in the identity controller retrieveTenants")
     //    var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
+    console.log("IN RETRIEVE TENANT FUCNTION")
+
 
     var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
     console.log(process.env.MICADO_ENV)
@@ -93,6 +95,8 @@ export class IdentityTenantManagerController {
 
         client.retrieveTenants(args, function (err: any, result: any) {
           //     client.getTenant(args, function (err: any, result: any) {
+            console.log("RETRIEVED TENANTS")
+
           console.log(result);
           return resolve(result)
         });
@@ -109,7 +113,7 @@ export class IdentityTenantManagerController {
     @param.query.string('lastname') lastname: String,
   ): Promise<any> {
     //Preconditions
-    console.log("in the identity controller")
+    console.log("in the identity controller ADD TENANT")
     console.log(tenantDomain)
     var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
     var url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService?wsdl'
@@ -120,6 +124,7 @@ export class IdentityTenantManagerController {
         return b['tenantId'] - a['tenantId'];
       }
     )[0]['tenantId']
+    console.log("MAX TENANT")
     console.log(maxTenant)
     maxTenant++
     var args = {
@@ -153,6 +158,7 @@ export class IdentityTenantManagerController {
         client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
         client.addTenant(args, function (err: any, result: any) {
+          console.log("ADDING THE TENANT")
           console.log(result);
           console.log(err)
           result.tenantInfoBean = args.tenantInfoBean
@@ -262,7 +268,7 @@ export class IdentityTenantManagerController {
   ): Promise<any> {
     //This function can be called either passing the credentials of the admin of with the access token from a logged user
     // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
-    console.log("in the identity controller")
+    console.log("in the identity controller ADD ROLE")
     console.log(role)
     console.log(authType)
 
