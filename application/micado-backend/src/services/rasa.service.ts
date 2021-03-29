@@ -14,7 +14,7 @@ export interface RasaService {
 export class RasaProvider implements Provider<RasaService> {
   constructor(
     // identityserver must match the name property in the datasource json file
-    @inject('datasources.countly')
+    @inject('datasources.rasa')
     protected dataSource: RasaDataSource = new RasaDataSource(),
   ) { }
 
