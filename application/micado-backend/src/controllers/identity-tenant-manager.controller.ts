@@ -174,14 +174,20 @@ export class IdentityTenantManagerController {
     @param.query.string('address') address: string,
     @param.query.string('contactmail') contactmail: string,
   ): Promise<any> {
-
+    console.log("BEFORE CREATING TENANT")
     let isRet = await this.addTenant(tenantDomain, password, email, firstname, lastname)
+    console.log("AFTER CREATING TENANT")
+    console.log("THIS IS RETURN FROM CREATING TENANT")
     console.log(isRet)
     // since we are adding the tenant we also need to add the roles that are needed
     // we only add NGO tenants so we need to use the admin and password we just created since that is the only one allowed to operate in the tenant
+    console.log("ADDING SUPERADMIN ROLE TO NEW TENANT")
     let roleRet1 = await this.addRole("APPLICATION/micado_ngo_superadmin", tenantDomain, "admin", password)
+    console.log("RETURN FROM ADDING SUPERADMIN ROLE")
     console.log(roleRet1)
+    console.log("ADDING MIGRANT MANAGER ROLE TO NEW TENANT")
     let roleRet2 = await this.addRole("APPLICATION/micado_ngo_migrant_manager", tenantDomain, "admin", password)
+    console.log("RETURN FROM ADDING MIGRANT MANAGER ROLE")
     console.log(roleRet2)
     let dbTenant: Tenant = new Tenant({
       id: isRet.tenantInfoBean.tenantId,
@@ -190,6 +196,9 @@ export class IdentityTenantManagerController {
       email: contactmail,
       address: address
     })
+    console.log("THIS IS DBTENANT")
+    console.log(dbTenant)
+    console.log("BEFORE CREATING TENANT ON DB WITH DBTENANT")
     return this.tenantRepository.create(dbTenant);
   }
 
