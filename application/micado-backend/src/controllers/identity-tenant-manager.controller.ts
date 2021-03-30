@@ -95,7 +95,7 @@ export class IdentityTenantManagerController {
 
         client.retrieveTenants(args, function (err: any, result: any) {
           //     client.getTenant(args, function (err: any, result: any) {
-            console.log("RETRIEVED TENANTS")
+          console.log("RETRIEVED TENANTS")
 
           console.log(result);
           return resolve(result)
@@ -188,11 +188,11 @@ export class IdentityTenantManagerController {
     // since we are adding the tenant we also need to add the roles that are needed
     // we only add NGO tenants so we need to use the admin and password we just created since that is the only one allowed to operate in the tenant
     console.log("ADDING SUPERADMIN ROLE TO NEW TENANT")
-    let roleRet1 = await this.addRole("APPLICATION/micado_ngo_superadmin", tenantDomain, "admin", password)
+    let roleRet1 = await this.addRole("APPLICATION/micado_ngo_superadmin", tenantDomain, "admin" + '@' + tenantDomain, password)
     console.log("RETURN FROM ADDING SUPERADMIN ROLE")
     console.log(roleRet1)
     console.log("ADDING MIGRANT MANAGER ROLE TO NEW TENANT")
-    let roleRet2 = await this.addRole("APPLICATION/micado_ngo_migrant_manager", tenantDomain, "admin", password)
+    let roleRet2 = await this.addRole("APPLICATION/micado_ngo_migrant_manager", tenantDomain, "admin" + '@' + tenantDomain, password)
     console.log("RETURN FROM ADDING MIGRANT MANAGER ROLE")
     console.log(roleRet2)
     let dbTenant: Tenant = new Tenant({
@@ -447,7 +447,7 @@ export class IdentityTenantManagerController {
     let paylodJSON: any = JSON.parse(payload)
     console.log(paylodJSON)
     let working_payload: any
-    let possibleRoles: string[] = ['micado_ngo_migrant_manager','micado_ngo_admin', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
+    let possibleRoles: string[] = ['micado_ngo_migrant_manager', 'micado_ngo_admin', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
     if (isPswd) {
       console.log("I'm saving a password")
       working_payload = { "schemas": [], "Operations": [{ "op": "add", "value": { "password": paylodJSON.password } }] }
@@ -505,7 +505,7 @@ export class IdentityTenantManagerController {
               "value": {
                 "emails": [
                   {
-                    "type":"work",
+                    "type": "work",
                     "value": paylodJSON.email
                   }
                 ],
@@ -538,7 +538,7 @@ export class IdentityTenantManagerController {
               "value": {
                 "emails": [
                   {
-                    "type":"work",
+                    "type": "work",
                     "value": paylodJSON.email
                   }
                 ],
@@ -572,7 +572,7 @@ export class IdentityTenantManagerController {
     console.log("before calling update")
     console.log(working_payload)
     //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
-    if(!isAdmin){
+    if (!isAdmin) {
       return this.identityService.updateUsers(
         working_payload,
         auth,
@@ -581,27 +581,27 @@ export class IdentityTenantManagerController {
         authType
       );
     }
-    else{
+    else {
       let rolesArr = paylodJSON.roles
       possibleRoles.forEach((element: any) => {
-      console.log(element)
-      if (possibleRoles.includes(element)) {
-        console.log("role removal")
-        // need to get the role
-        this.getGroup(element, tenant, admin, adminpwd, authType, authToken)
-          .then((theGroup) => {
-            console.log("found group")
-            console.log(theGroup)
-            if (theGroup.totalResults > 0) {
-              console.log("before group removal")
-              console.log(theGroup.Resources[0].id)
-              //         
-              this.removeFromGroups(theGroup.Resources[0].id, paylodJSON.username, tenant, admin, adminpwd, authType, authToken)
-            }
-          })
+        console.log(element)
+        if (possibleRoles.includes(element)) {
+          console.log("role removal")
+          // need to get the role
+          this.getGroup(element, tenant, admin, adminpwd, authType, authToken)
+            .then((theGroup) => {
+              console.log("found group")
+              console.log(theGroup)
+              if (theGroup.totalResults > 0) {
+                console.log("before group removal")
+                console.log(theGroup.Resources[0].id)
+                //         
+                this.removeFromGroups(theGroup.Resources[0].id, paylodJSON.username, tenant, admin, adminpwd, authType, authToken)
+              }
+            })
 
-      }
-    });
+        }
+      });
       let userRet = await this.updateUserByAdmin(paylodJSON.userid, working_payload, tenant, authType, authToken)
       console.log("i am user return")
       console.log(userRet)
@@ -623,12 +623,12 @@ export class IdentityTenantManagerController {
                 this.addToGroup(theGroup.Resources[0].id, paylodJSON.username, paylodJSON.userid, userRet.meta.location, tenant, admin, adminpwd, authType, authToken)
               }
             })
-  
+
         }
       })
     }
 
-  
+
   }
   @patch('/updateUserByAdmin')
   async updateUserByAdmin (
