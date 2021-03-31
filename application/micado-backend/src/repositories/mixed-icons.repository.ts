@@ -1,16 +1,16 @@
 import {DefaultCrudRepository} from '@loopback/repository';
-import {StepIcon, StepIconRelations} from '../models';
+import {MixedIcons, MixedIconsRelations} from '../models';
 import {MicadoDsDataSource} from '../datasources';
 import {inject} from '@loopback/core';
 
-export class StepIconRepository extends DefaultCrudRepository<
-  StepIcon,
-  typeof StepIcon.prototype.id,
-  StepIconRelations
+export class MixedIconsRepository extends DefaultCrudRepository<
+MixedIcons,
+  typeof MixedIcons.prototype.id,
+  MixedIconsRelations
 > {
   constructor(
     @inject('datasources.micadoDS') dataSource: MicadoDsDataSource,
   ) {
-    super(StepIcon, dataSource);
+    super(MixedIcons, dataSource);
   }
 }

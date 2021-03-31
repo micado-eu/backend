@@ -69,6 +69,8 @@ export class IdentityTenantManagerController {
     //Preconditions
     console.log("in the identity controller retrieveTenants")
     //    var url = '/code/micado-backend/src/datasources/TenantMgtAdminService.xml';
+    console.log("IN RETRIEVE TENANT FUCNTION")
+
 
     var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
     console.log(process.env.MICADO_ENV)
@@ -93,6 +95,8 @@ export class IdentityTenantManagerController {
 
         client.retrieveTenants(args, function (err: any, result: any) {
           //     client.getTenant(args, function (err: any, result: any) {
+          console.log("RETRIEVED TENANTS")
+
           console.log(result);
           return resolve(result)
         });
@@ -109,7 +113,7 @@ export class IdentityTenantManagerController {
     @param.query.string('lastname') lastname: String,
   ): Promise<any> {
     //Preconditions
-    console.log("in the identity controller")
+    console.log("in the identity controller ADD TENANT")
     console.log(tenantDomain)
     var innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":9443")
     var url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/services/TenantMgtAdminService?wsdl'
@@ -120,6 +124,7 @@ export class IdentityTenantManagerController {
         return b['tenantId'] - a['tenantId'];
       }
     )[0]['tenantId']
+    console.log("MAX TENANT")
     console.log(maxTenant)
     maxTenant++
     var args = {
@@ -153,6 +158,7 @@ export class IdentityTenantManagerController {
         client.setSecurity(new soap.BasicAuthSecurity(process.env.WSO2_IDENTITY_ADMIN_USER, process.env.WSO2_IDENTITY_ADMIN_PWD));
         console.log(JSON.stringify(client.describe()))
         client.addTenant(args, function (err: any, result: any) {
+          console.log("ADDING THE TENANT")
           console.log(result);
           console.log(err)
           result.tenantInfoBean = args.tenantInfoBean
@@ -174,14 +180,20 @@ export class IdentityTenantManagerController {
     @param.query.string('address') address: string,
     @param.query.string('contactmail') contactmail: string,
   ): Promise<any> {
-
+    console.log("BEFORE CREATING TENANT")
     let isRet = await this.addTenant(tenantDomain, password, email, firstname, lastname)
+    console.log("AFTER CREATING TENANT")
+    console.log("THIS IS RETURN FROM CREATING TENANT")
     console.log(isRet)
     // since we are adding the tenant we also need to add the roles that are needed
     // we only add NGO tenants so we need to use the admin and password we just created since that is the only one allowed to operate in the tenant
-    let roleRet1 = await this.addRole("APPLICATION/micado_ngo_superadmin", tenantDomain, "admin", password)
+    console.log("ADDING SUPERADMIN ROLE TO NEW TENANT")
+    let roleRet1 = await this.addRole("APPLICATION/micado_ngo_superadmin", tenantDomain, "admin" + '@' + tenantDomain, password)
+    console.log("RETURN FROM ADDING SUPERADMIN ROLE")
     console.log(roleRet1)
-    let roleRet2 = await this.addRole("APPLICATION/micado_ngo_migrant_manager", tenantDomain, "admin", password)
+    console.log("ADDING MIGRANT MANAGER ROLE TO NEW TENANT")
+    let roleRet2 = await this.addRole("APPLICATION/micado_ngo_migrant_manager", tenantDomain, "admin" + '@' + tenantDomain, password)
+    console.log("RETURN FROM ADDING MIGRANT MANAGER ROLE")
     console.log(roleRet2)
     let dbTenant: Tenant = new Tenant({
       id: isRet.tenantInfoBean.tenantId,
@@ -190,6 +202,9 @@ export class IdentityTenantManagerController {
       email: contactmail,
       address: address
     })
+    console.log("THIS IS DBTENANT")
+    console.log(dbTenant)
+    console.log("BEFORE CREATING TENANT ON DB WITH DBTENANT")
     return this.tenantRepository.create(dbTenant);
   }
 
@@ -253,7 +268,7 @@ export class IdentityTenantManagerController {
   ): Promise<any> {
     //This function can be called either passing the credentials of the admin of with the access token from a logged user
     // authType can be 'Bearer' or 'Basic' for authTocker or user:pwd hash
-    console.log("in the identity controller")
+    console.log("in the identity controller ADD ROLE")
     console.log(role)
     console.log(authType)
 
@@ -432,7 +447,7 @@ export class IdentityTenantManagerController {
     let paylodJSON: any = JSON.parse(payload)
     console.log(paylodJSON)
     let working_payload: any
-    let possibleRoles: string[] = ['micado_ngo_migrant_manager','micado_ngo_admin', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
+    let possibleRoles: string[] = ['micado_ngo_migrant_manager', 'micado_ngo_admin', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
     if (isPswd) {
       console.log("I'm saving a password")
       working_payload = { "schemas": [], "Operations": [{ "op": "add", "value": { "password": paylodJSON.password } }] }
@@ -490,7 +505,7 @@ export class IdentityTenantManagerController {
               "value": {
                 "emails": [
                   {
-                    "type":"work",
+                    "type": "work",
                     "value": paylodJSON.email
                   }
                 ],
@@ -523,7 +538,7 @@ export class IdentityTenantManagerController {
               "value": {
                 "emails": [
                   {
-                    "type":"work",
+                    "type": "work",
                     "value": paylodJSON.email
                   }
                 ],
@@ -557,7 +572,7 @@ export class IdentityTenantManagerController {
     console.log("before calling update")
     console.log(working_payload)
     //"YWRtaW5AbWlncmFudHMubWljYWRvLmV1Om1pY2Fkb2FkbTIwMjA="
-    if(!isAdmin){
+    if (!isAdmin) {
       return this.identityService.updateUsers(
         working_payload,
         auth,
@@ -566,27 +581,27 @@ export class IdentityTenantManagerController {
         authType
       );
     }
-    else{
+    else {
       let rolesArr = paylodJSON.roles
       possibleRoles.forEach((element: any) => {
-      console.log(element)
-      if (possibleRoles.includes(element)) {
-        console.log("role removal")
-        // need to get the role
-        this.getGroup(element, tenant, admin, adminpwd, authType, authToken)
-          .then((theGroup) => {
-            console.log("found group")
-            console.log(theGroup)
-            if (theGroup.totalResults > 0) {
-              console.log("before group removal")
-              console.log(theGroup.Resources[0].id)
-              //         
-              this.removeFromGroups(theGroup.Resources[0].id, paylodJSON.username, tenant, admin, adminpwd, authType, authToken)
-            }
-          })
+        console.log(element)
+        if (possibleRoles.includes(element)) {
+          console.log("role removal")
+          // need to get the role
+          this.getGroup(element, tenant, admin, adminpwd, authType, authToken)
+            .then((theGroup) => {
+              console.log("found group")
+              console.log(theGroup)
+              if (theGroup.totalResults > 0) {
+                console.log("before group removal")
+                console.log(theGroup.Resources[0].id)
+                //         
+                this.removeFromGroups(theGroup.Resources[0].id, paylodJSON.username, tenant, admin, adminpwd, authType, authToken)
+              }
+            })
 
-      }
-    });
+        }
+      });
       let userRet = await this.updateUserByAdmin(paylodJSON.userid, working_payload, tenant, authType, authToken)
       console.log("i am user return")
       console.log(userRet)
@@ -608,12 +623,12 @@ export class IdentityTenantManagerController {
                 this.addToGroup(theGroup.Resources[0].id, paylodJSON.username, paylodJSON.userid, userRet.meta.location, tenant, admin, adminpwd, authType, authToken)
               }
             })
-  
+
         }
       })
     }
 
-  
+
   }
   @patch('/updateUserByAdmin')
   async updateUserByAdmin (
