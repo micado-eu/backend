@@ -411,7 +411,8 @@ CREATE TABLE event (
     end_date timestamp without time zone,
     published boolean DEFAULT false,
     location text,
-    creator integer
+    creator integer,
+    cost text
 );
 
 
@@ -2666,6 +2667,7 @@ INSERT INTO charts VALUES (8, 'Real influx government residences from CIR/CR/IR 
 INSERT INTO charts VALUES (38, 'citytimes                                                                                                                                                                                                                                                      ', '[{"city":"Beijing","times":"20"},{"city":"Chongqing","times":"10"},{"city":"Tianjin","times":"2"},{"city":"Frankfurt","times":"2"}]', 'xxxxxxxxxxxxxxxxxxxxxx', 'test                                                                                                                                                                                                                                                           ', 'csv                                                                                                                                                                                                                                                            ', 'BAR                                                                                                                                                                                                                                                            ', false, 'city                                                                                                                                                                                                                                                           ', 'times                                                                                                                                                                                                                                                          ', 'antwerp                                                                                                                                                                                                                                                        ');
 INSERT INTO charts VALUES (39, 'citytimes                                                                                                                                                                                                                                                      ', '[{"city":"Beijing","times":"20"},{"city":"Chongqing","times":"10"},{"city":"Tianjin","times":"2"},{"city":"Frankfurt","times":"2"}]', '', 'test                                                                                                                                                                                                                                                           ', 'csv                                                                                                                                                                                                                                                            ', 'LINE                                                                                                                                                                                                                                                           ', false, 'city                                                                                                                                                                                                                                                           ', 'times                                                                                                                                                                                                                                                          ', 'antwerp                                                                                                                                                                                                                                                        ');
 INSERT INTO charts VALUES (11, 'Participant in integration lessons Atlas                                                                                                                                                                                                                       ', '[{"month":"2019-05","number":2070},{"month":"2019-06","number":1971},{"month":"2019-07","number":1917},{"month":"2019-08","number":1951},{"month":"2019-09","number":1975},{"month":"2019-10","number":1985},{"month":"2019-11","number":1940},{"month":"2019-12","number":1952},{"month":"2020-01","number":1900},{"month":"2020-02","number":1812},{"month":"2020-03","number":1760},{"month":"2020-04","number":1752},{"month":"2020-05","number":1743}]', NULL, 'ATLAS                                                                                                                                                                                                                                                          ', NULL, 'LINE                                                                                                                                                                                                                                                           ', false, 'month                                                                                                                                                                                                                                                          ', 'number                                                                                                                                                                                                                                                         ', 'Antwerp                                                                                                                                                                                                                                                        ');
+INSERT INTO charts VALUES (64, 'Testchart                                                                                                                                                                                                                                                      ', '[{"year":"2010","number":"5"},{"year":"2011","number":"45"},{"year":"2012","number":"42"},{"year":"2013","number":"12"},{"year":"2014","number":"31"}]', 'test chart', 'new category                                                                                                                                                                                                                                                   ', 'csv                                                                                                                                                                                                                                                            ', 'LINE                                                                                                                                                                                                                                                           ', false, 'year                                                                                                                                                                                                                                                           ', 'number                                                                                                                                                                                                                                                         ', 'new board                                                                                                                                                                                                                                                      ');
 
 
 --
@@ -2901,20 +2903,20 @@ INSERT INTO document_type_validator VALUES (1, 1);
 -- Data for Name: event; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO event VALUES (26, NULL, 4, '2020-11-18 20:00:00', '2020-11-18 23:00:00', false, NULL, NULL);
-INSERT INTO event VALUES (33, NULL, 4, '2020-11-26 06:00:00', '2020-11-26 15:30:00', false, NULL, NULL);
-INSERT INTO event VALUES (39, NULL, 3, '2020-11-26 01:20:00', '2020-11-24 13:30:00', false, NULL, NULL);
-INSERT INTO event VALUES (69, NULL, 3, '2021-01-28 08:00:00', '2021-01-31 13:00:00', false, 'ATLAS', NULL);
-INSERT INTO event VALUES (37, NULL, 3, '2020-11-10 11:30:00', '2020-11-20 11:30:00', true, NULL, NULL);
-INSERT INTO event VALUES (29, NULL, 5, '2020-12-31 09:55:00', '2020-11-13 09:55:00', false, NULL, NULL);
-INSERT INTO event VALUES (62, NULL, 4, '2021-01-26 02:00:00', '2021-01-26 04:00:00', true, 'Carnotstraat 110, 2060 Antwerpen', NULL);
-INSERT INTO event VALUES (71, NULL, 0, '2021-02-11 16:25:00', '2021-02-24 18:30:00', false, '', NULL);
-INSERT INTO event VALUES (74, NULL, 4, '2021-02-25 09:00:00', '2021-03-23 17:00:00', true, '', NULL);
-INSERT INTO event VALUES (52, NULL, 3, '2021-01-05 12:15:00', '2021-01-05 13:18:00', false, NULL, NULL);
-INSERT INTO event VALUES (55, NULL, 0, '2020-11-18 20:00:00', '2020-11-18 20:00:00', false, NULL, NULL);
-INSERT INTO event VALUES (53, NULL, 3, '2021-01-05 10:15:00', '2021-01-05 10:15:00', false, NULL, NULL);
-INSERT INTO event VALUES (51, NULL, 4, '2022-01-12 07:30:00', '2021-01-12 09:30:00', false, NULL, NULL);
-INSERT INTO event VALUES (75, NULL, 3, '2021-03-25 10:00:00', '2021-03-28 14:00:00', false, 'Madrid', 21);
+INSERT INTO event VALUES (26, NULL, 4, '2020-11-18 20:00:00', '2020-11-18 23:00:00', false, NULL, NULL, NULL);
+INSERT INTO event VALUES (33, NULL, 4, '2020-11-26 06:00:00', '2020-11-26 15:30:00', false, NULL, NULL, NULL);
+INSERT INTO event VALUES (39, NULL, 3, '2020-11-26 01:20:00', '2020-11-24 13:30:00', false, NULL, NULL, NULL);
+INSERT INTO event VALUES (69, NULL, 3, '2021-01-28 08:00:00', '2021-01-31 13:00:00', false, 'ATLAS', NULL, NULL);
+INSERT INTO event VALUES (37, NULL, 3, '2020-11-10 11:30:00', '2020-11-20 11:30:00', true, NULL, NULL, NULL);
+INSERT INTO event VALUES (29, NULL, 5, '2020-12-31 09:55:00', '2020-11-13 09:55:00', false, NULL, NULL, NULL);
+INSERT INTO event VALUES (62, NULL, 4, '2021-01-26 02:00:00', '2021-01-26 04:00:00', true, 'Carnotstraat 110, 2060 Antwerpen', NULL, NULL);
+INSERT INTO event VALUES (71, NULL, 0, '2021-02-11 16:25:00', '2021-02-24 18:30:00', false, '', NULL, NULL);
+INSERT INTO event VALUES (74, NULL, 4, '2021-02-25 09:00:00', '2021-03-23 17:00:00', true, '', NULL, NULL);
+INSERT INTO event VALUES (52, NULL, 3, '2021-01-05 12:15:00', '2021-01-05 13:18:00', false, NULL, NULL, NULL);
+INSERT INTO event VALUES (55, NULL, 0, '2020-11-18 20:00:00', '2020-11-18 20:00:00', false, NULL, NULL, NULL);
+INSERT INTO event VALUES (53, NULL, 3, '2021-01-05 10:15:00', '2021-01-05 10:15:00', false, NULL, NULL, NULL);
+INSERT INTO event VALUES (51, NULL, 4, '2022-01-12 07:30:00', '2021-01-12 09:30:00', false, NULL, NULL, NULL);
+INSERT INTO event VALUES (75, NULL, 3, '2021-03-25 10:00:00', '2021-03-28 14:00:00', false, 'Madrid', 21, NULL);
 
 
 --
@@ -3673,6 +3675,7 @@ INSERT INTO individual_intervention_plan VALUES (73, 'PLan 1', '2016-06-23 04:10
 INSERT INTO individual_intervention_plan_interventions VALUES (68, 11, NULL, false, NULL, NULL, NULL, 141, NULL, 'Go to school', '', NULL);
 INSERT INTO individual_intervention_plan_interventions VALUES (71, 13, NULL, false, NULL, NULL, NULL, 149, NULL, 'inschrijving NT2', 'lieve giusepope, schrijf je in voor NT2
 ', NULL);
+INSERT INTO individual_intervention_plan_interventions VALUES (72, 9, NULL, false, NULL, NULL, NULL, 158, NULL, 'test', 'bho', NULL);
 
 
 --
@@ -3697,7 +3700,6 @@ INSERT INTO information VALUES (162, NULL, 13, false, NULL);
 INSERT INTO information VALUES (163, NULL, 12, false, NULL);
 INSERT INTO information VALUES (172, NULL, 13, false, NULL);
 INSERT INTO information VALUES (173, NULL, 13, false, NULL);
-INSERT INTO information VALUES (186, NULL, 13, true, 2);
 INSERT INTO information VALUES (170, NULL, 13, false, NULL);
 INSERT INTO information VALUES (187, NULL, 12, false, 2);
 INSERT INTO information VALUES (188, NULL, 13, true, 21);
@@ -3705,6 +3707,7 @@ INSERT INTO information VALUES (189, NULL, 13, false, 21);
 INSERT INTO information VALUES (190, NULL, 13, false, 21);
 INSERT INTO information VALUES (191, NULL, 12, false, 21);
 INSERT INTO information VALUES (192, NULL, 13, false, 21);
+INSERT INTO information VALUES (186, NULL, 13, false, 2);
 
 
 --
@@ -4042,12 +4045,10 @@ INSERT INTO information_translation VALUES (187, 'it', '', '', '2021-03-03 15:00
 INSERT INTO information_translation VALUES (187, 'es', '', '', '2021-03-03 15:00:05.21', 2, false);
 INSERT INTO information_translation VALUES (188, 'it', '', '', '2021-03-12 12:37:31.721', 0, false);
 INSERT INTO information_translation VALUES (187, 'nl', '', '', '2021-03-03 15:00:05.21', 2, false);
-INSERT INTO information_translation VALUES (186, 'de', 'test creator German', 'test creator german content', '2021-03-02 13:16:56.461', 3, false);
 INSERT INTO information_translation VALUES (187, 'de', 'New info german', 'new info german content', '2021-03-03 15:00:05.21', 3, false);
 INSERT INTO information_translation VALUES (185, 'de', '', '', '2021-02-17 13:13:15.962', 2, false);
 INSERT INTO information_translation VALUES (185, 'es', '', '', '2021-02-17 13:13:15.962', 2, false);
 INSERT INTO information_translation VALUES (185, 'it', '', '', '2021-02-17 13:13:15.962', 2, false);
-INSERT INTO information_translation VALUES (186, 'es', '', '', '2021-03-02 13:16:56.461', 2, false);
 INSERT INTO information_translation VALUES (188, 'es', '', '', '2021-03-12 12:37:31.721', 0, false);
 INSERT INTO information_translation VALUES (172, 'nl', 'De app Welkom in Antwerpen', 'Vind alle nuttige diensten in Antwertpen, gebruik de app **Welkom in Antwerpen** op jouw telefoon.
 
@@ -4062,11 +4063,6 @@ INSERT INTO information_translation VALUES (172, 'nl', 'De app Welkom in Antwerp
 Watch the [movie ](<https://www.youtube.com/watch?v=aPELc2r32Lw&feature=emb_logo>)and learn all about the app
 
 ![null](<https://pa.micadoproject.eu/micado_img/572a94d0-ff75-40f3-baa0-70b8429ec121.PNG>)', '2021-01-27 12:48:28.581', 3, false);
-INSERT INTO information_translation VALUES (186, 'it', '', '', '2021-03-02 13:16:56.462', 2, false);
-INSERT INTO information_translation VALUES (186, 'nl', '', '', '2021-03-02 13:16:56.462', 2, false);
-INSERT INTO information_translation VALUES (186, 'en', 'test creator', 'test creator
-
-', '2021-03-02 13:16:56.461', 2, false);
 INSERT INTO information_translation VALUES (189, 'it', '', '', '2021-03-24 10:48:06.206', 0, false);
 INSERT INTO information_translation VALUES (189, 'nl', '', '', '2021-03-24 10:48:06.207', 0, false);
 INSERT INTO information_translation VALUES (189, 'de', '', '', '2021-03-24 10:48:06.206', 0, false);
@@ -4079,6 +4075,12 @@ INSERT INTO information_translation VALUES (174, 'en', 'Curso de castellano', 'C
 
 ', '2021-01-27 13:05:28.168', 3, true);
 INSERT INTO information_translation VALUES (190, 'de', '', '', '2021-03-24 14:18:17.063', 0, false);
+INSERT INTO information_translation VALUES (186, 'en', 'test creator', 'test creator
+
+', '2021-03-02 13:16:56.461', 0, false);
+INSERT INTO information_translation VALUES (186, 'de', 'test creator German', 'test creator german content', '2021-03-02 13:16:56.461', 0, false);
+INSERT INTO information_translation VALUES (186, 'it', '', '', '2021-03-02 13:16:56.462', 0, false);
+INSERT INTO information_translation VALUES (186, 'nl', '', '', '2021-03-02 13:16:56.462', 0, false);
 INSERT INTO information_translation VALUES (190, 'it', '', '', '2021-03-24 14:18:17.063', 0, false);
 INSERT INTO information_translation VALUES (190, 'es', '', '', '2021-03-24 14:18:17.063', 0, false);
 INSERT INTO information_translation VALUES (190, 'nl', '', '', '2021-03-24 14:18:17.063', 0, false);
@@ -4095,6 +4097,7 @@ INSERT INTO information_translation VALUES (192, 'it', '', '', '2021-03-24 14:33
 INSERT INTO information_translation VALUES (192, 'es', '', '', '2021-03-24 14:33:50.284', 0, false);
 INSERT INTO information_translation VALUES (192, 'de', '', '', '2021-03-24 14:33:50.284', 0, false);
 INSERT INTO information_translation VALUES (192, 'nl', '', '', '2021-03-24 14:33:50.284', 0, false);
+INSERT INTO information_translation VALUES (186, 'es', '', '', '2021-03-02 13:16:56.461', 0, false);
 INSERT INTO information_translation VALUES (185, 'en', 'A school for my child', 'In Belgium, every child has the right to education. Also children without residence documents. \*\*• Does my child have to go to school?\*\* Kindergarten is not compulsory, but it is very important. Your child learns Dutch and can play with other children. Ask for more information at Atlas or at the school. \*\*• When does my child have to go to school?\*\* Compulsory education starts on September 1st of the year your child turns 5. From then on your child must attend school every day. Compulsory education ends when your child turns 18. • Your child can attend kindergarten as soon as it turns 2 years and 6 months Attention! Do you want to register your child in a kindergarten class? You must do so 1.5 years in advance. Come to Atlas quickly. Atlas will help you. • A toddler who is 2 years and 6 months old can attend preschool: \- after the summer vacations (September) \- after the autumn vacations (November) \- after the Christmas vacations (January) \- the first school day of February \- after the spring break (February-March) \- after the Easter vacations (April) \- After Ascension Day (May) • Children who are 3 years old or older can start school immediately. They do not have to wait. • Is your child 6 years old? Your child must attend elementary school. • Is your child between 12 and 18? Your child has to go to secondary school or OKAN class. You can find more info here: [https://www.atlas-antwerpen.be/nl/een-school-voor-mijn-kind\]\() ![A school for my child\]\()
 
 ', '2021-02-17 13:13:15.962', 2, false);
@@ -4127,13 +4130,6 @@ INSERT INTO information_translation_prod VALUES (174, 'en', 'Curso de castellano
 
 ', '2021-01-27 13:05:28.168');
 INSERT INTO information_translation_prod VALUES (174, 'es', 'this is changed', 'this is changed too', '2021-01-27 13:05:28.17');
-INSERT INTO information_translation_prod VALUES (186, 'de', 'test creator German', 'test creator german content', '2021-03-02 13:16:56.461');
-INSERT INTO information_translation_prod VALUES (186, 'nl', '', '', '2021-03-02 13:16:56.462');
-INSERT INTO information_translation_prod VALUES (186, 'en', 'test creator', 'test creator
-
-', '2021-03-02 13:16:56.461');
-INSERT INTO information_translation_prod VALUES (186, 'es', '', '', '2021-03-02 13:16:56.461');
-INSERT INTO information_translation_prod VALUES (186, 'it', '', '', '2021-03-02 13:16:56.462');
 INSERT INTO information_translation_prod VALUES (188, 'es', '', '', '2021-03-12 12:37:31.721');
 INSERT INTO information_translation_prod VALUES (188, 'en', 'Registration in Atlas', 'When you register in Atlas and you sign an integration contract, an Atlas assistant will be assigned to you. He will guide you through the integration proces.
 
@@ -4340,6 +4336,7 @@ INSERT INTO mixed_icons VALUES (7, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMj
 INSERT INTO mixed_icons VALUES (8, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNjAwMDIgMTdIMi40MDAwMlY3SDUuMDAwMDJINy40MDAwMlYySDE0LjRWOEgxNS40VjIuNUMxNS40IDEuNyAxNC43IDEgMTMuOSAxSDcuMjAwMDJMMS40MDAwMiA2LjdWMTYuNUMxLjQwMDAyIDE3LjMgMi4xMDAwMiAxOCAyLjkwMDAyIDE4SDYuNjAwMDJWMTdaIiBmaWxsPSIjMzc0MDRGIi8+CjxwYXRoIGQ9Ik03LjIwMDAxIDEzLjdMMTQuOSA5LjVMMjIuNiAxMy43VjE4LjNDMjIuNiAxOC41IDIyLjUgMTguNiAyMi4zIDE4LjZIMjEuNUMyMS4zIDE4LjYgMjEuMiAxOC41IDIxLjIgMTguM1YxNC45QzIxLjIgMTQuNyAyMSAxNC42IDIwLjggMTQuN0wyMCAxNS4xQzE5LjkgMTUuMSAxOS45IDE1LjIgMTkuOSAxNS4zVjE5LjNMMTQuOSAyMkwxMCAxOS40VjE1LjJMNy4yMDAwMSAxMy43Wk0xNC45IDIwLjRMMTguNCAxOC41VjE1LjlMMTQuOSAxNy44TDExLjQgMTUuOVYxOC41TDE0LjkgMjAuNFoiIGZpbGw9IiMzNzQwNEYiLz4KPC9zdmc+Cg==', 1);
 INSERT INTO mixed_icons VALUES (9, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuOTk5OTkgMTdIMi43OTk5OVY3SDUuMzk5OTlINy43OTk5OVYySDE0LjhWOEgxNS44VjIuNUMxNS44IDEuNyAxNS4xIDEgMTQuMyAxSDcuNDk5OTlMMS43OTk5OSA2LjdWMTYuNUMxLjc5OTk5IDE3LjMgMi40OTk5OSAxOCAzLjI5OTk5IDE4SDYuOTk5OTlWMTdaIiBmaWxsPSIjMzc0MDRGIi8+CjxwYXRoIGQ9Ik0yMS4zIDEyLjdIMTguOFYxMS43QzE4LjggMTAuNCAxNy44IDkuNDAwMDIgMTYuNSA5LjQwMDAySDE0LjVDMTMuMiA5LjQwMDAyIDEyLjIgMTAuNCAxMi4yIDExLjdWMTIuN0g5Ljg5OTk5QzguOTk5OTkgMTIuNyA4LjI5OTk5IDEzLjQgOC4yOTk5OSAxNC4zVjE1LjJWMTYuNlYyMC44QzguMjk5OTkgMjEuNyA4Ljk5OTk5IDIyLjQgOS44OTk5OSAyMi40SDIxLjNDMjIuMiAyMi40IDIyLjkgMjEuNyAyMi45IDIwLjhWMTYuNlYxNS4yVjE0LjNDMjIuOSAxMy40IDIyLjIgMTIuNyAyMS4zIDEyLjdaTTEzLjYgMTEuNkMxMy42IDExLjEgMTQgMTAuNiAxNC42IDEwLjZIMTYuNkMxNy4xIDEwLjYgMTcuNiAxMSAxNy42IDExLjZWMTIuNkgxMy42VjExLjZWMTEuNloiIGZpbGw9IiMzNzQwNEYiLz4KPC9zdmc+Cg==', 1);
 INSERT INTO mixed_icons VALUES (10, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4LjEgMjIuMjk5OUg1Ljg5OTk4QzUuMTk5OTggMjIuMjk5OSA0LjU5OTk4IDIxLjcgNC41OTk5OCAyMVYzLjk5OTk1QzQuNTk5OTggMy4yOTk5NSA1LjE5OTk4IDIuNjk5OTUgNS44OTk5OCAyLjY5OTk1SDE4LjFDMTguOCAyLjY5OTk1IDE5LjQgMy4yOTk5NSAxOS40IDMuOTk5OTVWMjFDMTkuNCAyMS43IDE4LjggMjIuMjk5OSAxOC4xIDIyLjI5OTlaTTUuODk5OTggMy4zOTk5NUM1LjU5OTk4IDMuMzk5OTUgNS4yOTk5OCAzLjY5OTk1IDUuMjk5OTggMy45OTk5NVYyMUM1LjI5OTk4IDIxLjI5OTkgNS41OTk5OCAyMS42IDUuODk5OTggMjEuNkgxOC4xQzE4LjQgMjEuNiAxOC43IDIxLjI5OTkgMTguNyAyMVYzLjk5OTk1QzE4LjcgMy42OTk5NSAxOC40IDMuMzk5OTUgMTguMSAzLjM5OTk1SDUuODk5OThaIiBmaWxsPSIjMzc0MDRGIi8+CjxwYXRoIGQ9Ik0xNi4yIDE3LjZINy44QzcuNiAxNy42IDcuNSAxNy40MDAxIDcuNSAxNy4yMDAxQzcuNSAxNy4wMDAxIDcuNyAxNi44IDcuOCAxNi44SDE2LjNDMTYuNSAxNi44IDE2LjYgMTcuMDAwMSAxNi42IDE3LjIwMDFDMTYuNiAxNy40MDAxIDE2LjQgMTcuNiAxNi4yIDE3LjZaIiBmaWxsPSIjMzc0MDRGIi8+CjxwYXRoIGQ9Ik0xNS4zIDE5LjVIOC43MDAwMkM4LjUwMDAyIDE5LjUgOC40MDAwMiAxOS4zIDguNDAwMDIgMTkuMUM4LjQwMDAyIDE4LjkgOC42MDAwMiAxOC43IDguNzAwMDIgMTguN0gxNS4zQzE1LjUgMTguNyAxNS42IDE4LjkgMTUuNiAxOS4xQzE1LjYgMTkuMyAxNS41IDE5LjUgMTUuMyAxOS41WiIgZmlsbD0iIzM3NDA0RiIvPgo8cGF0aCBkPSJNMTQgMTMuNkMxMy43IDEzLjcgMTMuMyAxMy43IDEyLjkgMTMuN0MxMi4zIDEzLjcgMTEuOCAxMy42IDExLjQgMTMuM0MxMSAxMyAxMC42IDEyLjUgMTAuNSAxMS44SDE0LjJWMTAuOUgxMC40QzEwLjQgMTAuOCAxMC40IDEwLjYgMTAuNCAxMC41VjEwLjJWOS45OTk5OEgxNC4zVjkuMTk5OThIMTAuNkMxMC43IDguNzk5OTggMTAuOCA4LjQ5OTk4IDEwLjkgOC4xOTk5OEMxMC44IDcuOTk5OTggMTEgNy42OTk5OCAxMS4zIDcuNTk5OThDMTEuNSA3LjM5OTk4IDExLjggNy4yOTk5OCAxMi4xIDcuMTk5OThDMTIuMyA3LjA5OTk4IDEyLjYgNi45OTk5OCAxMi45IDYuOTk5OThDMTMuMyA2Ljk5OTk4IDEzLjYgNi45OTk5OCAxMy45IDcuMDk5OThDMTQuMiA3LjE5OTk4IDE0LjUgNy4yOTk5OCAxNC44IDcuNDk5OThMMTUuMiA2LjE5OTk4QzE0LjkgNi4wOTk5OCAxNC42IDUuODk5OTggMTQuMiA1Ljc5OTk4QzEzLjggNS42OTk5OCAxMy4zIDUuNTk5OTggMTIuNyA1LjU5OTk4QzExLjUgNS41OTk5OCAxMC41IDUuODk5OTggOS44MDAwMiA2LjQ5OTk4QzkuMTAwMDIgNy4xOTk5OCA4LjYwMDAyIDguMDk5OTggOC40MDAwMiA5LjE5OTk4SDcuNDAwMDJWMTAuMUg4LjMwMDAyVjEwLjNWMTAuNkM4LjMwMDAyIDEwLjcgOC4zMDAwMiAxMC44IDguMzAwMDIgMTAuOUg3LjQwMDAyVjExLjhIOC41MDAwMkM4LjYwMDAyIDEyLjMgOC44MDAwMiAxMi44IDkuMTAwMDIgMTMuMkM5LjQwMDAyIDEzLjYgOS43MDAwMiAxNCAxMCAxNC4yQzEwLjQgMTQuNSAxMC44IDE0LjcgMTEuMiAxNC44QzExLjcgMTQuOSAxMi4yIDE1IDEyLjcgMTVDMTMuMyAxNSAxMy44IDE1IDE0LjIgMTQuOUMxNC42IDE0LjggMTQuOSAxNC43IDE1LjIgMTQuNUwxNC44IDEzLjJDMTQuNiAxMy40IDE0LjMgMTMuNSAxNCAxMy42WiIgZmlsbD0iIzM3NDA0RiIvPgo8L3N2Zz4K', 1);
+INSERT INTO mixed_icons VALUES (11, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4LjEgMjIuMjk5OUg1Ljg5OTk4QzUuMTk5OTggMjIuMjk5OSA0LjU5OTk4IDIxLjcgNC41OTk5OCAyMVYzLjk5OTk1QzQuNTk5OTggMy4yOTk5NSA1LjE5OTk4IDIuNjk5OTUgNS44OTk5OCAyLjY5OTk1SDE4LjFDMTguOCAyLjY5OTk1IDE5LjQgMy4yOTk5NSAxOS40IDMuOTk5OTVWMjFDMTkuNCAyMS43IDE4LjggMjIuMjk5OSAxOC4xIDIyLjI5OTlaTTUuODk5OTggMy4zOTk5NUM1LjU5OTk4IDMuMzk5OTUgNS4yOTk5OCAzLjY5OTk1IDUuMjk5OTggMy45OTk5NVYyMUM1LjI5OTk4IDIxLjI5OTkgNS41OTk5OCAyMS42IDUuODk5OTggMjEuNkgxOC4xQzE4LjQgMjEuNiAxOC43IDIxLjI5OTkgMTguNyAyMVYzLjk5OTk1QzE4LjcgMy42OTk5NSAxOC40IDMuMzk5OTUgMTguMSAzLjM5OTk1SDUuODk5OThaIiBmaWxsPSIjMzc0MDRGIi8+CjxwYXRoIGQ9Ik0xNi4yIDE3LjZINy44QzcuNiAxNy42IDcuNSAxNy40MDAxIDcuNSAxNy4yMDAxQzcuNSAxNy4wMDAxIDcuNyAxNi44IDcuOCAxNi44SDE2LjNDMTYuNSAxNi44IDE2LjYgMTcuMDAwMSAxNi42IDE3LjIwMDFDMTYuNiAxNy40MDAxIDE2LjQgMTcuNiAxNi4yIDE3LjZaIiBmaWxsPSIjMzc0MDRGIi8+CjxwYXRoIGQ9Ik0xNS4zIDE5LjVIOC43MDAwMkM4LjUwMDAyIDE5LjUgOC40MDAwMiAxOS4zIDguNDAwMDIgMTkuMUM4LjQwMDAyIDE4LjkgOC42MDAwMiAxOC43IDguNzAwMDIgMTguN0gxNS4zQzE1LjUgMTguNyAxNS42IDE4LjkgMTUuNiAxOS4xQzE1LjYgMTkuMyAxNS41IDE5LjUgMTUuMyAxOS41WiIgZmlsbD0iIzM3NDA0RiIvPgo8cGF0aCBkPSJNMTQgMTMuNkMxMy43IDEzLjcgMTMuMyAxMy43IDEyLjkgMTMuN0MxMi4zIDEzLjcgMTEuOCAxMy42IDExLjQgMTMuM0MxMSAxMyAxMC42IDEyLjUgMTAuNSAxMS44SDE0LjJWMTAuOUgxMC40QzEwLjQgMTAuOCAxMC40IDEwLjYgMTAuNCAxMC41VjEwLjJWOS45OTk5OEgxNC4zVjkuMTk5OThIMTAuNkMxMC43IDguNzk5OTggMTAuOCA4LjQ5OTk4IDEwLjkgOC4xOTk5OEMxMC44IDcuOTk5OTggMTEgNy42OTk5OCAxMS4zIDcuNTk5OThDMTEuNSA3LjM5OTk4IDExLjggNy4yOTk5OCAxMi4xIDcuMTk5OThDMTIuMyA3LjA5OTk4IDEyLjYgNi45OTk5OCAxMi45IDYuOTk5OThDMTMuMyA2Ljk5OTk4IDEzLjYgNi45OTk5OCAxMy45IDcuMDk5OThDMTQuMiA3LjE5OTk4IDE0LjUgNy4yOTk5OCAxNC44IDcuNDk5OThMMTUuMiA2LjE5OTk4QzE0LjkgNi4wOTk5OCAxNC42IDUuODk5OTggMTQuMiA1Ljc5OTk4QzEzLjggNS42OTk5OCAxMy4zIDUuNTk5OTggMTIuNyA1LjU5OTk4QzExLjUgNS41OTk5OCAxMC41IDUuODk5OTggOS44MDAwMiA2LjQ5OTk4QzkuMTAwMDIgNy4xOTk5OCA4LjYwMDAyIDguMDk5OTggOC40MDAwMiA5LjE5OTk4SDcuNDAwMDJWMTAuMUg4LjMwMDAyVjEwLjNWMTAuNkM4LjMwMDAyIDEwLjcgOC4zMDAwMiAxMC44IDguMzAwMDIgMTAuOUg3LjQwMDAyVjExLjhIOC41MDAwMkM4LjYwMDAyIDEyLjMgOC44MDAwMiAxMi44IDkuMTAwMDIgMTMuMkM5LjQwMDAyIDEzLjYgOS43MDAwMiAxNCAxMCAxNC4yQzEwLjQgMTQuNSAxMC44IDE0LjcgMTEuMiAxNC44QzExLjcgMTQuOSAxMi4yIDE1IDEyLjcgMTVDMTMuMyAxNSAxMy44IDE1IDE0LjIgMTQuOUMxNC42IDE0LjggMTQuOSAxNC43IDE1LjIgMTQuNUwxNC44IDEzLjJDMTQuNiAxMy40IDE0LjMgMTMuNSAxNCAxMy42WiIgZmlsbD0iIzM3NDA0RiIvPgo8L3N2Zz4K', 2);
 
 
 --
@@ -4397,7 +4394,6 @@ INSERT INTO picture_hotspot_translation_prod VALUES (386, 'en', 'Second spot', '
 
 INSERT INTO process VALUES (116, '', false, NULL);
 INSERT INTO process VALUES (173, '', true, NULL);
-INSERT INTO process VALUES (111, '', false, NULL);
 INSERT INTO process VALUES (207, '', false, NULL);
 INSERT INTO process VALUES (206, '', false, NULL);
 INSERT INTO process VALUES (208, '', false, NULL);
@@ -4407,8 +4403,9 @@ INSERT INTO process VALUES (46, '', true, NULL);
 INSERT INTO process VALUES (47, '', true, NULL);
 INSERT INTO process VALUES (174, '', false, NULL);
 INSERT INTO process VALUES (175, '', false, NULL);
-INSERT INTO process VALUES (212, '', false, NULL);
+INSERT INTO process VALUES (111, '', false, NULL);
 INSERT INTO process VALUES (179, '', false, NULL);
+INSERT INTO process VALUES (212, '', false, NULL);
 INSERT INTO process VALUES (117, '', false, NULL);
 INSERT INTO process VALUES (48, '', true, NULL);
 INSERT INTO process VALUES (92, '', true, NULL);
@@ -4435,11 +4432,11 @@ INSERT INTO process_comments VALUES (61, 175);
 
 INSERT INTO process_produced_documents VALUES (47, 1);
 INSERT INTO process_produced_documents VALUES (47, 5);
-INSERT INTO process_produced_documents VALUES (111, 61);
 INSERT INTO process_produced_documents VALUES (207, 2);
 INSERT INTO process_produced_documents VALUES (206, 279);
 INSERT INTO process_produced_documents VALUES (208, 2);
 INSERT INTO process_produced_documents VALUES (46, 273);
+INSERT INTO process_produced_documents VALUES (111, 61);
 INSERT INTO process_produced_documents VALUES (212, 280);
 INSERT INTO process_produced_documents VALUES (128, 3);
 INSERT INTO process_produced_documents VALUES (203, 273);
@@ -4460,7 +4457,6 @@ INSERT INTO process_topic VALUES (47, 4);
 INSERT INTO process_topic VALUES (47, 2);
 INSERT INTO process_topic VALUES (116, 7);
 INSERT INTO process_topic VALUES (47, 3);
-INSERT INTO process_topic VALUES (111, 1);
 INSERT INTO process_topic VALUES (175, 4);
 INSERT INTO process_topic VALUES (207, 4);
 INSERT INTO process_topic VALUES (207, 7);
@@ -4473,7 +4469,10 @@ INSERT INTO process_topic VALUES (128, 13);
 INSERT INTO process_topic VALUES (117, 3);
 INSERT INTO process_topic VALUES (128, 3);
 INSERT INTO process_topic VALUES (46, 4);
+INSERT INTO process_topic VALUES (111, 1);
+INSERT INTO process_topic VALUES (111, 4);
 INSERT INTO process_topic VALUES (212, 2);
+INSERT INTO process_topic VALUES (212, 25);
 INSERT INTO process_topic VALUES (173, 4);
 INSERT INTO process_topic VALUES (173, 2);
 INSERT INTO process_topic VALUES (48, 1);
@@ -4507,10 +4506,13 @@ INSERT INTO process_translation VALUES (48, 'it', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (48, 'de', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (48, 'es', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (173, 'es', '', '', NULL, 2, false);
-INSERT INTO process_translation VALUES (212, 'de', '', '', NULL, 2, false);
+INSERT INTO process_translation VALUES (111, 'en', 'Getting the registration certificate', '<p>Getting your “<strong>certificado de empadronamiento</strong>” or your address registration certificate is probably the first and most important step when arriving to access some services and probe your residence.</p>', NULL, 0, false);
 INSERT INTO process_translation VALUES (173, 'it', '', '', NULL, 2, false);
+INSERT INTO process_translation VALUES (111, 'de', '', '', NULL, 0, false);
+INSERT INTO process_translation VALUES (111, 'nl', '', '', NULL, 0, false);
 INSERT INTO process_translation VALUES (173, 'en', 'Validation of your diploma for Atlas customers', '<p>You can have your diploma from your country of origin validated in Belgium via Diploma Erkenning (formerly known as Diplomagelijkschakeling). A higher diploma recognised in Belgium gives you more chance to continue your studies or to find a suitable job. </p><p>This is a complex procedure, Atlas will help you.</p>', NULL, 2, false);
 INSERT INTO process_translation VALUES (173, 'de', '', '', NULL, 2, false);
+INSERT INTO process_translation VALUES (111, 'it', '', '', NULL, 0, false);
 INSERT INTO process_translation VALUES (48, 'nl', 'Vraag een verblijfsvergunning aan', 'Met deze procedure vraag je toestemming om in België te kunnen verblijven', NULL, 3, false);
 INSERT INTO process_translation VALUES (92, 'it', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (92, 'de', '', '', NULL, 2, false);
@@ -4521,19 +4523,17 @@ INSERT INTO process_translation VALUES (92, 'nl', 'Vraag een sociale woning aan'
 INSERT INTO process_translation VALUES (47, 'es', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (126, 'de', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (203, 'de', '', '', NULL, 2, false);
-INSERT INTO process_translation VALUES (111, 'it', '', '', NULL, 0, false);
-INSERT INTO process_translation VALUES (111, 'es', '', '', NULL, 0, false);
-INSERT INTO process_translation VALUES (111, 'de', '', '', NULL, 0, false);
 INSERT INTO process_translation VALUES (126, 'es', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (126, 'nl', 'Aanvraag leefloon', '<p>Om financiële steun van OCMW Antwerpen te krijgen, dien je een aanvraag voor leefloon in bij een sociaal centrum of online via het hulpformulier. Een maatschappelijk werker neemt contact met u op en onderzoekt uw situatie. De maatschappelijk werker komt ook bij u thuis voor een huisbezoek. Om ondersteuning te krijgen, moet u ook bereid zijn om te werken. Na het onderzoek wordt beslist op uw aanvraag voor leef loon. Uw maatschappelijk werker zal u de beslissing laten weten. Bij een positieve beslissing ontvang je voor het einde van de maand je leefloon op je bankrekening.</p>', NULL, 3, false);
 INSERT INTO process_translation VALUES (126, 'it', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (193, 'nl', '', '', NULL, 2, false);
+INSERT INTO process_translation VALUES (111, 'es', '', '', NULL, 0, false);
+INSERT INTO process_translation VALUES (212, 'de', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (207, 'de', '', '', NULL, 0, false);
-INSERT INTO process_translation VALUES (111, 'en', 'Getting the registration certificate', '<p>Getting your “<strong>certificado de empadronamiento</strong>” or your address registration certificate is probably the first and most important step when arriving to access some services and probe your residence.</p>', NULL, 0, false);
-INSERT INTO process_translation VALUES (111, 'nl', '', '', NULL, 0, false);
 INSERT INTO process_translation VALUES (128, 'de', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (128, 'it', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (207, 'nl', '', '', NULL, 0, false);
+INSERT INTO process_translation VALUES (212, 'it', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (206, 'de', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (206, 'it', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (208, 'de', '', '', NULL, 0, false);
@@ -4551,7 +4551,6 @@ INSERT INTO process_translation VALUES (46, 'de', '', '<p>Das ist eine beschreib
 INSERT INTO process_translation VALUES (47, 'it', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (47, 'de', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (47, 'en', 'Enroll children to school', '<p>How to enroll children to school</p>', NULL, 2, false);
-INSERT INTO process_translation VALUES (212, 'it', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (92, 'en', 'Get public housing', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec efficitur orci. Nunc elementum sed risus dapibus iaculis. Pellentesque ornare ac leo a finibus. Curabitur facilisis efficitur ex at viverra. Pellentesque interdum at ante eget luctus. Quisque rutrum tincidunt nunc, ac porttitor tortor finibus non. Quisque vel diam non libero venenatis tempus. Fusce elit lacus, bibendum ac leo in, lacinia rutrum sem. Vestibulum vel ipsum porta, scelerisque leo non, iaculis purus. Integer pulvinar fermentum sagittis. Vivamus dapibus dui id dolor sagittis, non congue dui aliquam. Fusce mollis ante lectus, sed malesuada orci accumsan et. Donec viverra scelerisque posuere. Morbi risus turpis, porta eu lobortis ut, auctor ut enim. Donec suscipit magna enim.</p>', NULL, 2, false);
 INSERT INTO process_translation VALUES (174, 'de', '', '', NULL, 0, false);
 INSERT INTO process_translation VALUES (174, 'nl', '', '', NULL, 0, false);
@@ -4580,9 +4579,9 @@ INSERT INTO process_translation VALUES (179, 'en', 'Obtaining the health card', 
 INSERT INTO process_translation VALUES (179, 'es', '', '', NULL, 0, false);
 INSERT INTO process_translation VALUES (179, 'it', '', '', NULL, 0, false);
 INSERT INTO process_translation VALUES (179, 'nl', '', '', NULL, 0, false);
-INSERT INTO process_translation VALUES (212, 'nl', '', '', NULL, 2, false);
-INSERT INTO process_translation VALUES (212, 'en', 'test', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (203, 'it', '', '', NULL, 2, false);
+INSERT INTO process_translation VALUES (212, 'en', 'test', '', NULL, 2, false);
+INSERT INTO process_translation VALUES (212, 'nl', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (128, 'en', 'Hoe sluit ik me aan bij een ziekenfonds in België?', '<p>Een ziekenfonds (= mutualiteit) zorgt voor de terugbetaling van een deel van de dokterskosten, geneesmiddelen, ziekenhuiskosten, ... waarbij het Rijksinstituut voor Ziekte- en Invaliditeitsuitkering (RIZIV) bepaalt welke medische zorgen de mutualiteit terugbetaalt. De terugbetaling bedraagt ongeveer 75 % van de kosten voor mensen zonder een verhoogde tegemoetkoming en 90 % van de kosten voor mensen met een verhoogde tegemoetkoming.</p><p>Aansluiten bij een mutualiteit is verplicht voor iedereen die officieel in België woont én • ouder is dan 25 jaar</p><p>• jonger is dan 25 jaar en werkt</p><p>• jonger is dan 25 jaar, werkloos is én een uitkering krijgt</p><p>• ook erkende vluchtelingen en subsidiair beschermden moeten dat</p><p>Niet vergeten: de ouders moeten hun kinderen bij de geboorte aansluiten.</p><p>Bron: antwerpen.be</p>', NULL, 2, false);
 INSERT INTO process_translation VALUES (128, 'es', '', '', NULL, 2, false);
 INSERT INTO process_translation VALUES (128, 'nl', 'Hoe sluit ik me aan bij een ziekenfonds in België?', '<p>Een ziekenfonds (= mutualiteit) zorgt voor de terugbetaling van een deel van de dokterskosten, geneesmiddelen, ziekenhuiskosten, ... waarbij het Rijksinstituut voor Ziekte- en Invaliditeitsuitkering (RIZIV) bepaalt welke medische zorgen de mutualiteit terugbetaalt. De terugbetaling bedraagt ongeveer 75 % van de kosten voor mensen zonder een verhoogde tegemoetkoming en 90 % van de kosten voor mensen met een verhoogde tegemoetkoming.</p><p>Aansluiten bij een mutualiteit is verplicht voor iedereen die officieel in België woont én • ouder is dan 25 jaar</p><p>• jonger is dan 25 jaar en werkt</p><p>• jonger is dan 25 jaar, werkloos is én een uitkering krijgt</p><p>• ook erkende vluchtelingen en subsidiair beschermden moeten dat</p><p>Niet vergeten: de ouders moeten hun kinderen bij de geboorte aansluiten.</p><p>Bron: antwerpen.be</p>', NULL, 3, false);
@@ -4643,12 +4642,12 @@ INSERT INTO process_users VALUES (46, 7);
 INSERT INTO process_users VALUES (46, 1);
 INSERT INTO process_users VALUES (46, 9);
 INSERT INTO process_users VALUES (117, 1);
+INSERT INTO process_users VALUES (111, 7);
 INSERT INTO process_users VALUES (212, 32);
 INSERT INTO process_users VALUES (173, 32);
 INSERT INTO process_users VALUES (48, 9);
 INSERT INTO process_users VALUES (48, 1);
 INSERT INTO process_users VALUES (48, 7);
-INSERT INTO process_users VALUES (111, 7);
 INSERT INTO process_users VALUES (92, 9);
 INSERT INTO process_users VALUES (92, 1);
 INSERT INTO process_users VALUES (92, 7);
@@ -4775,7 +4774,8 @@ INSERT INTO step VALUES ('74c7f0fe-e21b-4daf-9caf-d0c17492d5d6', 0, false, 'home
 INSERT INTO step VALUES ('caf653b6-792e-4f14-bb84-bc4b79e45165', 0, false, 'Home', 0, 0, 208, NULL, NULL);
 INSERT INTO step VALUES ('23cd51b9-ea30-4430-9a7c-9af458105b8c', 0, false, '', 0, 0, 212, NULL, NULL);
 INSERT INTO step VALUES ('98e88978-dd0d-422b-9974-5527cf222c77', 0, false, '', 0, 0, 212, NULL, NULL);
-INSERT INTO step VALUES ('6c7d1976-b3b6-4118-b37f-dc3a2dcdb955', 0, false, '', 0, 0, 212, NULL, NULL);
+INSERT INTO step VALUES ('e3a1aa1a-44a4-40ed-b567-cdc0980f0f53', 0, false, '', 0, 0, 212, NULL, 11);
+INSERT INTO step VALUES ('6c7d1976-b3b6-4118-b37f-dc3a2dcdb955', 0, false, '', 0, 0, 212, NULL, 11);
 
 
 --
@@ -4908,16 +4908,6 @@ INSERT INTO step_link_translation VALUES ('de', '', '9b9f97f8-0ebd-4426-8554-b83
 INSERT INTO step_link_translation VALUES ('it', '', '9b9f97f8-0ebd-4426-8554-b83bfa491439', 0, false);
 INSERT INTO step_link_translation VALUES ('nl', '', '9b9f97f8-0ebd-4426-8554-b83bfa491439', 0, false);
 INSERT INTO step_link_translation VALUES ('en', '', '9b9f97f8-0ebd-4426-8554-b83bfa491439', 0, false);
-INSERT INTO step_link_translation VALUES ('it', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
-INSERT INTO step_link_translation VALUES ('nl', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
-INSERT INTO step_link_translation VALUES ('de', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
-INSERT INTO step_link_translation VALUES ('es', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
-INSERT INTO step_link_translation VALUES ('en', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
-INSERT INTO step_link_translation VALUES ('de', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
-INSERT INTO step_link_translation VALUES ('en', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
-INSERT INTO step_link_translation VALUES ('nl', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
-INSERT INTO step_link_translation VALUES ('es', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
-INSERT INTO step_link_translation VALUES ('it', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
 INSERT INTO step_link_translation VALUES ('en', '', '78ee58ae-cb6f-485a-8ce5-4e8f81b56178', 0, false);
 INSERT INTO step_link_translation VALUES ('de', '', '78ee58ae-cb6f-485a-8ce5-4e8f81b56178', 0, false);
 INSERT INTO step_link_translation VALUES ('it', '', '78ee58ae-cb6f-485a-8ce5-4e8f81b56178', 0, false);
@@ -4977,6 +4967,16 @@ INSERT INTO step_link_translation VALUES ('de', '', '793a004e-169a-4b79-a027-1c9
 INSERT INTO step_link_translation VALUES ('en', '', '250b1a3f-1dc0-4844-acc3-7243b46f4908', 0, false);
 INSERT INTO step_link_translation VALUES ('en', '', '4e0b528f-315d-4cf6-86c3-627acf542bf8', 0, false);
 INSERT INTO step_link_translation VALUES ('es', '', '793a004e-169a-4b79-a027-1c9ac832368b', 0, false);
+INSERT INTO step_link_translation VALUES ('de', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
+INSERT INTO step_link_translation VALUES ('en', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
+INSERT INTO step_link_translation VALUES ('nl', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
+INSERT INTO step_link_translation VALUES ('es', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
+INSERT INTO step_link_translation VALUES ('it', '', '4a14e0d9-18c8-4928-9c77-ee81fecf52be', 0, false);
+INSERT INTO step_link_translation VALUES ('it', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
+INSERT INTO step_link_translation VALUES ('nl', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
+INSERT INTO step_link_translation VALUES ('de', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
+INSERT INTO step_link_translation VALUES ('es', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
+INSERT INTO step_link_translation VALUES ('en', '', 'e78f2059-5616-4fcb-a1ae-23a4e1483de5', 0, false);
 INSERT INTO step_link_translation VALUES ('es', '', '4e0b528f-315d-4cf6-86c3-627acf542bf8', 0, false);
 INSERT INTO step_link_translation VALUES ('nl', '', '793a004e-169a-4b79-a027-1c9ac832368b', 0, false);
 INSERT INTO step_link_translation VALUES ('it', '', '250b1a3f-1dc0-4844-acc3-7243b46f4908', 0, false);
@@ -5125,25 +5125,18 @@ INSERT INTO step_link_translation VALUES ('es', '', '9f3a3d00-97e0-4dc1-b4e2-a1d
 -- Data for Name: step_translation; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
+INSERT INTO step_translation VALUES ('de', '', '', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
+INSERT INTO step_translation VALUES ('it', '', '', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
 INSERT INTO step_translation VALUES ('nl', '', '', NULL, '3c7dcedb-6337-4542-956b-ca06206add50', 2, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, '2d99d6f9-6b8d-42ef-b7f3-bec3ca91039b', 2, false);
+INSERT INTO step_translation VALUES ('nl', '', '', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
+INSERT INTO step_translation VALUES ('es', '', '', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
+INSERT INTO step_translation VALUES ('en', 'Go to the OAC Office', 'Madrid is divided in 21 districts and each one has its own OAC (Citizen’s Advice Office/ Oficina de Atención al Ciudadano) that deals with this process. You can go to any OAC office to register, it doesn’t have to be the one in your district.', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
 INSERT INTO step_translation VALUES ('nl', '', '', NULL, '2d99d6f9-6b8d-42ef-b7f3-bec3ca91039b', 2, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, '8aa4b3f1-bb79-4f4f-98bf-51ad7f0c1d4f', 2, false);
 INSERT INTO step_translation VALUES ('es', '', '', NULL, '8aa4b3f1-bb79-4f4f-98bf-51ad7f0c1d4f', 2, false);
 INSERT INTO step_translation VALUES ('nl', '', '', NULL, 'f73226c5-5bdd-4b06-a173-922b3c5ee6ac', 2, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, '891b58f3-de13-4e1c-9a30-6cf67e6ead27', 2, false);
-INSERT INTO step_translation VALUES ('de', '', '', NULL, '6d2ae10c-0e16-4184-8136-1f3cb6cb2fba', 3, false);
-INSERT INTO step_translation VALUES ('es', '联系学校', '<p>(the following content is only for testing the use of Chinese language)</p><p>请与您当地的公立学校联系以获取入学申请表。学校可以为您的申请提供帮助。</p>', NULL, '891b58f3-de13-4e1c-9a30-6cf67e6ead27', 2, false);
-INSERT INTO step_translation VALUES ('nl', '', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
-INSERT INTO step_translation VALUES ('it', '', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
-INSERT INTO step_translation VALUES ('en', 'Go to office', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
-INSERT INTO step_translation VALUES ('de', '', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
-INSERT INTO step_translation VALUES ('es', '', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
-INSERT INTO step_translation VALUES ('de', '', '', NULL, 'ada2bf8a-84b2-43d5-ab55-4e0128799ecf', 2, false);
-INSERT INTO step_translation VALUES ('it', '', '', NULL, 'ada2bf8a-84b2-43d5-ab55-4e0128799ecf', 2, false);
-INSERT INTO step_translation VALUES ('de', '', '', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
-INSERT INTO step_translation VALUES ('es', '', '', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
-INSERT INTO step_translation VALUES ('it', '', '', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
 INSERT INTO step_translation VALUES ('en', 'Getting an appointment', 'If you live in the city of Madrid  you can either:
 - Request an appointment (cita previa) at the website https://www-s.munimadrid.es/CitaNet/Principal.do
 - Call 010 (or 915298210 if you are calling from outside of Madrid)
@@ -5151,13 +5144,20 @@ If you live in other town of city of the Community of Madrid you should check th
 INSERT INTO step_translation VALUES ('it', '', '', NULL, 'ed5b4ccb-f16a-4253-aa4e-1e1d0ae4ff03', 0, false);
 INSERT INTO step_translation VALUES ('es', '', '', NULL, 'ed5b4ccb-f16a-4253-aa4e-1e1d0ae4ff03', 0, false);
 INSERT INTO step_translation VALUES ('nl', '', '', NULL, 'ed5b4ccb-f16a-4253-aa4e-1e1d0ae4ff03', 0, false);
+INSERT INTO step_translation VALUES ('de', '', '', NULL, '6d2ae10c-0e16-4184-8136-1f3cb6cb2fba', 3, false);
+INSERT INTO step_translation VALUES ('es', '联系学校', '<p>(the following content is only for testing the use of Chinese language)</p><p>请与您当地的公立学校联系以获取入学申请表。学校可以为您的申请提供帮助。</p>', NULL, '891b58f3-de13-4e1c-9a30-6cf67e6ead27', 2, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, 'ed5b4ccb-f16a-4253-aa4e-1e1d0ae4ff03', 0, false);
+INSERT INTO step_translation VALUES ('de', '', '', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
+INSERT INTO step_translation VALUES ('es', '', '', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
+INSERT INTO step_translation VALUES ('it', '', '', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
 INSERT INTO step_translation VALUES ('nl', '', '', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
-INSERT INTO step_translation VALUES ('de', '', '', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
-INSERT INTO step_translation VALUES ('it', '', '', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
-INSERT INTO step_translation VALUES ('nl', '', '', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
-INSERT INTO step_translation VALUES ('es', '', '', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
-INSERT INTO step_translation VALUES ('en', 'Go to the OAC Office', 'Madrid is divided in 21 districts and each one has its own OAC (Citizen’s Advice Office/ Oficina de Atención al Ciudadano) that deals with this process. You can go to any OAC office to register, it doesn’t have to be the one in your district.', NULL, 'b957c666-b770-46cc-af4b-861e47547fb8', 0, false);
+INSERT INTO step_translation VALUES ('nl', '', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
+INSERT INTO step_translation VALUES ('it', '', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
+INSERT INTO step_translation VALUES ('en', 'Go to office', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
+INSERT INTO step_translation VALUES ('de', '', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
+INSERT INTO step_translation VALUES ('es', '', '', NULL, '79b8a332-0ae3-4295-9589-05680093c0db', 2, false);
+INSERT INTO step_translation VALUES ('de', '', '', NULL, 'ada2bf8a-84b2-43d5-ab55-4e0128799ecf', 2, false);
+INSERT INTO step_translation VALUES ('it', '', '', NULL, 'ada2bf8a-84b2-43d5-ab55-4e0128799ecf', 2, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, '1a235c85-4568-40fd-b7bc-de2339a2bee2', 0, false);
 INSERT INTO step_translation VALUES ('es', '', '', NULL, '1a235c85-4568-40fd-b7bc-de2339a2bee2', 0, false);
 INSERT INTO step_translation VALUES ('en', 'Ansprechpartner und Beratung', '<p>Es gibt viele Orte an denen man sich einbringen kann. Erster Ansprechpartner in den Bezirken sind dazu die </p><p>Freiwilligenagenturen</p><p></p>', NULL, '1a235c85-4568-40fd-b7bc-de2339a2bee2', 0, false);
@@ -5397,8 +5397,8 @@ INSERT INTO step_translation VALUES ('nl', '', '', NULL, '503153d2-2000-4214-981
 INSERT INTO step_translation VALUES ('en', 'Send the kit', '', NULL, '503153d2-2000-4214-9818-4d2e819057d4', 3, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, '503153d2-2000-4214-9818-4d2e819057d4', 3, false);
 INSERT INTO step_translation VALUES ('es', '', '', NULL, '503153d2-2000-4214-9818-4d2e819057d4', 3, false);
-INSERT INTO step_translation VALUES ('en', 'Lost step', ' ', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, '2b558bb5-2879-494a-8fc6-381813383ac8', 0, false);
+INSERT INTO step_translation VALUES ('en', 'Lost step', ' ', NULL, 'eb3b421f-a755-4b56-bf36-dda48eda3582', 0, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, 'b2b7a5a5-2876-477e-8076-b0bc39ce7c9c', 3, false);
 INSERT INTO step_translation VALUES ('en', 'Go to Municipality', '', NULL, 'b2b7a5a5-2876-477e-8076-b0bc39ce7c9c', 3, false);
 INSERT INTO step_translation VALUES ('es', '', '', NULL, 'b2b7a5a5-2876-477e-8076-b0bc39ce7c9c', 3, false);
@@ -5473,6 +5473,11 @@ INSERT INTO step_translation VALUES ('nl', '', '', NULL, '6c7d1976-b3b6-4118-b37
 INSERT INTO step_translation VALUES ('es', '', '', NULL, '6c7d1976-b3b6-4118-b37f-dc3a2dcdb955', 2, false);
 INSERT INTO step_translation VALUES ('en', 'ret', '', NULL, '6c7d1976-b3b6-4118-b37f-dc3a2dcdb955', 2, false);
 INSERT INTO step_translation VALUES ('it', '', '', NULL, '6c7d1976-b3b6-4118-b37f-dc3a2dcdb955', 2, false);
+INSERT INTO step_translation VALUES ('de', '', '', NULL, 'e3a1aa1a-44a4-40ed-b567-cdc0980f0f53', 0, false);
+INSERT INTO step_translation VALUES ('en', 'test icon', '', NULL, 'e3a1aa1a-44a4-40ed-b567-cdc0980f0f53', 0, false);
+INSERT INTO step_translation VALUES ('es', '', '', NULL, 'e3a1aa1a-44a4-40ed-b567-cdc0980f0f53', 0, false);
+INSERT INTO step_translation VALUES ('it', '', '', NULL, 'e3a1aa1a-44a4-40ed-b567-cdc0980f0f53', 0, false);
+INSERT INTO step_translation VALUES ('nl', '', '', NULL, 'e3a1aa1a-44a4-40ed-b567-cdc0980f0f53', 0, false);
 INSERT INTO step_translation VALUES ('de', '', '', NULL, '12cc531f-f970-4449-a47c-fdc7f55dc08a', 3, false);
 
 
@@ -5636,8 +5641,8 @@ INSERT INTO step_translation_prod VALUES ('nl', '', '', NULL, 'fa38d49b-d58c-4d3
 
 INSERT INTO tenant VALUES (3, 'Atlas', 'https://www.atlas-antwerpen.be/', 'atlas@antwerpen.be', 'Carnotstraat 110 - 2060 Antwerpen');
 INSERT INTO tenant VALUES (1, 'Antwerp city', NULL, NULL, NULL);
-INSERT INTO tenant VALUES (10, 'undefined', 'undefined', 'undefined', 'undefined');
 INSERT INTO tenant VALUES (2, 'CSI', NULL, NULL, NULL);
+INSERT INTO tenant VALUES (4, 'undefined', 'undefined', 'undefined', 'undefined');
 
 
 --
@@ -5649,8 +5654,8 @@ INSERT INTO topic VALUES (1, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhl
 INSERT INTO topic VALUES (2, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyLjU2NDIgMTQuOTI4NkgxMS4yNzQ2QzEwLjYyOTkgMTQuOTI4NiAxMC4xNDYzIDE0LjQ0NSAxMC4wOTI1IDEzLjg1MzlMMyAxMi43NzkzVjE4LjM2NzRDMyAxOS40OTU3IDMuOTEzNDMgMjAuMzU1NCA0Ljk4ODA2IDIwLjM1NTRIMTguOTU4MkMyMC4wODY2IDIwLjM1NTQgMjAuOTQ2MyAxOS40NDIgMjAuOTQ2MyAxOC4zNjc0VjEyLjc3OTNMMTMuNzQ2MyAxMy44NTM5QzEzLjY5MjUgMTQuNDk4NyAxMy4yMDkgMTQuOTI4NiAxMi41NjQyIDE0LjkyODZaIiBmaWxsPSIjNUM4MUEyIi8+CjxwYXRoIGQ9Ik0xOC45NTgyIDcuMDgzNThIMTUuOTQ5M1Y1Ljc5NDAzQzE1Ljk0OTMgNC4yMzU4MiAxNC43MTM0IDMgMTMuMTU1MiAzSDEwLjczNzNDOS4xNzkxMSAzIDcuOTQzMjggNC4yMzU4MiA3Ljk0MzI4IDUuNzk0MDNWNy4wODM1OEg0Ljk4ODA2QzMuODU5NyA3LjA4MzU4IDMgNy45OTcwMiAzIDkuMDcxNjRWMTEuOTczMUwxMC4zMDc1IDEzLjA0NzhDMTAuNTIyNCAxMi43MjU0IDEwLjg5ODUgMTIuNTEwNCAxMS4zMjg0IDEyLjUxMDRIMTIuNjE3OUMxMy4wNDc4IDEyLjUxMDQgMTMuNDIzOSAxMi43MjU0IDEzLjYzODggMTMuMTAxNUwyMSAxMS45NzMxVjkuMDcxNjRDMjAuOTQ2MyA3Ljk5NzAyIDIwLjAzMjggNy4wODM1OCAxOC45NTgyIDcuMDgzNThaTTkuNTAxNDkgNS43OTQwM0M5LjUwMTQ5IDUuMTQ5MjUgMTAuMDM4OCA0LjYxMTk0IDEwLjY4MzYgNC42MTE5NEgxMy4xMDE1QzEzLjc0NjMgNC42MTE5NCAxNC4yODM2IDUuMTQ5MjUgMTQuMjgzNiA1Ljc5NDAzVjcuMDgzNThIOS40NDc3NlY1Ljc5NDAzSDkuNTAxNDlaIiBmaWxsPSIjNUM4MUEyIi8+Cjwvc3ZnPgo=', true, NULL);
 INSERT INTO topic VALUES (3, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDIwLjczNjFDMTEuODA4IDIwLjczNjEgMTEuNjY0IDIwLjY4ODEgMTEuNTIgMjAuNTkyMUM3LjgyNDA1IDE4LjA0ODEgNS4xODQwNSAxNS40NTYxIDMuNjk2MDUgMTIuOTEyMUg2LjcyMDA1QzcuMDU2MDUgMTIuOTEyMSA3LjM0NDA1IDEyLjcyMDEgNy40NDAwNSAxMi40MzIxTDguMzA0MDUgMTAuMTc2MUw5Ljc0NDA1IDE1Ljg4ODFDOS44NDAwNSAxNi4yMjQxIDEwLjA4IDE2LjQ2NDEgMTAuNDE2IDE2LjQ2NDFDMTAuNDY0IDE2LjQ2NDEgMTAuNDY0IDE2LjQ2NDEgMTAuNTEyIDE2LjQ2NDFDMTAuOCAxNi40NjQxIDExLjA4OCAxNi4zMjAxIDExLjIzMiAxNi4wMzIxTDEyLjgxNiAxMi45MTIxSDE1Ljg4OEMxNi4wOCAxMi45MTIxIDE2LjMyIDEyLjgxNjEgMTYuNDY0IDEyLjY3MjFDMTYuNjA4IDEyLjUyODEgMTYuNzA0IDEyLjMzNjEgMTYuNzA0IDEyLjA5NjFDMTYuNzA0IDExLjY2NDEgMTYuMzIgMTEuMzI4MSAxNS44ODggMTEuMzI4MUgxMi4zMzZDMTIuMDQ4IDExLjMyODEgMTEuNzYgMTEuNDcyMSAxMS42MTYgMTEuNzYwMUwxMC43NTIgMTMuNDQwMUw5LjI2NDA1IDcuMzkyMDdDOS4xNjgwNSA3LjEwNDA2IDguOTI4MDUgNi44NjQwNyA4LjY0MDA1IDYuNzY4MDdDOC41OTIwNSA2Ljc2ODA3IDguNTQ0MDUgNi43NjgwNyA4LjQ5NjA1IDYuNzY4MDdDOC4xNjAwNSA2Ljc2ODA3IDcuODcyMDUgNi45NjAwNyA3Ljc3NjA1IDcuMjQ4MDdMNi4xOTIwNSAxMS4zMjgxSDIuOTI4MDVDMi4wNjQwNSA5LjEyMDA3IDIuMTYwMDUgNy4wNTYwNyAzLjIxNjA1IDUuNDcyMDZDNC4xNzYwNSA0LjAzMjA2IDUuODA4MDUgMy4yMTYwNiA3LjYzMjA1IDMuMjE2MDZDOS4xNjgwNSAzLjIxNjA2IDEwLjY1NiAzLjg0MDA2IDExLjg1NiA0Ljk0NDA2TDEyLjA0OCA1LjA4ODA3TDEyLjI0IDQuOTQ0MDZDMTMuMzkyIDMuODQwMDYgMTQuODggMy4yNjQwNiAxNi40MTYgMy4yNjQwNkMxOC43NjggMy4yNjQwNiAyMC43ODQgNC43MDQwNiAyMS40MDggNi44MTYwN0MyMi42NTYgMTAuODAwMSAxOS4yOTYgMTUuOTM2MSAxMi40OCAyMC41OTIxQzEyLjMzNiAyMC42ODgxIDEyLjE5MiAyMC43MzYxIDEyIDIwLjczNjFaIiBmaWxsPSIjNUM4MUEyIi8+Cjwvc3ZnPgo=', true, 25);
 INSERT INTO topic VALUES (7, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIxLjg3MjYgMTAuNDQ1OUMyMS4zMjQxIDEwLjUzNzMgMjAuNjg0MiAxMC41MzczIDIwLjEzNTcgMTAuNTM3M0MxOC45NDc0IDEwLjUzNzMgMTcuNjY3NiAxMC40NDU5IDE2LjM4NzggMTAuMjYzMUMxNS42NTY1IDEzLjQ2MjUgMTMuNzM2OSAxNi4wMjIxIDExLjA4NTkgMTYuOTM2MkMxMC43MjAyIDE3LjAyNzYgMTAuMzU0NiAxNy4xMTkgOS45ODg5MiAxNy4yMTA0QzkuODA2MSAxNy4yMTA0IDkuNzE0NjkgMTcuMjEwNCA5LjUzMTg2IDE3LjIxMDRDMTAuMjYzMiAxOS41ODcyIDExLjkwODYgMjEuNDE1NCAxNC4wMTExIDIxLjc4MTFDMTQuMjg1MyAyMS43ODExIDE0LjU1OTYgMjEuODcyNSAxNC44MzM4IDIxLjg3MjVDMTguMDMzMyAyMS44NzI1IDIxLjA0OTkgMTguNTgxNiAyMS43ODEyIDE0LjI4NTJDMjIuMDU1NCAxMy4wMDU0IDIyLjA1NTQgMTEuNjM0MyAyMS44NzI2IDEwLjQ0NTlaTTE3LjQ4NDggMjAuMjI3MUMxNy40ODQ4IDIwLjIyNzEgMTYuNzUzNSAxOS4wMzg3IDE1LjEwOCAxOC43NjQ1QzEzLjczNjkgMTguNDkwMiAxMy4yNzk4IDE4Ljc2NDUgMTIuMjc0MiAxOS4xMzAxQzEyLjI3NDIgMTkuMTMwMSAxMi4xODI4IDE2LjkzNjIgMTQuNjUxIDE2Ljg0NDhDMTYuOTM2MyAxNi44NDQ4IDE4LjMwNzUgMTguOTQ3MyAxNy40ODQ4IDIwLjIyNzFaTTE4LjEyNDcgMTUuNzQ3OEMxNy4zMDIgMTUuNzQ3OCAxNi42NjIxIDE1LjEwNzkgMTYuNjYyMSAxNC4yODUyQzE2LjY2MjEgMTMuNDYyNSAxNy4zMDIgMTIuODIyNiAxOC4xMjQ3IDEyLjgyMjZDMTguOTQ3NCAxMi44MjI2IDE5LjU4NzMgMTMuNDYyNSAxOS41ODczIDE0LjI4NTJDMTkuNTg3MyAxNS4xMDc5IDE4Ljk0NzQgMTUuNzQ3OCAxOC4xMjQ3IDE1Ljc0NzhaIiBmaWxsPSIjNUM4MUEyIi8+CjxwYXRoIGQ9Ik0xNC43NDI0IDUuNzgzODNDMTQuNTU5NiA0LjUwNDA1IDE0LjEwMjUgMy4yMjQyNyAxMy42NDU0IDIuMTI3MzJDMTMuMDk3IDIuMzEwMTUgMTIuNTQ4NSAyLjU4NDM4IDEyIDIuNzY3MjFDMTAuNzIwMiAzLjIyNDI3IDkuNDQwNDUgMy40OTg1MSA3Ljk3Nzg0IDMuNjgxMzRDNS45NjY3NiA0LjA0Njk5IDMuOTU1NjggNC4xMzg0IDIuMjE4ODMgMy44NjQxNkMxLjk0NDU5IDUuMTQzOTQgMS45NDQ1OSA2LjQyMzcyIDIuMTI3NDIgNy43MDM1QzIuODU4NzIgMTIuNDU3IDYuMjQxIDE1LjgzOTIgOS43MTQ2OCAxNS4yOTA4QzkuOTg4OTIgMTUuMjkwOCAxMC4yNjMyIDE1LjE5OTQgMTAuNTM3NCAxNS4xMDc5QzEzLjU1NCAxNC4xMDI0IDE1LjM4MjMgMTAuMDgwMiAxNC43NDI0IDUuNzgzODNaTTQuNTk1NTcgNy43OTQ5MkM0LjMyMTMzIDcuMDYzNjEgNC43NzgzOSA2LjE0OTQ4IDUuNTA5NjkgNS45NjY2NkM2LjI0MSA1LjY5MjQyIDcuMTU1MTIgNi4xNDk0OCA3LjMzNzk1IDYuODgwNzlDNy42MTIxOSA3LjYxMjA5IDcuMTU1MTIgOC41MjYyMiA2LjQyMzgyIDguNzA5MDRDNS42OTI1MiA5LjA3NDcgNC44Njk4IDguNjE3NjMgNC41OTU1NyA3Ljc5NDkyWk0xMC4yNjMyIDEyLjkxNEM3Ljk3Nzg0IDEzLjczNjggNi4wNTgxNyAxMi4wOTEzIDYuNDIzODIgMTAuNjI4N0M2LjQyMzgyIDEwLjYyODcgNy43MDM2IDExLjI2ODYgOS4yNTc2MiAxMS4wODU4QzEwLjA4MDMgMTAuOTk0NCAxMC45MDMxIDEwLjcyMDEgMTEuODE3MiAxMC4wODAyQzExLjcyNTggMTAuMDgwMiAxMi41NDg1IDEyLjA5MTMgMTAuMjYzMiAxMi45MTRaTTExLjM2MDEgOC4zNDMzOUMxMC42Mjg4IDguNjE3NjMgOS43MTQ2OCA4LjE2MDU3IDkuNTMxODYgNy40MjkyNkM5LjI1NzYyIDYuNjk3OTYgOS43MTQ2OCA1Ljc4MzgzIDEwLjQ0NiA1LjYwMTAxQzExLjE3NzMgNS4zMjY3NyAxMi4wOTE0IDUuNzgzODMgMTIuMjc0MiA2LjUxNTE0QzEyLjU0ODUgNy4yNDY0NCAxMi4wOTE0IDguMDY5MTUgMTEuMzYwMSA4LjM0MzM5WiIgZmlsbD0iIzVDODFBMiIvPgo8L3N2Zz4K', true, 25);
-INSERT INTO topic VALUES (25, 'data:image/png;base64,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uyWxm93slsRudrNbYje72S2J3exmtyR2s5vdErvZzW5J7GY3uyWxm93slsRudktiN7vZLYnd7Ga3JHazm90Su9nNbknsZje7JbGb3eyW2M1udktiN7t72u5KpeJVp9zVfN52ZFazm92SrLvZzW5Lb/XAujv7EetudhfZbmQrj153odrsZje4pZFP3c7Oanazu70NVhbcN3/22ed85UtfPnHGTMPo8vGlmSfOPGFGPMbzr375K+fMOvv++Qsq7w52/JXEbna3r+effe6TRx5V7ivFJzOw8dEwunakU7R2rsY0Xvzc8/ZM2N0Tdr+weMmHd9m10YvBMPJl+u677vbikhesu9ldfLuPmTY9Jv2ARbdRCL5jxJS27mZ3we1+4rHHsz+BlkeNxreR63V3zOHY/YuJzW52F9nuK6/4ccz1MaUytY1ijJjM8RgTm93sLrLd8e58slQBt1GktzHjiKlGh4Gzm91FsPuyH/ww2SJs8t69YeQI7uRx7mVzOrXlzW52t6OFCxeWN+0SZgU3jPyOmNIL739gyDnx7C6w3YODg4ccdLBXu1GYg0ziSUzpmNjW3ewust3RI396eOyY7Sy6jTzua2fJTkZM5pjSHXxBsZvd7euBBffvtsuuZXYbud3gTp7ENE52S9jN7uLbnfxo+cYbb1xx+Y+mT512wH7777vXJMPo8rHfpL332XOveIzxsf0POHbqtJjAb6xcNdT4QoPsZnfR1t1STuvCqwmym90dmPouCau8q+3eC+zurXU3tZVHuKu2R7phGrOb3ZJG8iOjey+wm91Sbhzvkg1AdrNbUv5iN7slsZvd7JbEbnazWxK72S2J3exmtyR2s5vdktjNbnZL7GY3uyWxm93slsRudrNbYje72S2J3exmtyR2s5vdErvZzW5J7GY3uyWxm93slsRudktiN7vZLYnd7Ga3JHazm90Su9nNbknsZje7JbGb3eyW2M1udm9llUql0ROpy+vaSctudrfpBQBuFZV1drO7sHZTW0XVuVOzmt3sxrc0zHStnbfZj3RkVrOb3fiW8jdd2c1uWEv5m9LsZnf7J/6mIeXK6Np9kg4izm52t7WXl7107jmzD/7YQRPHT2jlczaMTo1yX6m0kb/SpucxaWPqzp49e9myZdbd7O6BPZNNT351x53bjxs/0FfigpHrEdP4N3f+KpnZFXazu8Dr7vjR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Jyccd3zdv/2tN1dffOFF2Uu2tnhd2VK9xfiwrG8ru2uPltmi0zWb/+Y83oiZ3exW+/jOwt1E7bp7F/957X8kf8L98xf0NTi+O3tWzoXnV99yIf7qG6+/4R923W2LrkdY9wKB8eeH/rtv/KM6su4egeBxguifH34kNvfn33vfihUrhoa7wi272c3u3oW7SoQ4nONLM0+suvRH88uDxAip43zL9HDsOIWn3PTovWSzO65mlf2r4+T4Qw8+pMXFctVRK++d7DP6vU+vtPESV8teXJr+W9q57m59vZycqhqfZ1xmIC6htf248e//w0vlr3zpyy+++OIWLc/ZzW529yLlse6LW0eWM8vY5E3CYQ7FK5Vvv/W2rCmnnnxKk9Vx+qKNO8onv/+pJ//v88d+rrQll0OpOlo8e9xLnO8TtzxO/uT455Tavu5uhHj244Pr3427xMWbuocfeljtO8Dpd6Oddtgx7gKa050TdrNb7ejtt9+uArRW3iyRyQjc45qCVZocdcTHG206p0/iwt+xQxI746eddlp27dzireXrnq554P4HxCXFs59MrLvbtt9dx+sqsjde7PBnt//0pK/982477dzoJKaqT2/Pj+zxxspVI76vELvZze4it+att+se1Vd1ldd0hZv8MvyN+/amF+F7b8/63Xcnjh1XtZtRJXj83w/cd7/vX3LpxPETypvvkLR4VcKq03x22Wnna6++Zv369SmaSbER0eb97iyy6fM40vGH3//BZz716fgZJflRJv2BpuqA91K9U5/itm1V/5HZzW529/QmSdKbq96IY6jrviFZ94Du5Hncq+yuu+6q/QOfeeaZukeC1z6pPal9BIf6xR3Xzj1n9qrXV9ZexzU+pXbanV1fx6HxcSu13/73b077+jfi+uClxkvsJkfBp7/8+OFHxJ/pvUp2s1vvF2fHfPLIoxptalcdWJ1+PN5Vu+eu39VdCf76179ucgrPNjmbJh3/9NV/XPzc800WpLHf3eY9k2ee/nu8VXvs9GOSu8E1uVZX892S7A8WY8dsl8crjLOb3drWi+5NT157dUXAPew5k1WmxLF3CxcurHPJqo1PYidkSwlO9wdaX31/+pOfeuRPD2/23l093YZdd8ffteE6tJXhfzpp8hvibvRxVN9Z/37mAfvt37/V16St1Tzescx+ht6rZDe7e2tvpKoVy1897JBD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cmNoYW5nZUZvcm1hdAAzMTCyMTowAAAAL3RFWHRleGlmOnRodW1ibmFpbDpKUEVHSW50ZXJjaGFuZ2VGb3JtYXRMZW5ndGgAMzUxNY3UijUAAAAfdEVYdGV4aWY6dGh1bWJuYWlsOlJlc29sdXRpb25Vbml0ADIlQF7TAAAAH3RFWHRleGlmOnRodW1ibmFpbDpYUmVzb2x1dGlvbgA3Mi8x2ocYLAAAAB90RVh0ZXhpZjp0aHVtYm5haWw6WVJlc29sdXRpb24ANzIvMXTvib0AAAA4dEVYdGljYzpjb3B5cmlnaHQAQ29weXJpZ2h0IChjKSAxOTk4IEhld2xldHQtUGFja2FyZCBDb21wYW55+Vd5NwAAACF0RVh0aWNjOmRlc2NyaXB0aW9uAHNSR0IgSUVDNjE5NjYtMi4xV63aRwAAACZ0RVh0aWNjOm1hbnVmYWN0dXJlcgBJRUMgaHR0cDovL3d3dy5pZWMuY2gcfwBMAAAAN3RFWHRpY2M6bW9kZWwASUVDIDYxOTY2LTIuMSBEZWZhdWx0IFJHQiBjb2xvdXIgc3BhY2UgLSBzUkdCRFNIqQAAAABJRU5ErkJggg==', true, NULL);
 INSERT INTO topic VALUES (4, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjIwODU4IDkuMjk1NDRDMC45MzA1MjggOS4xNDM5IDAuOTMwNDU4IDguNzQ0NyAxLjIwODQ2IDguNTkzMDZMMTEuMzcyOSAzLjA0ODg0QzExLjQ5MjMgMi45ODM3MiAxMS42MzY2IDIuOTgzNzIgMTEuNzU1OSAzLjA0ODg0TDIyLjM1NTkgOC44MzA2NkMyMi40ODQ0IDguOTAwNzUgMjIuNTY0NCA5LjAzNTQ0IDIyLjU2NDQgOS4xODE4MlYxNi41NDQ0QzIyLjU2NDQgMTYuNzY1MyAyMi4zODUzIDE2Ljk0NDQgMjIuMTY0NCAxNi45NDQ0SDIwLjk2NDRDMjAuNzQzNSAxNi45NDQ0IDIwLjU2NDQgMTYuNzY1MyAyMC41NjQ0IDE2LjU0NDRWMTAuNzA3OUMyMC41NjQ0IDEwLjQwNDQgMjAuMjM5NSAxMC4yMTE0IDE5Ljk3MyAxMC4zNTY3TDE4Ljc3MyAxMS4wMTA3QzE4LjY0NDQgMTEuMDgwOCAxOC41NjQ0IDExLjIxNTUgMTguNTY0NCAxMS4zNjE5VjE2Ljg4N0MxOC41NjQ0IDE3LjAzMzMgMTguNDg0NSAxNy4xNjggMTguMzU2IDE3LjIzODFMMTEuNzU2IDIwLjgzOThDMTEuNjM2NiAyMC45MDUgMTEuNDkyMiAyMC45MDUgMTEuMzcyOCAyMC44Mzk4TDQuNzcyNzkgMTcuMjM4MUM0LjY0NDMyIDE3LjE2OCA0LjU2NDQgMTcuMDMzMyA0LjU2NDQgMTYuODg3VjExLjM2MTlDNC41NjQ0IDExLjIxNTUgNC40ODQzOSAxMS4wODA4IDQuMzU1ODIgMTEuMDEwN0wxLjIwODU4IDkuMjk1NDRaTTExLjM3MjcgMTguNTU5N0MxMS40OTIyIDE4LjYyNDkgMTEuNjM2NiAxOC42MjQ5IDExLjc1NjEgMTguNTU5N0wxNi4zNTYxIDE2LjA0ODFDMTYuNDg0NSAxNS45NzggMTYuNTY0NCAxNS44NDMzIDE2LjU2NDQgMTUuNjk3VjEyLjg4ODVDMTYuNTY0NCAxMi41ODQ4IDE2LjIzOTMgMTIuMzkxOSAxNS45NzI3IDEyLjUzNzRMMTEuNzU2MSAxNC44Mzk3QzExLjYzNjYgMTQuOTA0OSAxMS40OTIyIDE0LjkwNDkgMTEuMzcyNyAxNC44Mzk3TDcuMTU2MDkgMTIuNTM3NEM2Ljg4OTU0IDEyLjM5MTkgNi41NjQ0IDEyLjU4NDggNi41NjQ0IDEyLjg4ODVWMTUuNjk3QzYuNTY0NCAxNS44NDMzIDYuNjQ0MjkgMTUuOTc4IDYuNzcyNzEgMTYuMDQ4MUwxMS4zNzI3IDE4LjU1OTdaIiBmaWxsPSIjNUM4MUEyIi8+Cjwvc3ZnPgo=', true, 25);
+INSERT INTO topic VALUES (25, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAekAAAJPCAIAAADXAbuuAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAZiS0dEAP8A/wD/oL2nkwAAJLVJREFUeNrt3YmbXFWZwGH/kqSrukM2dkYEwq7sCm5kAxcgwWXGmWFRRlAHAgHZBJUEEQLMyL64jKCjKEsCAZ0RlG0wIksCCRACCQQSErp6vuSSy01tXemEqrq33t9znnoqbUw69Km3T5+6y4eGJEl560P+E0gSuyVJ7JYksVuS2C1JYrckid2SxG5JErslSeyWJHZLktgtSWK3JLFbksRuSRK7JUnsliR2S5LYLUlitySxW5LEbkkSuyWJ3ZIkdkuS2C1J7JYksVuSxG5JErslid2SJHZLktgtSeyWJLFbksRuSWK3JIndkiR2SxK7JUnsliSxW5LYLUlitySJ3ZIkdksSuyVJ7JYksVuS2C1JYrckid2SxG5JErslSeyWJHZLktgtSWK3JIndksRuSRK7JUnsliR2S5LYPeIqlcpmzwcrt99627SjJ08cO65/dN9AXylG8iQeDcMo8IiXebzwp06e8tPbbq+8O8ju3PT666/Hly39KsYojxpNbcPohTGmVI7HeMmX+0ql0X3Tp05buXIlu3PQ4OBgCne60Aa3YfTCcjt9pYfgwXfywWlTpsbqO/ujObu7a8MkeYytklqsk6V38g3ZMIzeETx5Epsn1t3dzveUoydXwZ1smKQftAY3jALDnX1MN0uDhbrvjbG7i/ieMG58VupaxM1vwyg237Wv9PFjxzU6tIHd3VLtF8+K2zB6fMT7lkMF3O4unN3JKJmyhmHjO1nMsTtHdg//rXjzfXDDMHK6uz3sqzhWct6rLI7dVV/75IgiwzByx/ewO6LsLpTd2S+2Bbhh5H1jhN09tO6mtmHk+kDAFg9DYHdB7D7isMPPmXX22WfNmnXmWclj8kvDMHI34uVs3d0rdsfXOy5WVffwcEl5qjIUa6+ydXcP2V3ZjGxwS/lze+PLNuwe9oBgdhfE7vhiD7FaKgTfsRRjdy+tuyUVong597Ob3ZLYzW52S2I3u9ktid3slsRudrNbErvZzW5J7GY3uyV2s5vdktjNbnZLYje72S2xm93slsRudrNbErvZzW6J3exmtyR2s5vdktjNbnZLYje7JbGb3eyWxG52s1sSu9nNbond7Ga3JHazm92S2M1udkvsZje7JbGb3eyWxG52s1tiN7vZLYnd7Ga3JHazm90Su9nNbknsZje7JbGb3eyWxG52S2I3u9ktid3sZrckdrOb3RK72c1uSexmN7slsZvd7JbYzW52S2I3u9ktid3sZrfEbnazWxK72c1uSexmN7slsZvdktjNbnZLYje72S11TZVKhd3sZneXvhikViZq8pHsxzsymdnN7ra+BiobI4LyonY6XRshbt3N7uKvu5O5/sRjj18+Z+4Z3zz91JNPMYxuHqecdHLy5OunnBqPMWnnXjYnJvBQpfOCs5vd7VN7+cuvzDj+hJhP5VGjB/pKrXzOhtHZkU7U9ElM4BOOOz4msz0TdvfEuvvVV5bvt8++yWsA3EZe1M7anaw5YvSNGh2TecXyVzu4bcJudrdn4T104oyZVesXw8gp3wmLMaWTzRPrbnYX1u5FixaVa372NIz8mh4jZHx60d+su9ldZLuvvmpedj4R3MjXZnfVMjzdPImJzW52F9nuc8+ZnV2tQMHI0fq61vH0eUxsdrO7yHZ//5JLk9VK+nqw7ja6H+5kxjY64CSexMRmN7uLbPf8e+/ry7wMDCOP2ya1z++75152s7uwdse78OvXr49jqtLtQutuI6cHd2c3UmJKr39nnXNz2F3kdXfM7wX3zR8o9zu+2yjIGrzcf//8BbXXNmE3uwu17k6e3PnLOyaOn1B1zKxh5EXt5PCSAHHCuPG/vvNXnT0znt3sbmsvLV0Wb80f+rGDdhg/gQhGXo4zSR53nDAxpu7ss8+JaZzCbc+E3T1htyR2s5vdErvZzW5J7GY3uyWxm93slsRudktiN7vZLYnd7Ga3JHazm90Su9nNbknsZje7JbGb3eyW2M1udktiN7vZLYnd7Ga3xG52s1sSu9nNbknsZje7JXazm92S2M1udktiN7vZLYnd7JbEbnazWxK72c1uSexmN7sldrOb3ZLYzW52S2I3u9ktsZvd7JbEbnazWxK72c1uid3sZrckdrOb3ZLYze5i2F2pVNJHqftL52rdSdvBmcxudrdh+nd4lkvbSvC6S5COzG12s7tTrwYgqMvBbjC6Y/XNbna3tVWrVv1o7uXTp0776H7777vXJMPo2rH3xrHPpL0n7blXPMbzA/c/IKbuj390xRsrV3X8pcRudn/gDW5aqyy8/4Fdd95lTKncymdrGJ0d5VGjB/pKyWOM9z/eV9ptl11jMnd2y5vd7G5Tf374ke0GxqQvBjQY3T+yEzV9nszhsWO2e+RPD1t3s7vgdg8ODh5y0MHJ7Ae3kV/BN/xy1HsfiSkdE9t+N7sLa3fM6wcfWJi+BsrsNgpBeczkZOeE3ewuqN2VypwfXtZoFWMYedwKT+y+fM5c+93sLvKeSTLPkvd87HcbhVl6zz77HPvd7C6y3Vde8eN00oPbKAbfccRUTGzrbnYX2e4nHnu8lFmwENzI+6I7HmNKx8S27mZ3ke2Ojpk2nddGkeyOKd3BFxS72d2mlixZEmc02DkxisF3TOYXl7zAbnYX3+7o+Wef+/SRR1HbyPv41CeOXPzc89kjqdjN7iLbnczy++cviM/kq1/+yokzZhpG94+ZJ8xInsSkjak7f/78brgoJrvZ3Va4Nz1zHUHlr85e9JXd7Db7pZEuO4b7ILvZXUy7pQKoPdQFd4BiN7t7cc0ijVjtLvkhkt3s7vxrQMqv4Nbd7C6s3RLZ2c3uXNqdneKW4cI3u9lt3S31YuxmtyR2s5vdktjNbnZLYje7JbGb3eyWxG52s1sSu9nNbond7Ga3JHazm92S2M1udkvsZje7JbGb3eyWxG52s1tiN7vZLYnd7Ga3JHazm92S2M1uSexmN7slsZvd7JbEbnazW2I3u9ktid3sZrckdrOb3RK72c1uqcerVCrsZnfP2Z2d9+nzLnwxSI2mbqN528FpzG529+iyRdpKx6272d1beyYcV97h7obVN7vZ3QGv165du/SFF5dI3d3ixYtfeOGF7GNM3aFKV6xC2M3uNjZY+cODDx07/Zgx/QPlvtKAYXT3KI8aHY/ZF9HY/oGYwA8tfHCo0z89spvd7Vp3V4Yu/d4l6Yuh6iVhGF04qmZponk8iZVHTGbrbnb3xLr7phturHoxWNYZ3TyyszSduukvg+9bbrqZ3ewuuN2rV6/ededdrOOMIi3Jd9lp57feXM1udhfZ7jt/eUepZtHt9W/kei8lHmNis5vdRbb74gsvqvoJ1DAKIPhFF1zIbnYX2e7zz/tuCnfydiXBjbwvumMmx8R+/914drO7eHZf/5Pr+ktluyVGwY4/iXfgO3W0CbvZ3Y6WLl06UO73mjeKBHecphAT254Juwtrd7Is+c63vm3FbRRpzySmdAdf8uxmd5vsfmfN2ilHT85OfQoYObU7xvTJU2JKp9Ob3ewu5p5J8mbOunXrLjz/ggnjxpc2ntpAASMvS+zsL8ePHReHl8Rk7uxLnt3sbndxOsO9d98T715efdU8w+jyce3V1yRPrpl3dUzamLpvr35rqAsuhcludrd79T3kMrDKT01mbGev6M1udksaxu4uXHCwm91tfQF058tAGhncHfw5kt3s7grNpbz7zm52F9xuaqswOrvXMLt7a92Nb4nd7M6f3ZLYzW52S+xmN7slsZvd7JbEbnazWxK72S2J3exmtyR2s5vdktjNbknsZje7JbGb3eyWxG52s1tiN7vZLYnd7Ga3JHazm90Su9nNbknsZje7JbGb3eyW2M1udktiN7vZLYnd7Ga3JHazWxK72c1uSexmN7slsZvdHbe7Uql4sUnsZnf+1t2VjXnJKY+lU7d75jC72S2ppZ8XG8HdEdDZzW5JW7v0bj/f7GZ3V6xopO5fd3fV7GU3u9vdW2+uvu+ee6//yXVXXzXPMLp8XDPv6nlXXpU8j0l77933vL36rVrHrbvZXWS717+z7oLvnj9x/ITyqNHJxDKM7h/lvlKM9PmEceMvuuDCmMydXX2zm91t6p01a6dOnhJTv5VP1TA6Pgb6SgObT9fkl8ljTOa1a9eym93Ft/vfv/2d+BxixT2Ab6MQsseUZje7C273smXLBsr98TmMKZWzSxjDyK/d/aVyTGx2s7vIdt9w3fWwNopm9+i+G6+/oVO73uxmdzv67rnnebUbxRsxsa272V1kuy++8KLsmz/W4EYx1t0xsdnN7sLaHT9U3vFfv8zCzW6jGEeh3PnLO4acE8/uAtu9evXqXXfeJXuUFb6NvC+6Y0rHxLbuZneR90yim2+8iddGYeCOx5jS2QUKu9ldTLujSy7+nnNzjDwynd0nGdh4jmVM5s1/urTuZndx7Y4efGDhsdOPiWO905OMDaNrT4XPnhCfPI7pH4gJ/IcHHxrq9EW92c3uDrT27TUvLnlhidTdvfDChlm6ePHi5Ek8rlmzpgrrTt1UhN3sbuublh1cp0hbP2NbvBsDu9ldBLurFilEUB753qL/id3sLs66m9oqJOvOiWd38fdMhjZtDnJc+GY3u/NktwW4cs1090xjdrNbUv5iN7slsZvd7JbEbnazWxK72S2J3exmtyR2s5vdktjNbnZL7GY3uyWxm93slsRudrNbYje72S2J3exmtyR2s5vdErvZzW5J7GY3uyWxm93slsRudktiN7vZLYnd7Ga3JHazm90Su9nNbknsZje7JbGb3eyW2M1udktiN7t72u5KpeJVp9zVfN52ZFazm92SrLvZzW5Lb/XAujv7EetudhfZbmQrj153odrsZje4pZFP3c7Oanazu70NVhbcN3/22ed85UtfPnHGTMPo8vGlmSfOPGFGPMbzr375K+fMOvv++Qsq7w52/JXEbna3r+effe6TRx5V7ivFJzOw8dEwunakU7R2rsY0Xvzc8/ZM2N0Tdr+weMmHd9m10YvBMPJl+u677vbikhesu9ldfLuPmTY9Jv2ARbdRCL5jxJS27mZ3we1+4rHHsz+BlkeNxreR63V3zOHY/YuJzW52F9nuK6/4ccz1MaUytY1ijJjM8RgTm93sLrLd8e58slQBt1GktzHjiKlGh4Gzm91FsPuyH/ww2SJs8t69YeQI7uRx7mVzOrXlzW52t6OFCxeWN+0SZgU3jPyOmNIL739gyDnx7C6w3YODg4ccdLBXu1GYg0ziSUzpmNjW3ewust3RI396eOyY7Sy6jTzua2fJTkZM5pjSHXxBsZvd7euBBffvtsuuZXYbud3gTp7ENE52S9jN7uLbnfxo+cYbb1xx+Y+mT512wH7777vXJMPo8rHfpL332XOveIzxsf0POHbqtJjAb6xcNdT4QoPsZnfR1t1STuvCqwmym90dmPouCau8q+3eC+zurXU3tZVHuKu2R7phGrOb3ZJG8iOjey+wm91Sbhzvkg1AdrNbUv5iN7slsZvd7JbEbnazWxK72S2J3exmtyR2s5vdktjNbnZL7GY3uyWxm93slsRudrNbYje72S2J3exmtyR2s5vdErvZzW5J7GY3uyWxm93slsRudktiN7vZLYnd7Ga3JHazm90Su9nNbknsZje7JbGb3eyW2M1udm9llUql0ROpy+vaSctudrfpBQBuFZV1drO7sHZTW0XVuVOzmt3sxrc0zHStnbfZj3RkVrOb3fiW8jdd2c1uWEv5m9LsZnf7J/6mIeXK6Np9kg4izm52t7WXl7107jmzD/7YQRPHT2jlczaMTo1yX6m0kb/SpucxaWPqzp49e9myZdbd7O6BPZNNT351x53bjxs/0FfigpHrEdP4N3f+KpnZFXazu8Dr7vjRcsGCBf2lcnwaid0EN3I6YurG2K7cf//8BR3c/mY3u9vRunXr9ttnX14bRRJ83733iYnt+G52F9nu++65t5SZ9F75RjFGTGz73ewust3fv+TS8qjR4DYK8jbmqNHJTI6Jbc+E3UW2e/bZ5yS7hJbeRjE2TJIn580+17qb3UW2++qr5lW9S4lvI9djzMY33uddeRW72V1Yu+Pnyb/9dVF2PrHbyPtxJslMfnrR39jN7iKvu6MTZ8y06DZyujdS98ydmSfM6OALit3sblOvvrJ8n0l7p2/y4NvIF9xVv4zJvHz58iHXgGV34e1O+D7huOPL7DZytaldtVsSEzimcUzmzr6a2M3udvfEY49fPmfuGd88/dSTTzGMbh6nnHRy8uTrp5wajzFp514258nHn+iG1xG72d3GNy3Tny5dR1C5atg7LbR/54Td7O7A7JdyR/ZQzW103K+S3cW3G9wqhuNNrujNbnYXze6O39lPKt5ChN3slpS/2M1uSexmN7slsZvd7JbEbnZLYje72S2J3exmtyR2s5vdErvZzW5J7GY3uyWxm93sltjNbnZLYje72S2J3exmt8RudrNbErvZzW5J7GY3uyWxm92S2M1udktiN7vZLYnd7Ga3xG52s1sSu9nNbknsZje7JXazm92S2M1udmurqlQqdZ83/51iN7vZre7VXOxmN7tFarGb3ezWB6x5LeugZze72a0uxroytPD+B77zrW9PnTxl+tRpp//bNx9a+KD/UOxmN7vVpYLH48rXXj/huONLG7/KA32l5Mtd7isd94Uvrnp9paU3u9nNbnVdr7264rBDDk2/yuVRo1PBg+8jDjt87dq1+GY3u9mtdi+uG+5iD1aWvbj0wP0PyC63a8cF3z3ff0Z2s5vd6tj2SFUvLV22/777JXAny+26Y6cddnznnXeG/dPEbnazWx+448898+w+k/Z+b29k1Ogm6+4Yjz766FBmfxzf7GY3u9X2RXdlA9x77bFn/6Y3J5vDHf/rvXffg2x2s5vd6oDdKbt//b+n9vzIHpsdUjLcuvsvj/zZf0Z2s5vd6tiiO+DebZddU6mTJ8Ouu9944w3/JdnNbnarM4g/9pdHU7jT9yebwx1j770mVX0bsHPCbnazW21ad8e+xw4Tt8/CnT5vzvfME2Y0WciL3exmt7bxDsl7v6wM/e8f/yeFu/n2SJ3juy+4YARwN/qddQ423/gY2zJ3/+73t91y66/uuHPp0qW+lOxmN7t7xetGXMaFSiaMGz/s17d27ztZm//iF78YanCOz9YgnvbqK8vjOirjthv7/t/bV/ri57+wePFii312s5vdPbfoTnpgwf0J3MMuurOIZ7dWnnrqqRHvdDc/JPydNWvnXjZnxwkT6y78d95xpycee3wI2uxmN7t7Su1Q73e/vWu7gTFVu9tbtGcytn9g3bp1W7P4Tf5fg0Ob8z1Y+flPfxbHmJdrjnjJHrA4ac+93l79lqU3u9nN7p6Be2gD3GP6B5psZNeOrJvJkyMOOXRr3Kz7f/zjQ3848uOfyEpdRXZ27T/vyqt8idnNbnb3SrGqHSj3V2nY+p5J+vzkfz2prr8j2zx59u/PnDhjZqnmk8nu0mQvrhLPJ3/26BH/pWI3u9mdm3V3/PIXP/t5wJ2lsGo1Pazayf8xXrqXz5m7LT7FoddXvDbrzLOSbyfZv6V2uV31kT12/wiy2c1udhef7xuuuz6Bu8XLlTQSPAyNzeh7fn/3Vn5u699Zd9WPr9xx+x2qvnPULr2zT0qbPh6HNnq7kt3sZneh+a4MXf+T65rsSAy7f1J1tk78Uemh1k2OEWx0GEl85M5f3rHv3vts0XeOqrHz9jv44rKb3ewu8oo73tYrNVjPZjeUh734VPI/jSmVd9zk5ghOyXn4f//02U9/prQVarOb3exmdzG9zpIaG9PlGo4bHReYvZhJ9vdUbVxMOXryUJNzfyrVH0yeL3l+8df+8Z/Km//J7GY3u9nd02rXWhnHSv/g0u/3l8rp8XbZlXX2OLxGrFddlyr9nd8+41vp39jK0nvVqlXnzT53/JjttugNUnazm93s7sXV9/nnfbdUsw2SYF21YZI99q72ncPa3ZXr/vMnTbZossX5O/9xzbVxkcJGUo+Yb3azm93sLhTZyYo71rmlmrclGxmdPtk5c9RHI8Hjj/2fP/yxlU2bu37z248ecGCjjZqqbxvsZje72d3bfA9WvnX6Gc2NrnvCZNz3ffrUaXXhrjq4u+4tF7JbKHG9kTh3Jt7VHPZoFutudrOb3RbdQ4ODgyncW3R9kiviXJvKULK50fxgwbiWSJNPY9myZXHKZbwhOWbjPnuTc3zsd7Ob3ezuyY2Rmg++u279Sf/yr8MubKsOO4nX4dy5G06SfOWll8tNt6STJyccd3zdv/2tN1dffOFF2Uu2tnhd2VK9xfiwrG8ru2uPltmi0zWb/+Y83oiZ3exW+/jOwt1E7bp7F/957X8kf8L98xf0NTi+O3tWzoXnV99yIf7qG6+/4R923W2LrkdY9wKB8eeH/rtv/KM6su4egeBxguifH34kNvfn33vfihUrhoa7wi272c3u3oW7SoQ4nONLM0+suvRH88uDxAip43zL9HDsOIWn3PTovWSzO65mlf2r4+T4Qw8+pMXFctVRK++d7DP6vU+vtPESV8teXJr+W9q57m59vZycqhqfZ1xmIC6htf248e//w0vlr3zpyy+++OIWLc/ZzW529yLlse6LW0eWM8vY5E3CYQ7FK5Vvv/W2rCmnnnxKk9Vx+qKNO8onv/+pJ//v88d+rrQll0OpOlo8e9xLnO8TtzxO/uT455Tavu5uhHj244Pr3427xMWbuocfeljtO8Dpd6Oddtgx7gKa050TdrNb7ejtt9+uArRW3iyRyQjc45qCVZocdcTHG206p0/iwt+xQxI746eddlp27dzireXrnq554P4HxCXFs59MrLvbtt9dx+sqsjde7PBnt//0pK/982477dzoJKaqT2/Pj+zxxspVI76vELvZze4it+att+se1Vd1ldd0hZv8MvyN+/amF+F7b8/63Xcnjh1XtZtRJXj83w/cd7/vX3LpxPETypvvkLR4VcKq03x22Wnna6++Zv369SmaSbER0eb97iyy6fM40vGH3//BZz716fgZJflRJv2BpuqA91K9U5/itm1V/5HZzW529/QmSdKbq96IY6jrviFZ94Du5Hncq+yuu+6q/QOfeeaZukeC1z6pPal9BIf6xR3Xzj1n9qrXV9ZexzU+pXbanV1fx6HxcSu13/73b077+jfi+uClxkvsJkfBp7/8+OFHxJ/pvUp2s1vvF2fHfPLIoxptalcdWJ1+PN5Vu+eu39VdCf76179ucgrPNjmbJh3/9NV/XPzc800WpLHf3eY9k2ee/nu8VXvs9GOSu8E1uVZX892S7A8WY8dsl8crjLOb3drWi+5NT157dUXAPew5k1WmxLF3CxcurHPJqo1PYidkSwlO9wdaX31/+pOfeuRPD2/23l093YZdd8ffteE6tJXhfzpp8hvibvRxVN9Z/37mAfvt37/V16St1Tzescx+ht6rZDe7e2tvpKoVy1897JBD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cmNoYW5nZUZvcm1hdAAzMTCyMTowAAAAL3RFWHRleGlmOnRodW1ibmFpbDpKUEVHSW50ZXJjaGFuZ2VGb3JtYXRMZW5ndGgAMzUxNY3UijUAAAAfdEVYdGV4aWY6dGh1bWJuYWlsOlJlc29sdXRpb25Vbml0ADIlQF7TAAAAH3RFWHRleGlmOnRodW1ibmFpbDpYUmVzb2x1dGlvbgA3Mi8x2ocYLAAAAB90RVh0ZXhpZjp0aHVtYm5haWw6WVJlc29sdXRpb24ANzIvMXTvib0AAAA4dEVYdGljYzpjb3B5cmlnaHQAQ29weXJpZ2h0IChjKSAxOTk4IEhld2xldHQtUGFja2FyZCBDb21wYW55+Vd5NwAAACF0RVh0aWNjOmRlc2NyaXB0aW9uAHNSR0IgSUVDNjE5NjYtMi4xV63aRwAAACZ0RVh0aWNjOm1hbnVmYWN0dXJlcgBJRUMgaHR0cDovL3d3dy5pZWMuY2gcfwBMAAAAN3RFWHRpY2M6bW9kZWwASUVDIDYxOTY2LTIuMSBEZWZhdWx0IFJHQiBjb2xvdXIgc3BhY2UgLSBzUkdCRFNIqQAAAABJRU5ErkJggg==', true, NULL);
 
 
 --
@@ -5667,44 +5672,44 @@ INSERT INTO topic_translation VALUES (13, 'it', '', NULL, 2, false);
 INSERT INTO topic_translation VALUES (13, 'de', '', NULL, 2, false);
 INSERT INTO topic_translation VALUES (13, 'en', 'Finance', NULL, 2, false);
 INSERT INTO topic_translation VALUES (13, 'es', '', NULL, 2, false);
-INSERT INTO topic_translation VALUES (25, 'de', '', NULL, 2, false);
-INSERT INTO topic_translation VALUES (25, 'nl', '', NULL, 2, false);
-INSERT INTO topic_translation VALUES (25, 'it', '', NULL, 2, false);
-INSERT INTO topic_translation VALUES (25, 'en', 'Administration', NULL, 2, false);
-INSERT INTO topic_translation VALUES (25, 'es', '', NULL, 2, false);
 INSERT INTO topic_translation VALUES (1, 'nl', ' ', NULL, 2, false);
 INSERT INTO topic_translation VALUES (1, 'en', 'House', NULL, 2, false);
 INSERT INTO topic_translation VALUES (1, 'es', ' ', NULL, 2, false);
+INSERT INTO topic_translation VALUES (4, 'es', '', NULL, 2, false);
+INSERT INTO topic_translation VALUES (4, 'it', '', NULL, 2, false);
 INSERT INTO topic_translation VALUES (1, 'de', 'aggiornato', '2020-06-24 21:59:35.993', 2, false);
 INSERT INTO topic_translation VALUES (1, 'it', 'Casa', '2020-06-18 20:31:27.89', 2, false);
-INSERT INTO topic_translation VALUES (2, 'de', 'Werk', NULL, 3, false);
-INSERT INTO topic_translation VALUES (2, 'en', 'Employment', NULL, 3, false);
-INSERT INTO topic_translation VALUES (2, 'it', 'Lavoro', '2020-06-18 21:42:09.469', 3, false);
-INSERT INTO topic_translation VALUES (2, 'es', ' ', NULL, 0, false);
-INSERT INTO topic_translation VALUES (2, 'nl', ' ', NULL, 0, false);
+INSERT INTO topic_translation VALUES (4, 'nl', '', NULL, 2, false);
+INSERT INTO topic_translation VALUES (4, 'de', '', NULL, 2, false);
+INSERT INTO topic_translation VALUES (4, 'en', 'Education', NULL, 2, false);
 INSERT INTO topic_translation VALUES (3, 'es', '', NULL, 2, false);
 INSERT INTO topic_translation VALUES (3, 'nl', '', NULL, 2, false);
 INSERT INTO topic_translation VALUES (3, 'de', '', NULL, 2, false);
+INSERT INTO topic_translation VALUES (2, 'de', 'Werk', NULL, 3, false);
+INSERT INTO topic_translation VALUES (2, 'nl', ' ', NULL, 0, false);
 INSERT INTO topic_translation VALUES (3, 'it', '', NULL, 2, false);
 INSERT INTO topic_translation VALUES (3, 'en', 'Health', NULL, 2, false);
-INSERT INTO topic_translation VALUES (4, 'es', '', NULL, 2, false);
-INSERT INTO topic_translation VALUES (4, 'en', 'Education', NULL, 2, false);
-INSERT INTO topic_translation VALUES (4, 'de', '', NULL, 2, false);
-INSERT INTO topic_translation VALUES (4, 'nl', '', NULL, 2, false);
-INSERT INTO topic_translation VALUES (4, 'it', '', NULL, 2, false);
+INSERT INTO topic_translation VALUES (2, 'es', ' ', NULL, 0, false);
+INSERT INTO topic_translation VALUES (2, 'it', 'Lavoro', '2020-06-18 21:42:09.469', 3, false);
+INSERT INTO topic_translation VALUES (2, 'en', 'Employment', NULL, 3, false);
+INSERT INTO topic_translation VALUES (25, 'it', '', NULL, 2, false);
+INSERT INTO topic_translation VALUES (25, 'es', '', NULL, 2, false);
+INSERT INTO topic_translation VALUES (25, 'de', '', NULL, 2, false);
+INSERT INTO topic_translation VALUES (25, 'en', 'Administration', NULL, 2, false);
+INSERT INTO topic_translation VALUES (25, 'nl', '', NULL, 2, false);
 
 
 --
 -- Data for Name: topic_translation_prod; Type: TABLE DATA; Schema: micadoapp; Owner: -
 --
 
-INSERT INTO topic_translation_prod VALUES (2, 'de', 'Werk', NULL);
+INSERT INTO topic_translation_prod VALUES (4, 'en', 'Education', NULL);
 INSERT INTO topic_translation_prod VALUES (2, 'en', 'Employment', NULL);
 INSERT INTO topic_translation_prod VALUES (2, 'it', 'Lavoro', '2020-06-18 21:42:09.469');
+INSERT INTO topic_translation_prod VALUES (2, 'de', 'Werk', NULL);
 INSERT INTO topic_translation_prod VALUES (25, 'en', 'Administration', NULL);
 INSERT INTO topic_translation_prod VALUES (1, 'en', 'House', NULL);
 INSERT INTO topic_translation_prod VALUES (3, 'en', 'Health', NULL);
-INSERT INTO topic_translation_prod VALUES (4, 'en', 'Education', NULL);
 INSERT INTO topic_translation_prod VALUES (7, 'en', 'Cultural', NULL);
 INSERT INTO topic_translation_prod VALUES (13, 'en', 'Finance', NULL);
 
@@ -5814,7 +5819,7 @@ INSERT INTO user_types_translation_prod VALUES (32, 'en', 'Atlas Customer', '<p>
 -- Name: charts_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
-SELECT pg_catalog.setval('charts_id_seq', 63, true);
+SELECT pg_catalog.setval('charts_id_seq', 64, true);
 
 
 --
@@ -6038,7 +6043,7 @@ SELECT pg_catalog.setval('individual_intervention_plan_intervention_intervention
 -- Name: individual_intervention_plan_interventions_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
-SELECT pg_catalog.setval('individual_intervention_plan_interventions_id_seq', 157, true);
+SELECT pg_catalog.setval('individual_intervention_plan_interventions_id_seq', 158, true);
 
 
 --
@@ -6087,7 +6092,7 @@ SELECT pg_catalog.setval('picture_hotspot_id_seq', 391, true);
 -- Name: process_id_seq; Type: SEQUENCE SET; Schema: micadoapp; Owner: -
 --
 
-SELECT pg_catalog.setval('process_id_seq', 212, true);
+SELECT pg_catalog.setval('process_id_seq', 213, true);
 
 
 --
