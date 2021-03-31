@@ -60,7 +60,7 @@ export class TSettingsTSettingsTranslationController {
         'application/json': {
           schema: getModelSchemaRef(TSettingsTranslation, {
             title: 'NewTSettingsTranslationInTSettings',
-            exclude: ['id'],
+            //exclude: ['id'],
             optional: ['id']
           }),
         },
