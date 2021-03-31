@@ -8,9 +8,10 @@ import {TSettingsTranslationProd} from './t-settings-translation-prod.model';
 export class TSettings extends Entity {
   @property({
     type: 'number',
-    required: true,
+    required: false,
     scale: 0,
     id: 1,
+    generated: true,
     postgresql: {columnName: 'id', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   id: number;
