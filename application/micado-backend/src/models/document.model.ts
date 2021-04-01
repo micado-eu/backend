@@ -85,6 +85,13 @@ export class Document extends Entity {
   })
   expirationDate?: string;
 
+  @property({
+    type: 'boolean',
+    required: true,
+    postgresql: {columnName: 'shareable', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'NO'},
+  })
+  shareable: boolean;
+
   @hasMany(() => DocumentPictures, {keyTo: 'docId'})
   pictures: DocumentPictures[];
 
