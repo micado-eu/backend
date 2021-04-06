@@ -127,11 +127,10 @@ export class PictureHotspotPictureHotspotTranslationController {
     @param.query.number('pictureId') pictureId:number
   ): Promise<void> {
     let selected_spot:any
-    await this.pictureHotspotRepository.dataSource.execute("select * from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id=tt.pht_id and tt.lang='" +
-      currentlang + "' union select * from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id = tt.pht_id and tt.lang = '" +
-      defaultlang +
-      "' and t.id not in (select t.id from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id = tt.pht_id and tt.lang = '" +
-      currentlang + "')").then((spots)=>{
+    await this.pictureHotspotRepository.dataSource.execute(
+      "select * from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id=tt.pht_id and tt.lang=$2 union select * from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id = tt.pht_id and tt.lang = $1 and t.id not in (select t.id from picture_hotspot t inner join picture_hotspot_translation_prod tt on t.id = tt.pht_id and tt.lang = $2)",
+      [defaultlang, currentlang]
+    ).then((spots)=>{
         console.log("i a spots")
         console.log(spots)
         selected_spot =  spots.filter((sp:any)=>{
@@ -159,9 +158,9 @@ export class PictureHotspotPictureHotspotTranslationController {
     let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
     let idx = languages.findIndex(el => el.lang == def_lang.value)
     languages.splice(idx, 1)
-    this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" >= '2' and pht_id=" + pht_id+ "and lang='" + def_lang.value+"'");
+    this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" >= '2' and pht_id=$1 and lang=$2", [pht_id, def_lang.value]);
     languages.forEach((lang:any)=>{
-      this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" > '2' and pht_id=" + pht_id+ "and lang='" + lang.lang+"'");
+      this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" > '2' and pht_id=$1 and lang=$2", [pht_id, lang.lang]);
     })
   }
 }

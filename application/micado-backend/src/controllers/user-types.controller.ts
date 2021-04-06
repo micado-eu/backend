@@ -185,11 +185,10 @@ export class UserTypesController {
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<void> {
-    return this.userTypesRepository.dataSource.execute("select * from user_types t inner join user_types_translation_prod tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' union select * from user_types t inner join user_types_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      defaultlang +
-      "' and t.id not in (select t.id from user_types t inner join user_types_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      currentlang + "')");
+    return this.userTypesRepository.dataSource.execute(
+      "select * from user_types t inner join user_types_translation_prod tt on t.id=tt.id and tt.lang=$2 union select * from user_types t inner join user_types_translation_prod tt on t.id = tt.id and tt.lang = $1 and t.id not in (select t.id from user_types t inner join user_types_translation_prod tt on t.id = tt.id and tt.lang = $2)",
+      [defaultlang, currentlang]
+    );
   }
 
   @get('/user-types/to-production', {
@@ -208,9 +207,9 @@ export class UserTypesController {
     let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
     let idx = languages.findIndex(el => el.lang == def_lang.value)
     languages.splice(idx, 1)
-    this.userTypesRepository.dataSource.execute("insert into user_types_translation_prod(id, lang ,user_type, description,translation_date) select user_types_translation.id, user_types_translation.lang, user_types_translation.user_type, user_types_translation.description, user_types_translation.translation_date from user_types_translation  where "+'"translationState"'+" >= '2' and id=" + id + "and lang='" + def_lang.value+"'");
+    this.userTypesRepository.dataSource.execute("insert into user_types_translation_prod(id, lang ,user_type, description,translation_date) select user_types_translation.id, user_types_translation.lang, user_types_translation.user_type, user_types_translation.description, user_types_translation.translation_date from user_types_translation  where "+'"translationState"'+" >= '2' and id=$1 and lang=$2", [id, def_lang.value]);
     languages.forEach((lang:any)=>{
-      this.userTypesRepository.dataSource.execute("insert into user_types_translation_prod(id, lang ,user_type, description,translation_date) select user_types_translation.id, user_types_translation.lang, user_types_translation.user_type, user_types_translation.description, user_types_translation.translation_date from user_types_translation  where "+'"translationState"'+" > '2' and id=" + id + "and lang='" + lang.lang+"'");
+      this.userTypesRepository.dataSource.execute("insert into user_types_translation_prod(id, lang ,user_type, description,translation_date) select user_types_translation.id, user_types_translation.lang, user_types_translation.user_type, user_types_translation.description, user_types_translation.translation_date from user_types_translation  where "+'"translationState"'+" > '2' and id=$1 and lang=$2", [id, lang.lang]);
     })
 
   }

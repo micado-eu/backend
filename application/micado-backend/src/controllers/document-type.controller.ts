@@ -186,11 +186,10 @@ export class DocumentTypeController {
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<void> {
-    return this.documentTypeRepository.dataSource.execute("select * from document_type t inner join document_type_translation_prod tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' union select * from document_type t inner join document_type_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      defaultlang +
-      "' and t.id not in (select t.id from document_type t inner join document_type_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      currentlang + "')");
+    return this.documentTypeRepository.dataSource.execute(
+      "select * from document_type t inner join document_type_translation_prod tt on t.id=tt.id and tt.lang=$2 union select * from document_type t inner join document_type_translation_prod tt on t.id = tt.id and tt.lang = $1 and t.id not in (select t.id from document_type t inner join document_type_translation_prod tt on t.id = tt.id and tt.lang = $2)",
+      [defaultlang, currentlang]
+    );
   }
 
   @get('/document-types-rasa', {
@@ -205,11 +204,10 @@ export class DocumentTypeController {
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<JSONArray> {
     let arrRet: JSONArray = []
-    await this.documentTypeRepository.dataSource.execute("select document from document_type t inner join document_type_translation tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' union select document from document_type t inner join document_type_translation tt on t.id = tt.id and tt.lang = '" +
-      defaultlang +
-      "' and t.id not in (select t.id from document_type t inner join document_type_translation tt on t.id = tt.id and tt.lang = '" +
-      currentlang + "')")
+    await this.documentTypeRepository.dataSource.execute(
+      "select document from document_type t inner join document_type_translation tt on t.id=tt.id and tt.lang=$2 union select document from document_type t inner join document_type_translation tt on t.id = tt.id and tt.lang = $1 and t.id not in (select t.id from document_type t inner join document_type_translation tt on t.id = tt.id and tt.lang = $2)",
+      [defaultlang, currentlang]
+    )
       .then(documents => {
         console.log(documents)
         documents.forEach((doc: any) => {
@@ -237,9 +235,9 @@ export class DocumentTypeController {
     let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
     let idx = languages.findIndex(el => el.lang == def_lang.value)
     languages.splice(idx, 1)
-    this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" >= '2' and id=" + id+ "and lang='" + def_lang.value+"'");
+    this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" >= '2' and id=$1 and lang=$2", [id, def_lang.value]);
     languages.forEach((lang:any)=>{
-      this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" > '2' and id=" + id+ "and lang='" + lang.lang+"'");
+      this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" > '2' and id=$1 and lang=$2", [id, lang.lang]);
     })
   }
 }

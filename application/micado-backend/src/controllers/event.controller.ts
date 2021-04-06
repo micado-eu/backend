@@ -274,7 +274,7 @@ export class EventController {
         event t
       inner join event_translation_prod tt on
         t.id = tt.id
-        and tt.lang = '${currentlang}'
+        and tt.lang = $2
       union
       select
         *,
@@ -296,7 +296,7 @@ export class EventController {
         event t
       inner join event_translation_prod tt on
         t.id = tt.id
-        and tt.lang = '${defaultlang}'
+        and tt.lang = $1
         and t.id not in (
         select
           t.id
@@ -304,8 +304,8 @@ export class EventController {
           event t
         inner join event_translation_prod tt on
           t.id = tt.id
-          and tt.lang = '${currentlang}')
-    `);
+          and tt.lang = $2)
+    `, [defaultlang, currentlang]);
   }
 
   @get('/temp-events', {
@@ -340,7 +340,7 @@ export class EventController {
         event t
       inner join event_translation tt on
         t.id = tt.id
-        and tt.lang = '${currentlang}'
+        and tt.lang = $2
       union
       select
         *,
@@ -362,7 +362,7 @@ export class EventController {
         event t
       inner join event_translation tt on
         t.id = tt.id
-        and tt.lang = '${defaultlang}'
+        and tt.lang = $1
         and t.id not in (
         select
           t.id
@@ -370,7 +370,7 @@ export class EventController {
           event t
         inner join event_translation tt on
           t.id = tt.id
-          and tt.lang = '${currentlang}')
-    `);
+          and tt.lang = $2)
+    `, [defaultlang, currentlang]);
   }
 }

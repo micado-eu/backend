@@ -191,9 +191,9 @@ export class StepController {
     let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
     let idx = languages.findIndex(el => el.lang == def_lang.value)
     languages.splice(idx, 1)
-    this.stepRepository.dataSource.execute("insert into step_translation_prod(id, lang ,step , description ,translation_date) select step_translation.id, step_translation.lang, step_translation.step, step_translation.description , step_translation.translation_date from step_translation  where "+'"translationState"'+" >= '2' and id='" + id+ "' and lang='" + def_lang.value+"'");
+    this.stepRepository.dataSource.execute("insert into step_translation_prod(id, lang ,step , description ,translation_date) select step_translation.id, step_translation.lang, step_translation.step, step_translation.description , step_translation.translation_date from step_translation  where "+'"translationState"'+" >= '2' and id=$1 and lang=$2", [id, def_lang.value]);
     languages.forEach((lang:any)=>{
-      this.stepRepository.dataSource.execute("insert into step_translation_prod(id, lang ,step , description ,translation_date) select step_translation.id, step_translation.lang, step_translation.step, step_translation.description , step_translation.translation_date from step_translation  where "+'"translationState"'+" > '2' and id='" + id+ "' and lang='" + lang.lang+"'");
+      this.stepRepository.dataSource.execute("insert into step_translation_prod(id, lang ,step , description ,translation_date) select step_translation.id, step_translation.lang, step_translation.step, step_translation.description , step_translation.translation_date from step_translation  where "+'"translationState"'+" > '2' and id=$1 and lang=$2", [id, lang.lang]);
     })
   }
 }

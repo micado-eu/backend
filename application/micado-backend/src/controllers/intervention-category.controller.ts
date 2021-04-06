@@ -185,11 +185,10 @@ export class InterventionCategoryController {
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<void> {
-    return this.interventionCategoryRepository.dataSource.execute("select * from intervention_category t inner join intervention_category_translation tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' union select * from intervention_category t inner join intervention_category_translation tt on t.id = tt.id and tt.lang = '" +
-      defaultlang +
-      "' and t.id not in (select t.id from intervention_category t inner join intervention_category_translation tt on t.id = tt.id and tt.lang = '" +
-      currentlang + "')");
+    return this.interventionCategoryRepository.dataSource.execute(
+      "select * from intervention_category t inner join intervention_category_translation tt on t.id=tt.id and tt.lang=$2 union select * from intervention_category t inner join intervention_category_translation tt on t.id = tt.id and tt.lang = $1 and t.id not in (select t.id from intervention_category t inner join intervention_category_translation tt on t.id = tt.id and tt.lang = $2)", 
+      [defaultlang, currentlang]
+    );
   }
 
   @get('/intervention-categories/to-production', {
@@ -208,9 +207,9 @@ export class InterventionCategoryController {
     let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
     let idx = languages.findIndex(el => el.lang == def_lang.value)
     languages.splice(idx, 1)
-    this.interventionCategoryRepository.dataSource.execute("insert into intervention_category_translation_prod(id, lang ,title,translation_date) select intervention_category_translation.id, intervention_category_translation.lang, intervention_category_translation.title, intervention_category_translation.translation_date from intervention_category_translation  where "+'"translationState"'+" >= '2' and id=" + id+ "and lang='" + def_lang.value+"'");
+    this.interventionCategoryRepository.dataSource.execute("insert into intervention_category_translation_prod(id, lang ,title,translation_date) select intervention_category_translation.id, intervention_category_translation.lang, intervention_category_translation.title, intervention_category_translation.translation_date from intervention_category_translation  where "+'"translationState"'+" >= '2' and id=$1 and lang=$2", [id, def_lang.value]);
     languages.forEach((lang:any)=>{
-      this.interventionCategoryRepository.dataSource.execute("insert into intervention_category_translation_prod(id, lang ,title,translation_date) select intervention_category_translation.id, intervention_category_translation.lang, intervention_category_translation.title, intervention_category_translation.translation_date from intervention_category_translation  where "+'"translationState"'+" > '2' and id=" + id+ "and lang='" + lang.lang+"'");
+      this.interventionCategoryRepository.dataSource.execute("insert into intervention_category_translation_prod(id, lang ,title,translation_date) select intervention_category_translation.id, intervention_category_translation.lang, intervention_category_translation.title, intervention_category_translation.translation_date from intervention_category_translation  where "+'"translationState"'+" > '2' and id=$1 and lang=$2", [id, lang.lang]);
     })
   }
 }

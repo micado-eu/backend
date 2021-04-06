@@ -189,7 +189,7 @@ export class EventCategoryController {
       event_category t
     inner join event_category_translation tt on
       t.id = tt.id
-      and tt.lang = '${currentlang}'
+      and tt.lang = $2
     union
     select
       *
@@ -197,7 +197,7 @@ export class EventCategoryController {
     event_category t
     inner join event_category_translation tt on
       t.id = tt.id
-      and tt.lang = '${defaultlang}'
+      and tt.lang = $1
       and t.id not in (
       select
         t.id
@@ -205,8 +205,8 @@ export class EventCategoryController {
       event_category t
       inner join event_category_translation tt on
         t.id = tt.id
-        and tt.lang = '${currentlang}')
-    `);
+        and tt.lang = $2)
+    `, [defaultlang, currentlang]);
   }
 
   @get('/temp-event-category', {
@@ -228,9 +228,9 @@ export class EventCategoryController {
       event_category t
     inner join event_category_translation tt on
       t.id = tt.id
-      and tt.lang = '${currentlang}'
+      and tt.lang = $2
     where
-      t.id = ${id}
+      t.id = $3
     union
     select
       *
@@ -238,7 +238,7 @@ export class EventCategoryController {
       event_category t
     inner join event_category_translation tt on
       t.id = tt.id
-      and tt.lang = '${defaultlang}'
+      and tt.lang = $1
       and t.id not in (
       select
         t.id
@@ -246,8 +246,8 @@ export class EventCategoryController {
         event_category t
       inner join event_category_translation tt on
         t.id = tt.id
-        and tt.lang = '${currentlang}')
-    `);
+        and tt.lang = $2)
+    `, [defaultlang, currentlang, id]);
 
 
   }
@@ -269,7 +269,7 @@ export class EventCategoryController {
       event_category t
     inner join event_category_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${currentlang}'
+      and tt.lang = $2
     union
     select
       *
@@ -277,7 +277,7 @@ export class EventCategoryController {
     event_category t
     inner join event_category_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${defaultlang}'
+      and tt.lang = $1
       and t.id not in (
       select
         t.id
@@ -285,8 +285,8 @@ export class EventCategoryController {
       event_category t
       inner join event_category_translation_prod tt on
         t.id = tt.id
-        and tt.lang = '${currentlang}')
-    `);
+        and tt.lang = $2)
+    `, [defaultlang, currentlang]);
   }
 
   @get('/production-event-category', {
@@ -308,9 +308,9 @@ export class EventCategoryController {
       event_category t
     inner join event_category_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${currentlang}'
+      and tt.lang = $2
     where
-      t.id = ${id}
+      t.id = $3
     union
     select
       *
@@ -318,7 +318,7 @@ export class EventCategoryController {
       event_category t
     inner join event_category_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${defaultlang}'
+      and tt.lang = $1
       and t.id not in (
       select
         t.id
@@ -326,7 +326,7 @@ export class EventCategoryController {
         event_category t
       inner join event_category_translation_prod tt on
         t.id = tt.id
-        and tt.lang = '${currentlang}')
-    `);
+        and tt.lang = $1)
+    `, [defaultlang, currentlang, id]);
   }
 }

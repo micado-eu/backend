@@ -53,11 +53,10 @@ export class UnifiedSearchController {
     let events:any=[]
     if(topic == undefined){
       console.log("inside if")
-       processes = await this.processRepository.dataSource.execute("select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' where NOT EXISTS(SELECT * from process_topic pt2 WHERE pt2.id_process =t.id) union select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      defaultlang +
-      "' and t.id not in (select t.id from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      currentlang + "')");
+       processes = await this.processRepository.dataSource.execute(
+        "select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id=tt.id and tt.lang=$2 where NOT EXISTS(SELECT * from process_topic pt2 WHERE pt2.id_process =t.id) union select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = $1 and t.id not in (select t.id from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = $2)",
+        [defaultlang, currentlang]
+      );
       information = await this.informationRepository.dataSource.execute(`
     select
       *,
@@ -79,7 +78,7 @@ export class UnifiedSearchController {
       information t
     inner join information_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${currentlang}'
+      and tt.lang = $2
     where not EXISTS(SELECT * from information_topic pt2 WHERE pt2.id_information =t.id and pt2.id_topic =4)
     union
     select
@@ -102,7 +101,7 @@ export class UnifiedSearchController {
       information t
     inner join information_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${defaultlang}'
+      and tt.lang = $1
       and t.id not in (
       select
         t.id
@@ -110,9 +109,11 @@ export class UnifiedSearchController {
         information t
       inner join information_translation_prod tt on
         t.id = tt.id
-        and tt.lang = '${currentlang}')
-  `);
-   events = await this.eventRepository.dataSource.execute(`
+        and tt.lang = $2)
+  `,
+        [defaultlang, currentlang]
+      );
+      events = await this.eventRepository.dataSource.execute(`
   select
     *,
     (
@@ -133,7 +134,7 @@ export class UnifiedSearchController {
     event t
   inner join event_translation_prod tt on
     t.id = tt.id
-    and tt.lang = '${currentlang}'
+    and tt.lang = $2
   where not EXISTS(SELECT * from event_topic pt2 WHERE pt2.id_event =t.id and pt2.id_topic =4)
   union
   select
@@ -156,7 +157,7 @@ export class UnifiedSearchController {
     event t
   inner join event_translation_prod tt on
     t.id = tt.id
-    and tt.lang = '${defaultlang}'
+    and tt.lang = $1
     and t.id not in (
     select
       t.id
@@ -164,16 +165,15 @@ export class UnifiedSearchController {
       event t
     inner join event_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${currentlang}')
-`);
+      and tt.lang = $2)
+`,
+        [defaultlang, currentlang]
+      );
     }
     else{
       console.log("inside else")
-       processes = await this.processRepository.dataSource.execute("select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' where EXISTS(SELECT * from process_topic pt2 WHERE pt2.id_process =t.id and pt2.id_topic =" + topic +") union select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      defaultlang +
-      "' and t.id not in (select t.id from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      currentlang + "')");
+       processes = await this.processRepository.dataSource.execute("select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id=tt.id and tt.lang=$2 where EXISTS(SELECT * from process_topic pt2 WHERE pt2.id_process =t.id and pt2.id_topic =$3) union select *, (select to_jsonb(array_agg(pt.id_topic)) from process_topic pt where pt.id_process=t.id) as topics, (select to_jsonb(array_agg(pu.id_user_types)) from process_users pu where pu.id_process=t.id) as users,(select coalesce(avg(value),0) from ratings r where r.content_type=1 AND r.content_id=t.id) as rating from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = $1 and t.id not in (select t.id from process t inner join process_translation_prod tt on t.id = tt.id and tt.lang = $2)",
+       [defaultlang, currentlang, topic]);
      information = await this.informationRepository.dataSource.execute(`
     select
       *,
@@ -195,7 +195,7 @@ export class UnifiedSearchController {
       information t
     inner join information_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${currentlang}'
+      and tt.lang = $2
     where EXISTS(SELECT * from information_topic pt2 WHERE pt2.id_information =t.id and pt2.id_topic =4)
     union
     select
@@ -218,7 +218,7 @@ export class UnifiedSearchController {
       information t
     inner join information_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${defaultlang}'
+      and tt.lang = $1
       and t.id not in (
       select
         t.id
@@ -226,7 +226,7 @@ export class UnifiedSearchController {
         information t
       inner join information_translation_prod tt on
         t.id = tt.id
-        and tt.lang = '${currentlang}')
+        and tt.lang = $2)
   `);
    events = await this.eventRepository.dataSource.execute(`
   select
@@ -249,7 +249,7 @@ export class UnifiedSearchController {
     event t
   inner join event_translation_prod tt on
     t.id = tt.id
-    and tt.lang = '${currentlang}'
+    and tt.lang = $2
   where EXISTS(SELECT * from event_topic pt2 WHERE pt2.id_event =t.id and pt2.id_topic =4)
   union
   select
@@ -272,7 +272,7 @@ export class UnifiedSearchController {
     event t
   inner join event_translation_prod tt on
     t.id = tt.id
-    and tt.lang = '${defaultlang}'
+    and tt.lang = $1
     and t.id not in (
     select
       t.id
@@ -280,7 +280,7 @@ export class UnifiedSearchController {
       event t
     inner join event_translation_prod tt on
       t.id = tt.id
-      and tt.lang = '${currentlang}')
+      and tt.lang = $2)
 `);
     }
     
@@ -301,11 +301,8 @@ export class UnifiedSearchController {
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<any> {
-    let topics:any = await this.topicRepository.dataSource.execute("select * from topic t inner join topic_translation_prod tt on t.id=tt.id and tt.lang='" +
-      currentlang + "' union select * from topic t inner join topic_translation_prod  tt on t.id = tt.id and tt.lang = '" +
-      defaultlang +
-      "' and t.id not in (select t.id from topic t inner join topic_translation_prod tt on t.id = tt.id and tt.lang = '" +
-      currentlang + "')")
+    let topics:any = await this.topicRepository.dataSource.execute("select * from topic t inner join topic_translation_prod tt on t.id=tt.id and tt.lang=$2 union select * from topic t inner join topic_translation_prod  tt on t.id = tt.id and tt.lang = $1and t.id not in (select t.id from topic t inner join topic_translation_prod tt on t.id = tt.id and tt.lang = $2)",
+    [defaultlang, currentlang])
       console.log(topics)
 
     let settings = await this.settingsRepository.find({});

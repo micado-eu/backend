@@ -101,11 +101,10 @@ export class MermaidController {
             await this.asyncForEach(astep.documents, async (adoc: any) => {
               console.log("nel secondo asynforeach")
               console.log(adoc)
-              let docs = await this.documentTypeRepository.dataSource.execute("select * from document_type t inner join document_type_translation_prod tt on t.id=tt.id and tt.lang='" +
-                lang + "'  and t.id=" + adoc.idDocument + " union select * from document_type t inner join document_type_translation_prod tt on t.id = tt.id and tt.lang = '" +
-                defaultlang +
-                "' and t.id=" + adoc.idDocument + " and t.id not in (select t.id from document_type t inner join document_type_translation_prod tt on t.id = tt.id and tt.lang = '" +
-                lang + "')")
+              let docs = await this.documentTypeRepository.dataSource.execute(
+                "select * from document_type t inner join document_type_translation_prod tt on t.id=tt.id and tt.lang=$1 and t.id=$2 union select * from document_type t inner join document_type_translation_prod tt on t.id = tt.id and tt.lang = $3 and t.id=$2 and t.id not in (select t.id from document_type t inner join document_type_translation_prod tt on t.id = tt.id and tt.lang = $1)",
+                [lang, adoc.idDocument, defaultlang]
+              )
               /*
               let docs = await this.documentTypeTranslationRepository.find({
                 where: {
