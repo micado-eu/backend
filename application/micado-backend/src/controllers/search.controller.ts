@@ -13,16 +13,25 @@ export class SearchController {
     public processRepository: ProcessTranslationProdRepository
   ) { }
 
+  // private SEARCH_QUERY = `
+  //   SELECT 
+  //       id, %title%, description, lang,
+  //       pgroonga_score(tableoid, ctid) AS score,
+  //       pgroonga_snippet_html(%title%, ARRAY%search_context%) AS title_context,
+  //       pgroonga_snippet_html(description, ARRAY%search_context%) AS description_context
+  //   FROM %table%
+  //   WHERE lang=$1 AND ARRAY[%title%, description] &@~ ('%search%', ARRAY[2, 1], '%table%_pgroonga_index')::pgroonga_full_text_search_condition
+  //   ORDER BY score DESC;
+  // `.replace(/\n|\r/g, ' '); // Replace new line chars with a single white space
+
   private SEARCH_QUERY = `
-    SELECT 
-        id, %title%, description, lang,
-        pgroonga_score(tableoid, ctid) AS score,
-        pgroonga_snippet_html(%title%, ARRAY%search_context%) AS title_context,
-        pgroonga_snippet_html(description, ARRAY%search_context%) AS description_context
-    FROM %table%
-    WHERE %lang_condition% ARRAY[%title%, description] &@~ ('%search%', ARRAY[2, 1], '%table%_pgroonga_index')::pgroonga_full_text_search_condition
-    ORDER BY score DESC;
-  `.replace(/\n|\r/g, ' '); // Replace new line chars with a single white space
+  SELECT 
+      id,
+      pgroonga_score(tableoid, ctid) AS score
+  FROM %table%
+  WHERE lang=$1 AND ARRAY[%title%, description] &@~ ($2, ARRAY[2, 1], '%table%_pgroonga_index')::pgroonga_full_text_search_condition
+  ORDER BY score DESC;
+`.replace(/\n|\r/g, ' '); // Replace new line chars with a single white space
 
   @get('/search', {
     responses: {
@@ -32,7 +41,7 @@ export class SearchController {
     },
   })
   async search(
-    @param.query.string('lang') lang: string,
+    @param.query.string('lang') lang = 'en',
     @param.query.string('words') words: string
   ) {
     let search = ""
@@ -50,35 +59,19 @@ export class SearchController {
         search += " OR ";
       }
     })
-    let fullLanguage
-    if (!!lang) {
-      fullLanguage = "lang = '" + lang + "' and"
-      fullLanguage = fullLanguage.toLowerCase()
-    } else {
-      fullLanguage = ''
-    }
     let queryEvents = this.SEARCH_QUERY
       .split("%table%").join("event_translation_prod")
       .split("%title%").join("event")
-      .split("%search%").join(search)
-      .split("%search_context%").join(JSON.stringify(wordsToSearch).replace(/"/g, "'"))
-      .split("%lang_condition%").join(fullLanguage)
     let queryInfo = this.SEARCH_QUERY
       .split("%table%").join("information_translation_prod")
       .split("%title%").join("information")
-      .split("%search%").join(search)
-      .split("%search_context%").join(JSON.stringify(wordsToSearch).replace(/"/g, "'"))
-      .split("%lang_condition%").join(fullLanguage)
     let queryProcesses = this.SEARCH_QUERY
       .split("%table%").join("process_translation_prod")
       .split("%title%").join("process")
-      .split("%search%").join(search)
-      .split("%search_context%").join(JSON.stringify(wordsToSearch).replace(/"/g, "'"))
-      .split("%lang_condition%").join(fullLanguage)
     let results = await Promise.all([
-      this.eventRepository.dataSource.execute(queryEvents),
-      this.informationRepository.dataSource.execute(queryInfo),
-      this.processRepository.dataSource.execute(queryProcesses)
+      this.eventRepository.dataSource.execute(queryEvents, [lang, search]),
+      this.informationRepository.dataSource.execute(queryInfo, [lang, search]),
+      this.processRepository.dataSource.execute(queryProcesses, [lang, search])
     ])
     return {
       "events": results[0],
