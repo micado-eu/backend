@@ -741,6 +741,13 @@ export class IdentityTenantManagerController {
       auth = authToken
     }
     console.log(auth)
+    if(tenant == 'pa.micado.eu'){
+      rolesArr.push('pa_sp')
+    }
+    else{
+      rolesArr.push('ngo_sp')
+    }
+    console.log(rolesArr)
     // I need to create the user
     let userRet = await this.addUser(username, password, name, surname, email, tenant, admin, adminpwd, authType, authToken)
     console.log(userRet)
