@@ -732,7 +732,7 @@ export class IdentityTenantManagerController {
     let rolesArr = JSON.parse(roles)
     console.log(rolesArr)
     console.log(authType)
-    let possibleRoles: string[] = ['pa_sp','micado_ngo_migrant_manager', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
+    let possibleRoles: string[] = ['pa_sp','ngo_sp','micado_ngo_migrant_manager', 'micado_ngo_superadmin', 'micado_admin', 'micado_migrant_manager']
     console.log(possibleRoles)
     let auth: String
     if (authType === 'Basic') {
