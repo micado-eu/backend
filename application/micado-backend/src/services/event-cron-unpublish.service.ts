@@ -36,7 +36,6 @@ export class EventCronUnpublishService {
 
   private async cleanEvents() {
     const currentDate = new Date().toISOString()
-    console.log("Unpublishing events older than: " + currentDate)
     let itemsToUpdate = await this.eventRepository.find({
       fields: { id: true },
       where: {
@@ -55,6 +54,5 @@ export class EventCronUnpublishService {
       promises.push(this.eventRepository.updateAll({ published: false }, { id: { inq: idsToUpdate } }))
       await Promise.all(promises)
     }
-    console.log("Old events unpublished")
   }
 }
