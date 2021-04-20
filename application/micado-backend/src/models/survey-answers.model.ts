@@ -6,7 +6,7 @@ import {Entity, model, property} from '@loopback/repository';
 export class SurveyAnswers extends Entity {
   @property({
     type: 'number',
-    required: true,
+    generated:true,
     scale: 0,
     id: 1,
     postgresql: {columnName: 'id_answer', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
