@@ -170,4 +170,20 @@ export class SurveyController {
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.surveyRepository.deleteById(id);
   }
+
+  @get('/specific-survey', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async specificSurvey (
+    @param.query.number('destinationApp') destinationApp:number,
+  ): Promise<Survey> {
+    let surveys = await this.surveyRepository.dataSource.execute('select * from survey where survey.active = true and survey.destination_app =' + destinationApp + ' and survey.expiry_date >= current_date')
+    return surveys[0]
+  }
+
 }
+  
