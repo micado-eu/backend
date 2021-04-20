@@ -16,13 +16,15 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Survey} from '../models';
-import {SurveyRepository} from '../repositories';
+import {Survey, SurveyAnswers} from '../models';
+import {SurveyRepository, SurveyAnswersRepository} from '../repositories';
 
 export class SurveyController {
   constructor(
     @repository(SurveyRepository)
     public surveyRepository : SurveyRepository,
+    @repository(SurveyAnswersRepository)
+    public surveyAnswersRepository : SurveyAnswersRepository,
   ) {}
 
   @post('/surveys', {
@@ -180,9 +182,26 @@ export class SurveyController {
   })
   async specificSurvey (
     @param.query.number('destinationApp') destinationApp:number,
-  ): Promise<Survey> {
+    @param.query.number('userid') userid = 0,
+  ): Promise<any> {
     let surveys = await this.surveyRepository.dataSource.execute('select * from survey where survey.active = true and survey.destination_app =' + destinationApp + ' and survey.expiry_date >= current_date')
-    return surveys[0]
+    if(userid != 0){
+      let completed_survey = await this.surveyAnswersRepository.dataSource.execute('select * from survey_answers where  EXISTS(SELECT * from survey_answers WHERE id_user =' + userid + ')')
+      console.log(completed_survey)
+      if(completed_survey.length >0){
+        console.log("This survey was already answered")
+        return null
+      }
+      else{
+        console.log("This survey was not answered")
+        return surveys[0]
+      }
+    }
+    else{
+      console.log("No userid given")
+
+      return surveys[0]
+    }
   }
 
 }
