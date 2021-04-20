@@ -58,6 +58,7 @@
     "csv-parser": "^2.3.3",
     "emailjs": "^3.3.0",
     "jsdom": "^16.4.0",
+    "json2csv": "^5.0.6",
     "loopback-connector-postgresql": "^5.0.1",
     "loopback-connector-rest": "^3.6.0",
     "loopback-connector-soap": "^5.1.0",

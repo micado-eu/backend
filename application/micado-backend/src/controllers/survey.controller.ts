@@ -16,26 +16,27 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Survey, SurveyAnswers} from '../models';
-import {SurveyRepository, SurveyAnswersRepository} from '../repositories';
+import { Survey, SurveyAnswers } from '../models';
+import { SurveyRepository, SurveyAnswersRepository } from '../repositories';
+
 
 export class SurveyController {
   constructor(
     @repository(SurveyRepository)
-    public surveyRepository : SurveyRepository,
+    public surveyRepository: SurveyRepository,
     @repository(SurveyAnswersRepository)
-    public surveyAnswersRepository : SurveyAnswersRepository,
-  ) {}
+    public surveyAnswersRepository: SurveyAnswersRepository,
+  ) { }
 
   @post('/surveys', {
     responses: {
       '200': {
         description: 'Survey model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Survey)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Survey) } },
       },
     },
   })
-  async create(
+  async create (
     @requestBody({
       content: {
         'application/json': {
@@ -55,11 +56,11 @@ export class SurveyController {
     responses: {
       '200': {
         description: 'Survey model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async count(
+  async count (
     @param.where(Survey) where?: Where<Survey>,
   ): Promise<Count> {
     return this.surveyRepository.count(where);
@@ -73,14 +74,14 @@ export class SurveyController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Survey, {includeRelations: true}),
+              items: getModelSchemaRef(Survey, { includeRelations: true }),
             },
           },
         },
       },
     },
   })
-  async find(
+  async find (
     @param.filter(Survey) filter?: Filter<Survey>,
   ): Promise<Survey[]> {
     return this.surveyRepository.find(filter);
@@ -90,15 +91,15 @@ export class SurveyController {
     responses: {
       '200': {
         description: 'Survey PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
-  async updateAll(
+  async updateAll (
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Survey, {partial: true}),
+          schema: getModelSchemaRef(Survey, { partial: true }),
         },
       },
     })
@@ -114,15 +115,15 @@ export class SurveyController {
         description: 'Survey model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Survey, {includeRelations: true}),
+            schema: getModelSchemaRef(Survey, { includeRelations: true }),
           },
         },
       },
     },
   })
-  async findById(
+  async findById (
     @param.path.number('id') id: number,
-    @param.filter(Survey, {exclude: 'where'}) filter?: FilterExcludingWhere<Survey>
+    @param.filter(Survey, { exclude: 'where' }) filter?: FilterExcludingWhere<Survey>
   ): Promise<Survey> {
     return this.surveyRepository.findById(id, filter);
   }
@@ -134,12 +135,12 @@ export class SurveyController {
       },
     },
   })
-  async updateById(
+  async updateById (
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Survey, {partial: true}),
+          schema: getModelSchemaRef(Survey, { partial: true }),
         },
       },
     })
@@ -155,7 +156,7 @@ export class SurveyController {
       },
     },
   })
-  async replaceById(
+  async replaceById (
     @param.path.number('id') id: number,
     @requestBody() survey: Survey,
   ): Promise<void> {
@@ -169,7 +170,7 @@ export class SurveyController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById (@param.path.number('id') id: number): Promise<void> {
     await this.surveyRepository.deleteById(id);
   }
 
@@ -181,28 +182,67 @@ export class SurveyController {
     },
   })
   async specificSurvey (
-    @param.query.number('destinationApp') destinationApp:number,
+    @param.query.number('destinationApp') destinationApp: number,
     @param.query.number('userid') userid = 0,
   ): Promise<any> {
     let surveys = await this.surveyRepository.dataSource.execute('select * from survey where survey.active = true and survey.destination_app =' + destinationApp + ' and survey.expiry_date >= current_date')
-    if(userid != 0){
+    if (userid != 0) {
       let completed_survey = await this.surveyAnswersRepository.dataSource.execute('select * from survey_answers where  EXISTS(SELECT * from survey_answers WHERE id_user =' + userid + ')')
       console.log(completed_survey)
-      if(completed_survey.length >0){
+      if (completed_survey.length > 0) {
         console.log("This survey was already answered")
         return null
       }
-      else{
+      else {
         console.log("This survey was not answered")
         return surveys[0]
       }
     }
-    else{
+    else {
       console.log("No userid given")
 
       return surveys[0]
     }
   }
 
+  @get('/getCsv', {
+    responses: {
+      '200': {
+        description: 'return CSV content',
+      },
+    },
+  })
+  async getCsv (
+    @param.query.number('destinationApp') destinationApp: number,
+    @param.query.number('surveyid') surveyid = 0,
+  ): Promise<any> {
+    const { parse, transforms: { unwind, flatten } } = require('json2csv');
+    let surveyanswers = await this.surveyAnswersRepository.dataSource.execute('select * from survey_answers where  id_survey=' + surveyid)
+    console.log(surveyanswers)
+    let answerArray: any[] = []
+    surveyanswers.forEach((answer: any) => {
+      console.log(answer)
+      answerArray.push(answer.answer)
+    });
+    const fields = ['question1', 'question2', 'question3.I_found', 'question3.I_understood'];
+    /*
+    const opts = {
+      fields,
+      transforms: [unwind({ paths: ['question3'] }), flatten({ objects: false, arrays: false })],
+    };
+    */
+    const opts = {
+      transforms: [flatten({ objects: true, arrays: true })],
+    };
+    let csv = ''
+    try {
+      csv = parse(answerArray, opts);
+    } catch (err) {
+      console.error(err);
+    }
+    console.log(csv);
+    console.log(typeof (csv))
+    return csv
+  }
 }
-  
+
