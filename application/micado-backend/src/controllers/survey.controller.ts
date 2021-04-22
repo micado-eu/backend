@@ -204,6 +204,17 @@ export class SurveyController {
       return surveys[0]
     }
   }
+  @get('/survey-with-answers-count', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async countSurveyAnswers (
+  ): Promise<any> {
+    return this.surveyRepository.dataSource.execute('select * , (select count(*) as answer_number from survey_answers sa where sa.id_survey = s.id ) from survey s ')
+    }
 
   @get('/getCsv', {
     responses: {
