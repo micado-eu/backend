@@ -213,7 +213,7 @@ export class SurveyController {
   })
   async countSurveyAnswers (
   ): Promise<any> {
-    return this.surveyRepository.dataSource.execute('select * , (select count(*) as answer_number from survey_answers sa where sa.id_survey = s.id ) from survey s ')
+    return this.surveyRepository.dataSource.execute('select id as id, survey as survey, active as active,  activation_date as "activationDate", expiry_date as "expiryDate", title as title, destination_app as "destinationApp", (select count(*) as "answerNumber" from survey_answers sa where sa.id_survey = s.id ) from survey s ')
     }
 
   @get('/getCsv', {
