@@ -185,26 +185,35 @@ private SEARCH_QUERY_NULL =
       ])
       if(full_results[0].length>0){
         full_results[0].forEach((el:any)=>{
-          let temp =  el.topics.some((el:any)=>  {return the_topics.includes(el)})
-          if(temp){
-            events.push(el)
+          if(el.topics){
+            let temp =  el.topics.some((el:any)=>  {return the_topics.includes(el)})
+            if(temp){
+              events.push(el)
+            }
           }
+
         })
       }
       if(full_results[1].length>0){
         full_results[1].forEach((el:any)=>{
-          let temp =  el.topics.some((el:any)=>  {return the_topics.includes(el)})
-          if(temp){
-            info.push(el)
+          if(el.topics){
+            let temp =  el.topics.some((el:any)=>  {return the_topics.includes(el)})
+            if(temp){
+              info.push(el)
+            }
           }
+
         })
       } 
       if(full_results[2].length>0){
         full_results[2].forEach((el:any)=>{
-          let temp =  el.topics.some((el:any)=>  {return the_topics.includes(el)})
-          if(temp){
-            processes.push(el)
+          if(el.topics){
+            let temp =  el.topics.some((el:any)=>  {return the_topics.includes(el)})
+            if(temp){
+              processes.push(el)
+            }
           }
+
         })
       }  
       
