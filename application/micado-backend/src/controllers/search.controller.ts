@@ -103,13 +103,13 @@ private SEARCH_QUERY_NULL =
   async searchFull(
     @param.query.string('lang') lang = 'en',
     @param.query.string('words') words: string,
-    @param.query.number('topicid') topicid: number
+    @param.query.number('topicid') topicid = 0
   ) {
     let events:any[] = []
     let processes:any[] =[]
     let info:any[] = []
     let the_topics:any[] = []
-    if(topicid != null){
+    if(topicid != 0){
      let topics_return = await this.topicRepository.dataSource.execute(` WITH RECURSIVE c AS (SELECT ` + topicid + ` AS id UNION ALL SELECT sa.id FROM topic AS sa JOIN c ON c.id = sa. father) SELECT id FROM c`)
      console.log(the_topics)
      topics_return.forEach((top:any)=>{
