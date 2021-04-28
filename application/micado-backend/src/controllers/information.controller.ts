@@ -274,6 +274,7 @@ export class InformationController {
       inner join information_translation_prod tt on
         t.id = tt.id
         and tt.lang = $2
+        and (tt.information = '') is false
       union
       select
         *,
@@ -303,7 +304,8 @@ export class InformationController {
           information t
         inner join information_translation_prod tt on
           t.id = tt.id
-          and tt.lang = $2)
+          and tt.lang = $2
+          and (tt.information = '') is false)
     `, [defaultlang, currentlang]);
 
     
@@ -341,6 +343,7 @@ export class InformationController {
       inner join information_translation tt on
         t.id = tt.id
         and tt.lang = $2
+        and (tt.information = '') is false
       union
       select
         *,
@@ -370,7 +373,8 @@ export class InformationController {
           information t
         inner join information_translation tt on
           t.id = tt.id
-          and tt.lang = $2)
+          and tt.lang = $2
+          and (tt.information = '') is false)
     `, [defaultlang, currentlang]);
   }
 }

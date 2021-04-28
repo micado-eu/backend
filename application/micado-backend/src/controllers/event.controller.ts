@@ -275,6 +275,7 @@ export class EventController {
       inner join event_translation_prod tt on
         t.id = tt.id
         and tt.lang = $2
+        and (tt.event = '') is false
       union
       select
         *,
@@ -304,7 +305,8 @@ export class EventController {
           event t
         inner join event_translation_prod tt on
           t.id = tt.id
-          and tt.lang = $2)
+          and tt.lang = $2
+          and (tt.event = '') is false)
     `, [defaultlang, currentlang]);
   }
 
@@ -341,6 +343,7 @@ export class EventController {
       inner join event_translation tt on
         t.id = tt.id
         and tt.lang = $2
+        and (tt.event = '') is false
       union
       select
         *,
@@ -370,7 +373,8 @@ export class EventController {
           event t
         inner join event_translation tt on
           t.id = tt.id
-          and tt.lang = $2)
+          and tt.lang = $2
+          and (tt.event = '') is false)
     `, [defaultlang, currentlang]);
   }
 }

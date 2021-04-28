@@ -212,6 +212,7 @@ export class GlossaryController {
     inner join glossary_translation_prod tt on
       t.id = tt.id
       and tt.lang = $2
+      and (tt.title = '') is false
     union
     select
       *
@@ -227,7 +228,8 @@ export class GlossaryController {
         glossary t
       inner join glossary_translation_prod tt on
         t.id = tt.id
-        and tt.lang = $2)
+        and tt.lang = $2
+        and (tt.title = '') is false)
     `, [defaultlang, currentlang]);
   }
 
@@ -250,6 +252,7 @@ export class GlossaryController {
     inner join glossary_translation tt on
       t.id = tt.id
       and tt.lang = $2
+      and (tt.title = '') is false
     union
     select
       *
@@ -265,7 +268,8 @@ export class GlossaryController {
         glossary t
       inner join glossary_translation tt on
         t.id = tt.id
-        and tt.lang = $1)
+        and tt.lang = $2
+        and (tt.title = '') is false)
     `, [defaultlang, currentlang]);
   }
 }
