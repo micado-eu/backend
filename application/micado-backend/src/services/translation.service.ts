@@ -2,7 +2,8 @@ import {bind, BindingScope} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {existsSync, mkdirSync, promises as fsAsync, readdirSync, readFileSync, unlinkSync} from 'fs';
 import simpleGit, {SimpleGit} from 'simple-git';
-import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, UserTypesTranslationRepository} from '../repositories';
+import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, UserTypesTranslationRepository, LanguagesRepository} from '../repositories';
+import { Languages } from '../models';
 import {
   WeblateService
 } from '../services/weblate.service'
@@ -40,6 +41,7 @@ export class TranslationService {
     @repository(StepTranslationRepository) protected stepTranslationRepository: StepTranslationRepository,
     @repository(TopicTranslationRepository) protected topicTranslationRepository: TopicTranslationRepository,
     @repository(UserTypesTranslationRepository) protected userTypesTranslationRepository: UserTypesTranslationRepository,
+    @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
     @inject('services.Weblate') protected weblateService: WeblateService,
   ) {
     this.gitInitialized = false;
@@ -212,7 +214,10 @@ export class TranslationService {
     const baseLanguageStrings = await repo.getBaseLanguageTranslatables(MICADO_SOURCE_LANGUAGE);
 
     // All languages for this component that should be in git. (so we can create an empty file if it's not in git yet so that weblate will add that language)
-    const languagesThatShouldBeInGit = await repo.getTranslatableLanguages();
+    let languagesThatShouldBeInGit = await repo.getTranslatableLanguages();
+    let activeLanguagesObjects = await this.languagesRepository.findActive();
+    const activeLanguages = activeLanguagesObjects.map((l:any) => l.lang);
+    languagesThatShouldBeInGit = languagesThatShouldBeInGit.filter((l:any) => activeLanguages.indexOf(l.lang) > -1); 
 
     const files: {[language: string]: {[key: string]: string}} = {};
 
