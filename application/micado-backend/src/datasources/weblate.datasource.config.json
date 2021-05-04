@@ -1,7 +1,7 @@
 {
   "name": "weblate",
   "connector": "rest",
-  "baseURL": "https://{baseurl}",
+  "baseURL": "http://{baseurl}",
   "debug": true,
   "options": {
     "headers": {
@@ -16,7 +16,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://{baseurl}/api/translations",
+        "url": "http://{baseurl}/api/translations",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -41,7 +41,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://{baseurl}/api/projects/{project}/components",
+        "url": "http://{baseurl}/api/projects/{project}/components",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -64,7 +64,7 @@
     {
       "template": {
         "method": "POST",
-        "url": "https://{baseurl}/api/components/{project}/{component}/lock/",
+        "url": "http://{baseurl}/api/components/{project}/{component}/lock/",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -92,7 +92,7 @@
     {
       "template": {
         "method": "POST",
-        "url": "https://{baseurl}/api/projects/{project}/repository/",
+        "url": "http://{baseurl}/api/projects/{project}/repository/",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -119,7 +119,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "https://{baseurl}/api/projects/{project}/languages/",
+        "url": "http://{baseurl}/api/projects/{project}/languages/",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",

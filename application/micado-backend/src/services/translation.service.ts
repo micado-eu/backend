@@ -146,7 +146,7 @@ export class TranslationService {
   }
 
   public async getStatistics(): Promise<any> {
-    return this.weblateService.statistics(MICADO_WEBLATE_PROJECT, MICADO_WEBLATE_KEY, TRANSLATION_HOSTNAME);
+    return this.weblateService.statistics(MICADO_WEBLATE_PROJECT, MICADO_WEBLATE_KEY, 'weblate:8080');
   }
 
   public async updateTranslatables() {
@@ -164,8 +164,10 @@ export class TranslationService {
 
     */
 
-    await this.weblateService.git(MICADO_WEBLATE_PROJECT, 'commit', MICADO_WEBLATE_KEY, TRANSLATION_HOSTNAME);
-    await this.weblateService.git(MICADO_WEBLATE_PROJECT, 'push', MICADO_WEBLATE_KEY, TRANSLATION_HOSTNAME);
+    if(MICADO_WEBLATE_KEY !== '') {
+      await this.weblateService.git(MICADO_WEBLATE_PROJECT, 'commit', MICADO_WEBLATE_KEY, 'weblate:8080');
+      await this.weblateService.git(MICADO_WEBLATE_PROJECT, 'push', MICADO_WEBLATE_KEY, 'weblate:8080');
+    }
 
     await this.git.pull('origin', 'master');
 
