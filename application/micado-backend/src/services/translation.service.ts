@@ -10,7 +10,6 @@ import {
 import { inject } from '@loopback/context';
 
 // Should come from a config file or the database.
-const MICADO_SOURCE_LANGUAGE = process.env.MICADO_SOURCE_LANGUAGE ?? 'en';
 const MICADO_GIT_URL = process.env.MICADO_GIT_URL ?? '';
 const MICADO_TRANSLATIONS_DIR = process.env.MICADO_TRANSLATIONS_DIR ?? '/tmp/translations';
 const MICADO_WEBLATE_PROJECT = process.env.MICADO_WEBLATE_PROJECT ?? '';
@@ -22,6 +21,7 @@ export class TranslationService {
   private componentRepos: {[componentName: string]: any}; // Any now but should be an interface that all repos inherit from.
   private gitInitialized: boolean;
   private git: SimpleGit;
+  private sourceLanguage: string;
 
   constructor(
     @repository(CommentsTranslationRepository) protected commentsTranslationRepository: CommentsTranslationRepository,
@@ -90,7 +90,7 @@ export class TranslationService {
     // Generate empty base language files.
     for (const componentName in this.componentRepos) {
       const file: any = {};
-      file[MICADO_SOURCE_LANGUAGE] = {};
+      file[this.sourceLanguage] = {};
       this.generateFiles(componentName, file);
     }
 
@@ -115,7 +115,12 @@ export class TranslationService {
 
       this.git = simpleGit(MICADO_TRANSLATIONS_DIR);
 
-      this.git.checkIsRepo()
+      this.getDefaultActiveLanguage()
+      .then((lang) => {
+        this.sourceLanguage = lang;
+	console.log('Source language: ' + this.sourceLanguage);
+      }).then(() => {
+        this.git.checkIsRepo()
         .then((isRepo) => {
           if (!isRepo) {
             if (MICADO_GIT_URL === '') {
@@ -144,6 +149,7 @@ export class TranslationService {
           console.log('Could not initialize git: ', reason);
           reject(reason);
         });
+      });
     });
   }
 
@@ -201,6 +207,18 @@ export class TranslationService {
 
 
   }
+
+  private async getDefaultActiveLanguage(): Promise<string> {
+    let activeLanguagesObjects = await this.languagesRepository.findActive();
+    for(let i = 0; i < activeLanguagesObjects.length; i++) {
+      if(activeLanguagesObjects[i].isDefault) {
+        return activeLanguagesObjects[i].lang;
+      }
+    }
+
+    return 'en';
+  }
+
   private async updateComponentInGit(componentName: string) {
     if (!this.gitInitialized) {
       console.log('Git is not initalized yet, try again later.');
@@ -211,7 +229,7 @@ export class TranslationService {
     const repo = this.componentRepos[componentName];
 
     // All strings in the base language that should be in git. (because they have siblings in 'translatable', 'translating' state.)
-    const baseLanguageStrings = await repo.getBaseLanguageTranslatables(MICADO_SOURCE_LANGUAGE);
+    const baseLanguageStrings = await repo.getBaseLanguageTranslatables(this.sourceLanguage);
 
     // All languages for this component that should be in git. (so we can create an empty file if it's not in git yet so that weblate will add that language)
     let languagesThatShouldBeInGit = await repo.getTranslatableLanguages();
@@ -235,7 +253,7 @@ export class TranslationService {
 
     // Add empty files for languages if not already in git.
     languagesThatShouldBeInGit.forEach((translatable: any) => {
-      if (translatable.lang === MICADO_SOURCE_LANGUAGE) {
+      if (translatable.lang === this.sourceLanguage) {
         return;
       }
 
@@ -244,14 +262,14 @@ export class TranslationService {
       }
     });
 
-    if (!files.hasOwnProperty(MICADO_SOURCE_LANGUAGE)) {
+    if (!files.hasOwnProperty(this.sourceLanguage)) {
       // We need atleast an empty file for the source language in weblate.
-      files[MICADO_SOURCE_LANGUAGE] = {};
+      files[this.sourceLanguage] = {};
     }
 
     // Remove previous file in git.
     readdirSync(MICADO_TRANSLATIONS_DIR).filter(
-      fn => (fn === (componentName + '.' + MICADO_SOURCE_LANGUAGE + '.json'))
+      fn => (fn === (componentName + '.' + this.sourceLanguage + '.json'))
     ).forEach((filename) => {
       unlinkSync(MICADO_TRANSLATIONS_DIR + '/' + filename);
     });
@@ -401,7 +419,7 @@ export class TranslationService {
       }
     });
 
-    await repo.updateToTranslated(MICADO_SOURCE_LANGUAGE, data);
+    await repo.updateToTranslated(this.sourceLanguage, data);
     await repo.updateToProduction();
   }
 
