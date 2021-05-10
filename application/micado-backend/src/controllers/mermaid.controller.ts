@@ -121,7 +121,8 @@ export class MermaidController {
                 text: docs[0].document,
                 emitter: docs[0].issuer,
                 price: adoc.cost,
-                image: docs[0].icon
+                image: docs[0].icon,
+                model:docs[0].model
               })
             })
             console.log('Dopo il secondo asyncforeach');
