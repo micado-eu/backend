@@ -1,4 +1,3 @@
-// This template defines different ways to ask for the location of toilets (Chatette version)
 %[&ask_toilet](3)
     ~[sorry?] ~[tell me] where the @[toilet#singular] is [please?]?
     ~[sorry?] ~[tell me] where the @[toilet#plural] are [please?]?
