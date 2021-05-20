@@ -195,17 +195,24 @@ export class IdentityTenantManagerController {
     let roleRet2 = await this.addRole("APPLICATION/micado_ngo_migrant_manager", tenantDomain, "admin" + '@' + tenantDomain, password)
     console.log("RETURN FROM ADDING MIGRANT MANAGER ROLE")
     console.log(roleRet2)
-    let dbTenant: Tenant = new Tenant({
-      id: isRet.tenantInfoBean.tenantId,
-      name: tenantname,
-      link: link,
-      email: contactmail,
-      address: address
-    })
-    console.log("THIS IS DBTENANT")
-    console.log(dbTenant)
-    console.log("BEFORE CREATING TENANT ON DB WITH DBTENANT")
-    return this.tenantRepository.create(dbTenant);
+    if(isRet.TenantMgtAdminServiceException){
+      console.log("domain name already in use")
+      return 0
+    }
+    else{
+      let dbTenant: Tenant = new Tenant({
+        id: isRet.tenantInfoBean.tenantId,
+        name: tenantname,
+        link: link,
+        email: contactmail,
+        address: address
+      })
+      console.log("THIS IS DBTENANT")
+      console.log(dbTenant)
+      console.log("BEFORE CREATING TENANT ON DB WITH DBTENANT")
+      return this.tenantRepository.create(dbTenant);
+    }
+
   }
 
   @del('/wso2Tenant')
