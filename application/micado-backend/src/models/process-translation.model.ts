@@ -28,7 +28,7 @@ export class ProcessTranslation extends Entity {
     type: 'string',
     length: 50,
     jsonSchema: { nullable: true },
-    postgresql: { columnName: 'process', dataType: 'character varying', dataLength: 70, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'process', dataType: 'character varying', dataLength: 250, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   process?: string;
 

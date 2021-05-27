@@ -17,7 +17,7 @@ export class StepLinkTranslation extends Entity {
   @property({
     type: 'string',
     length: 25,
-    postgresql: { columnName: 'description', dataType: 'character varying', dataLength: 25, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'description', dataType: 'character varying', dataLength: 250, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
   description?: string;
 

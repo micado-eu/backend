@@ -27,7 +27,7 @@ export class InterventionCategoryTranslationProd extends Entity {
   @property({
     type: 'string',
     length: 30,
-    postgresql: {columnName: 'title', dataType: 'character varying', dataLength: 50, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'title', dataType: 'character varying', dataLength: 250, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   title?: string;
 

@@ -25,7 +25,7 @@ export class PictureHotspotTranslation extends Entity {
   @property({
     type: 'string',
     length: 20,
-    postgresql: {columnName: 'title', dataType: 'character varying', dataLength: 40, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'title', dataType: 'character varying', dataLength: 250, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   title?: string;
 
