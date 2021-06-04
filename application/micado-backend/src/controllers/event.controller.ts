@@ -155,6 +155,19 @@ export class EventController {
     return this.eventRepository.updateAll(event, where);
   }
 
+  @del('/events/{id}/category', {
+    responses: {
+      '204': {
+        description: 'Removes category',
+      },
+    },
+  })
+  async removeCategory(
+    @param.path.number('id') id: number
+  ): Promise<void> {
+    await this.eventRepository.updateById(id, {category: undefined});
+  }
+
   @get('/events/{id}', {
     responses: {
       '200': {

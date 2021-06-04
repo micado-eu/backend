@@ -216,6 +216,19 @@ export class InformationController {
     await this.informationRepository.updateById(id, information);
   }
 
+  @del('/information/{id}/category', {
+    responses: {
+      '204': {
+        description: 'Removes category',
+      },
+    },
+  })
+  async removeCategory(
+    @param.path.number('id') id: number
+  ): Promise<void> {
+    await this.informationRepository.updateById(id, {category: undefined});
+  }
+
   @put('/information/{id}', {
     responses: {
       '204': {
