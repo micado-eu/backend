@@ -82,6 +82,21 @@ export class Charts extends Entity {
   })
   board: string;
 
+  @property({
+    type: 'string',
+    length: 50,
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'provider', dataType: 'character varying', dataLength: 100, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  provider?: string;
+
+  @property({
+    type: 'date',
+    jsonSchema: { nullable: true },
+    postgresql: {columnName: 'updated', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  updated?: string;
+
   // Define well-known properties here
 
   // Indexer property to allow additional data
