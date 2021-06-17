@@ -142,17 +142,17 @@ private SEARCH_QUERY_NULL =
       this.informationRepository.dataSource.execute(queryInfo, [lang, search]),
       this.processRepository.dataSource.execute(queryProcesses, [lang, search])
     ])
-    let return_string = "I found the following results"
+    let return_string = "I found the following results  "
     results[0].forEach((element:any) => {
-      return_string += "\n[" + element.title + "](/events/"+ element.id + ")" 
+      return_string += "\n[" + element.title + "](/events/"+ element.id + ")  " 
       
     });
     results[1].forEach((element:any) => {
-      return_string += "\n[" + element.title + "](/information/"+ element.id + ")" 
+      return_string += "\n[" + element.title + "](/information/"+ element.id + ")  " 
       
     });
     results[2].forEach((element:any) => {
-      return_string += "\n[" + element.title + "](/processes/"+ element.id + ")" 
+      return_string += "\n[" + element.title + "](/processes/"+ element.id + ")  " 
       
     });
     return return_string
