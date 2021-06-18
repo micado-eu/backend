@@ -35,6 +35,15 @@ export class SearchController {
   ORDER BY score DESC;
 `.replace(/\n|\r/g, ' '); // Replace new line chars with a single white space
 
+private SEARCH_QUERY_RASA=`
+  SELECT 
+      id,
+      pgroonga_score(tableoid, ctid) AS score,
+      %title% as title
+  FROM %table%
+  WHERE lang=$1 AND ARRAY[%title%, description] &@~ ($2, ARRAY[2, 1], '%table%_pgroonga_index')::pgroonga_full_text_search_condition
+  ORDER BY score DESC;
+`.replace(/\n|\r/g, ' '); // Replace new line chars with a single white space
 
 private SEARCH_QUERY_NULL =
 
@@ -91,6 +100,67 @@ private SEARCH_QUERY_NULL =
       "information": results[1],
       "processes": results[2]
     }
+  }
+
+  @get('/search_rasa', {
+    responses: {
+      '200': {
+        description: 'Search in events, information and processes powered by PGroonga'
+      },
+    },
+  })
+  async searchXrasa(
+    @param.query.string('lang') lang = 'en',
+    @param.query.string('words') words: string
+  ) {
+    let search = ""
+    if (!words) {
+      throw {
+        status: 400,
+        message: "Please include text in the words query parameter"
+      }
+    }
+    const wordsToSearch = words.split(',')
+    // Append the terms to search with OR operator
+    wordsToSearch.forEach((word, index, array) => {
+      search += word;
+      if (index !== (array.length - 1)) {
+        search += " OR ";
+      }
+    })
+    let queryEvents = this.SEARCH_QUERY_RASA
+      .split("%table%").join("event_translation_prod")
+      .split("%title%").join("event")
+    let queryInfo = this.SEARCH_QUERY_RASA
+      .split("%table%").join("information_translation_prod")
+      .split("%title%").join("information")
+    let queryProcesses = this.SEARCH_QUERY_RASA
+      .split("%table%").join("process_translation_prod")
+      .split("%title%").join("process")
+    let results = await Promise.all([
+      this.eventRepository.dataSource.execute(queryEvents, [lang, search]),
+      this.informationRepository.dataSource.execute(queryInfo, [lang, search]),
+      this.processRepository.dataSource.execute(queryProcesses, [lang, search])
+    ])
+    let return_string = "I found the following results  "
+    results[0].forEach((element:any) => {
+      return_string += "\n[" + element.title + "](/events/"+ element.id + ")  " 
+      
+    });
+    results[1].forEach((element:any) => {
+      return_string += "\n[" + element.title + "](/information/"+ element.id + ")  " 
+      
+    });
+    results[2].forEach((element:any) => {
+      return_string += "\n[" + element.title + "](/processes/"+ element.id + ")  " 
+      
+    });
+    return return_string
+    /*return {
+      "events": results[0],
+      "information": results[1],
+      "processes": results[2]
+    }*/
   }
 
   @get('/search-full', {
