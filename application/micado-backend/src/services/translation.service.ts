@@ -2,7 +2,7 @@ import {bind, BindingScope} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {existsSync, mkdirSync, promises as fsAsync, readdirSync, readFileSync, unlinkSync} from 'fs';
 import simpleGit, {SimpleGit} from 'simple-git';
-import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, UserTypesTranslationRepository, LanguagesRepository} from '../repositories';
+import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, UserTypesTranslationRepository, TSettingsTranslationRepository, LanguagesRepository} from '../repositories';
 import { Languages } from '../models';
 import {
   WeblateService
@@ -41,6 +41,7 @@ export class TranslationService {
     @repository(StepTranslationRepository) protected stepTranslationRepository: StepTranslationRepository,
     @repository(TopicTranslationRepository) protected topicTranslationRepository: TopicTranslationRepository,
     @repository(UserTypesTranslationRepository) protected userTypesTranslationRepository: UserTypesTranslationRepository,
+    @repository(TSettingsTranslationRepository) protected tSettingsTranslationRepository: TSettingsTranslationRepository,
     @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
     @inject('services.Weblate') protected weblateService: WeblateService,
   ) {
@@ -64,6 +65,7 @@ export class TranslationService {
       'step': this.stepTranslationRepository,
       'topic': this.topicTranslationRepository,
       'user_types': this.userTypesTranslationRepository,
+      't_settings': this.tSettingsTranslationRepository,
     };
   }
 
