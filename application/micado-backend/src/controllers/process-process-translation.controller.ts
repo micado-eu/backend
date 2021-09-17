@@ -13,6 +13,7 @@ import {
   param,
   patch,
   post,
+  put,
   requestBody,
 } from '@loopback/rest';
 import {
@@ -108,4 +109,44 @@ export class ProcessProcessTranslationController {
   ): Promise<Count> {
     return this.processRepository.translations(id).delete(where);
   }
+
+
+
+  @put('/processes/{id}/process-translations', {
+    responses: {
+      '200': {
+        description: 'Process.ProcessTranslation PUT success count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async put(
+    @param.path.number('id') id: number,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(ProcessTranslation, {partial: true}),
+        },
+      },
+    })
+    processTranslation: Partial<ProcessTranslation>,
+    @param.query.object('where', getWhereSchemaFor(ProcessTranslation)) where?: Where<ProcessTranslation>,
+  ): Promise<void> {
+    console.log(processTranslation);
+//    this.processTranslationProdRepository.
+    this.processRepository.dataSource.execute("INSERT INTO process_translation(id,lang,process,description,translation_date,published,"+'"translationState"'+") VALUES($1,$2,$3,$4,NOW(),true,1) ON CONFLICT (id,lang) DO UPDATE SET description = EXCLUDED.description, process=EXCLUDED.process, translation_date= EXCLUDED.translation_date where NOT(process_translation.process=EXCLUDED.process and process_translation.description=EXCLUDED.description);",
+    [processTranslation.id,processTranslation.lang,processTranslation.process,processTranslation.description]);
+    //translations_prod(id).patch(processTranslationProd, where);
+  }
+
 }
+
+
+/*
+ INSERT INTO micadoapp.process_translation_prod(id,lang,process,description,translation_date)
+VALUES(92,'es','test_it5','test1',null) 
+ON CONFLICT (id,lang) 
+DO
+   UPDATE SET description = EXCLUDED.description, process=EXCLUDED.process, translation_date= NOW() where NOT(micadoapp.process_translation_prod.process=EXCLUDED.process and micadoapp.process_translation_prod.description=EXCLUDED.description);
+
+*/
