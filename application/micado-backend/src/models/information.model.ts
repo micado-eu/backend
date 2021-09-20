@@ -44,6 +44,13 @@ export class Information extends Entity {
   })
   creator?: number;
 
+  @property({
+    type: 'date',
+    jsonSchema: {nullable: true},
+    postgresql: {columnName: 'published_date', dataType: 'date', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  publishedDate?: string;
+
 
   @hasMany(() => InformationTranslation, { keyTo: 'id' })
   translations: InformationTranslation[];
