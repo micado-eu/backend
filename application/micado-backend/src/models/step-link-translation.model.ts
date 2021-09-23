@@ -37,10 +37,17 @@ export class StepLinkTranslation extends Entity {
   translationState: number;
 
   @property({
-    type: 'boolean',
-    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    type: 'date',
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
-  published?: boolean;
+  translationDate?: string;
+
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'translated', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  translated?: boolean;
 
   // Define well-known properties here
 

@@ -35,6 +35,18 @@ export class TSettingsTranslation extends Entity {
     postgresql: {columnName: 'lang', dataType: 'character varying', dataLength: 10, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   lang?: string;
+  @property({
+    type: 'date',
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  translationDate?: string;
+
+  @property({
+    type: 'boolean',
+    postgresql: {columnName: 'translated', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  translated?: boolean;
 
   // Define well-known properties here
 

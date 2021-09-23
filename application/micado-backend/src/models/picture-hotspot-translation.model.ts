@@ -41,12 +41,19 @@ export class PictureHotspotTranslation extends Entity {
     postgresql: {columnName: 'translationState', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
   translationState: number;
+  
+  @property({
+    type: 'date',
+    jsonSchema: { nullable: true },
+    postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  translationDate?: string;
 
   @property({
     type: 'boolean',
-    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'translated', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
-  published?: boolean;
+  translated?: boolean;
 
   // Define well-known properties here
 

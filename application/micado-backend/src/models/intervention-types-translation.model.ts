@@ -52,9 +52,9 @@ export class InterventionTypesTranslation extends Entity {
 
   @property({
     type: 'boolean',
-    postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'translated', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
-  published?: boolean;
+  translated?: boolean;
 
   // Define well-known properties here
 
