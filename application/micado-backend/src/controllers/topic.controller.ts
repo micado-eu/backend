@@ -201,15 +201,15 @@ export class TopicController {
   async publish (
     @param.query.number('id') id:number,
   ): Promise<void> {
-    let settings = await this.settingsRepository.find({});
-    //   let lang_filter = { where: { active: true } }
+    //let settings = await this.settingsRepository.find({});
+    //let lang_filter = { where: { active: true } }
     let languages = await this.languagesRepository.find({ where: { active: true } });
-    let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
-    let idx = languages.findIndex(el => el.lang == def_lang.value)
-    languages.splice(idx, 1)
-    this.topicRepository.dataSource.execute("insert into topic_translation_prod(id, lang ,topic,translation_date) select topic_translation.id, topic_translation.lang, topic_translation.topic, topic_translation.translation_date from topic_translation  where "+'"translationState"'+" >= '2' and id=$1 and lang=$2", [id, def_lang.value]);
+    //let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
+    //let idx = languages.findIndex(el => el.lang == def_lang.value)
+    //languages.splice(idx, 1)
+    //this.topicRepository.dataSource.execute("insert into topic_translation_prod(id, lang ,topic,translation_date) select topic_translation.id, topic_translation.lang, topic_translation.topic, topic_translation.translation_date from topic_translation  where "+'"translationState"'+" >= '2' and id=$1 and lang=$2", [id, def_lang.value]);
     languages.forEach((lang:any)=>{
-      this.topicRepository.dataSource.execute("insert into topic_translation_prod(id, lang ,topic,translation_date) select topic_translation.id, topic_translation.lang, topic_translation.topic, topic_translation.translation_date from topic_translation  where "+'"translationState"'+" > '2' and id=$1 and lang=$2", [id, lang.lang]);
+      this.topicRepository.dataSource.execute("insert into topic_translation_prod(id, lang ,topic,translation_date) select topic_translation.id, topic_translation.lang, topic_translation.topic, topic_translation.translation_date from topic_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
     })
   }
 }

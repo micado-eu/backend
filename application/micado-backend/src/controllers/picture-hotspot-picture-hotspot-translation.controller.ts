@@ -152,15 +152,15 @@ export class PictureHotspotPictureHotspotTranslationController {
   async publish (
     @param.query.number('pht_id') pht_id:number,
   ): Promise<void> {
-    let settings = await this.settingsRepository.find({});
+    //let settings = await this.settingsRepository.find({});
     //   let lang_filter = { where: { active: true } }
     let languages = await this.languagesRepository.find({ where: { active: true } });
-    let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
-    let idx = languages.findIndex(el => el.lang == def_lang.value)
-    languages.splice(idx, 1)
-    this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" >= '2' and pht_id=$1 and lang=$2", [pht_id, def_lang.value]);
+    //let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
+    //let idx = languages.findIndex(el => el.lang == def_lang.value)
+    //languages.splice(idx, 1)
+    //this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" >= '2' and pht_id=$1 and lang=$2", [pht_id, def_lang.value]);
     languages.forEach((lang:any)=>{
-      this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" > '2' and pht_id=$1 and lang=$2", [pht_id, lang.lang]);
+      this.pictureHotspotRepository.dataSource.execute("insert into picture_hotspot_translation_prod(pht_id, lang ,title, message) select picture_hotspot_translation.pht_id, picture_hotspot_translation.lang, picture_hotspot_translation.title, picture_hotspot_translation.message from picture_hotspot_translation where "+'"translationState"'+" = '1' and pht_id=$1 and lang=$2 and translated=true", [pht_id, lang.lang]);
     })
   }
 }
