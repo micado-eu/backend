@@ -62,7 +62,7 @@ export class GraphController {
         const saveTranslations = async () => {
           await this.asyncForEach(nstep.translations, async (transl: any) => {
 
-            let savingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description', 'translationState']));
+            let savingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description', 'translationState','translationDate','translated']));
             let trid = nstep.id
             console.log(savingTranslation)
 
@@ -130,7 +130,7 @@ export class GraphController {
         const editTranslations = async () => {
           await this.asyncForEach(cstep.translations, async (transl: any) => {
 
-            let editingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description', 'translationState']));
+            let editingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description', 'translationState','translationDate','translated']));
             let trid = cstep.id
             console.log(editingTranslation)
             let where = {
@@ -200,7 +200,7 @@ export class GraphController {
         const saveLinkTranslations = async () => {
           await this.asyncForEach(nstep_link.translations, async (transl: any) => {
 
-            let savingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description']));
+            let savingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description','translationState','translationDate','translated']));
             let trid = nstep_link.id
             console.log(savingTranslation)
 
@@ -238,7 +238,7 @@ export class GraphController {
         const editTranslationsLinks = async () => {
           await this.asyncForEach(cstep.translations, async (transl: any) => {
 
-            let editingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description', 'translationState']));
+            let editingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'description', 'translationState','translationState','translationDate','translated']));
             let trid = cstep.id
             console.log(editingTranslation)
             let where = {
