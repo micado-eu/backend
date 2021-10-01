@@ -49,6 +49,13 @@ export class TopicTranslation extends Entity {
   topic?: string;
 
   @property({
+    type: 'string',
+    postgresql: {columnName: 'description', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  description?: string;
+
+
+  @property({
     type: 'date',
     jsonSchema: { nullable: true },
     postgresql: { columnName: 'translation_date', dataType: 'timestamp without time zone', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
