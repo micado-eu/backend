@@ -18,12 +18,14 @@ import {
   requestBody,
 } from '@loopback/rest';
 import { Event } from '../models';
-import { EventRepository } from '../repositories';
+import { EventRepository, LanguagesRepository } from '../repositories';
 
 export class EventController {
   constructor(
     @repository(EventRepository)
-    public eventRepository: EventRepository
+    public eventRepository: EventRepository,
+    @repository(LanguagesRepository) 
+    public languagesRepository: LanguagesRepository,
   ) { }
 
   @post('/events', {
@@ -389,5 +391,20 @@ export class EventController {
           and tt.lang = $2
           and (tt.event = '') is false)
     `, [defaultlang, currentlang]);
+  }
+  @get('/events/to-production', {
+    responses: {
+      '200': {
+        description: 'event GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    let languages = await this.languagesRepository.find({ where: { active: true } });
+    languages.forEach((lang:any)=>{
+      this.eventRepository.dataSource.execute("insert into event_translation_prod(id, lang ,event, description, translation_date) select event_translation.id, event_translation.lang, event_translation.event, event_translation.description, event_translation.translation_date from event_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
+    })
   }
 }

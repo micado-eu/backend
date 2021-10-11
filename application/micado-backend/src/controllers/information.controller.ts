@@ -18,12 +18,14 @@ import {
   requestBody,
 } from '@loopback/rest';
 import { Information } from '../models';
-import { InformationRepository } from '../repositories';
+import { InformationRepository, LanguagesRepository } from '../repositories';
 
 export class InformationController {
   constructor(
     @repository(InformationRepository)
-    public informationRepository: InformationRepository
+    public informationRepository: InformationRepository,
+    @repository(LanguagesRepository) 
+    public languagesRepository: LanguagesRepository,
   ) { }
 
   @post('/information', {
@@ -389,5 +391,20 @@ export class InformationController {
           and tt.lang = $2
           and (tt.information = '') is false)
     `, [defaultlang, currentlang]);
+  }
+  @get('/information/to-production', {
+    responses: {
+      '200': {
+        description: 'information GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    let languages = await this.languagesRepository.find({ where: { active: true } });
+    languages.forEach((lang:any)=>{
+      this.informationRepository.dataSource.execute("insert into information_translation_prod(id, lang ,information, description, translation_date) select information_translation.id, information_translation.lang, information_translation.information, information_translation.description, information_translation.translation_date from information_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
+    })
   }
 }

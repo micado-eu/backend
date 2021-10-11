@@ -17,12 +17,14 @@ import {
   requestBody,
 } from '@loopback/rest';
 import { EventCategory } from '../models';
-import { EventCategoryRepository } from '../repositories';
+import { EventCategoryRepository, LanguagesRepository } from '../repositories';
 
 export class EventCategoryController {
   constructor(
     @repository(EventCategoryRepository)
     public eventCategoryRepository: EventCategoryRepository,
+    @repository(LanguagesRepository) 
+    public languagesRepository: LanguagesRepository,
   ) { }
 
   @post('/event-categories', {
@@ -328,5 +330,20 @@ export class EventCategoryController {
         t.id = tt.id
         and tt.lang = $1)
     `, [defaultlang, currentlang, id]);
+  }
+  @get('/event-categories/to-production', {
+    responses: {
+      '200': {
+        description: 'event category GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    let languages = await this.languagesRepository.find({ where: { active: true } });
+    languages.forEach((lang:any)=>{
+      this.eventCategoryRepository.dataSource.execute("insert into event_category_translation_prod(id, lang ,event_category, translation_date) select event_category_translation.id, event_category_translation.lang, event_category_translation.event_category, event_category_translation.translation_date from event_category_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
+    })
   }
 }

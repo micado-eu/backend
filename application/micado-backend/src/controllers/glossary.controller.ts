@@ -18,12 +18,14 @@ import {
   requestBody,
 } from '@loopback/rest';
 import { Glossary } from '../models';
-import { GlossaryRepository } from '../repositories';
+import { GlossaryRepository, LanguagesRepository } from '../repositories';
 
 export class GlossaryController {
   constructor(
     @repository(GlossaryRepository)
-    public glossaryRepository: GlossaryRepository
+    public glossaryRepository: GlossaryRepository,
+    @repository(LanguagesRepository) 
+    public languagesRepository: LanguagesRepository,
   ) { }
 
   @post('/glossaries', {
@@ -271,5 +273,20 @@ export class GlossaryController {
         and tt.lang = $2
         and (tt.title = '') is false)
     `, [defaultlang, currentlang]);
+  }
+  @get('/glossaries/to-production', {
+    responses: {
+      '200': {
+        description: 'glossary GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    let languages = await this.languagesRepository.find({ where: { active: true } });
+    languages.forEach((lang:any)=>{
+      this.glossaryRepository.dataSource.execute("insert into glossary_translation_prod(id, lang ,title, description, translation_date) select glossary_translation.id, glossary_translation.lang, glossary_translation.title, glossary_translation.description, glossary_translation.translation_date from glossary_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
+    })
   }
 }

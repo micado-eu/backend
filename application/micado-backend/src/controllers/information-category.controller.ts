@@ -17,12 +17,14 @@ import {
   requestBody,
 } from '@loopback/rest';
 import {InformationCategory} from '../models';
-import {InformationCategoryRepository} from '../repositories';
+import {InformationCategoryRepository, LanguagesRepository} from '../repositories';
 
 export class InformationCategoryController {
   constructor(
     @repository(InformationCategoryRepository)
     public informationCategoryRepository : InformationCategoryRepository,
+    @repository(LanguagesRepository) 
+    public languagesRepository: LanguagesRepository,
   ) {}
 
   @post('/information-categories', {
@@ -328,5 +330,20 @@ export class InformationCategoryController {
         t.id = tt.id
         and tt.lang = $2)
     `, [defaultlang, currentlang]);
+  }
+  @get('/information-categories/to-production', {
+    responses: {
+      '200': {
+        description: 'information category GET for the frontend',
+      },
+    },
+  })
+  async publish (
+    @param.query.number('id') id:number,
+  ): Promise<void> {
+    let languages = await this.languagesRepository.find({ where: { active: true } });
+    languages.forEach((lang:any)=>{
+      this.informationCategoryRepository.dataSource.execute("insert into information_category_translation_prod(id, lang ,information_category, translation_date) select information_category_translation.id, information_category_translation.lang, information_category_translation.information_category, information_category_translation.translation_date from information_category_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
+    })
   }
 }
