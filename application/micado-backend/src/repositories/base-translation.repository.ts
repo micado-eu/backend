@@ -46,7 +46,9 @@ export abstract class BaseTranslationRepository<
   }
 
   public async getBaseLanguageTranslatables(language: string): Promise<any> {
-    const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().map(c => `"${c}"`).join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
+    //const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().map(c => `"${c}"`).join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
+    const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().map(c => `"${c}"`).join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (0,1) AND translated = TRUE) > 0;';
+    console.log(q);
     const results = await this.dataSource.execute(q, [language]);
 
     for (let i = 0; i < results.length; i++) {
@@ -89,13 +91,22 @@ export abstract class BaseTranslationRepository<
 
     let q = `
     UPDATE ` + this.getTableName() + ` AS t1
+    SET ` + columnsAssign.join(', ') + `
+    WHERE "translationState" = 1 AND "translated" = TRUE
+    AND "lang" = $` + (columnsAssign.length + 1).toString() + `
+    AND "` + this.getIdColumnName() + `" = $` + (columnsAssign.length + 2).toString() + `
+    AND ` + columnsUpdated.join(' AND ') + `;
+    `;
+    console.log(q);
+    /*let q = `
+    UPDATE ` + this.getTableName() + ` AS t1
     SET ` + columnsAssign.join(', ') + `,
     "translationState" = 3
     WHERE "translationState" = 2
     AND "lang" = $` + (columnsAssign.length + 1).toString() + `
     AND "` + this.getIdColumnName() + `" = $` + (columnsAssign.length + 2).toString() + `
     AND ` + columnsUpdated.join(' AND ') + `;
-    `;
+    `;*/
 
     for (const id in translations) {
       for (const language in translations[id]) {
@@ -131,8 +142,8 @@ export abstract class BaseTranslationRepository<
 
     // Since the base language will never be updated above to the 'translated' state (because it never changes compared to the old value)
     // we update them here if all their siblings are translated.
-    q = 'UPDATE ' + this.getTableName() + ' AS t1 SET "translationState" = 3 WHERE "translationState" = 2 AND "lang" = $1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" != 2) > 1;';
-    await this.dataSource.execute(q, [baseLanguage]);
+    //q = 'UPDATE ' + this.getTableName() + ' AS t1 SET "translationState" = 3 WHERE "translationState" = 2 AND "lang" = $1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" != 2) > 1;';
+    //await this.dataSource.execute(q, [baseLanguage]);
   }
 
   protected async getUpdateToProductionQuery(): Promise<string> {

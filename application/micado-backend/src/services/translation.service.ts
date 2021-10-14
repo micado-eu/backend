@@ -183,7 +183,7 @@ export class TranslationService {
 
     // Merge changes from weblate to database.
     for (const componentName in this.componentRepos) {
-      await this.importTranslatablesComponent(componentName);
+       await this.importTranslatablesComponent(componentName);
     }
 
     const componentBaseLanguageStrings: any = {};
@@ -196,7 +196,7 @@ export class TranslationService {
     await this.git.push('origin', 'master');
 
     for (const componentName in this.componentRepos) {
-      await this.componentRepos[componentName].updateToTranlating(componentBaseLanguageStrings[componentName]);
+      //await this.componentRepos[componentName].updateToTranlating(componentBaseLanguageStrings[componentName]);
     }
 
 
@@ -422,7 +422,7 @@ export class TranslationService {
     });
 
     await repo.updateToTranslated(this.sourceLanguage, data);
-    await repo.updateToProduction();
+    //await repo.updateToProduction();
   }
 
   private generateFiles(componentName: string, fileDict: any) {
