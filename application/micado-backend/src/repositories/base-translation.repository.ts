@@ -79,24 +79,43 @@ export abstract class BaseTranslationRepository<
    */
   public async updateToTranslated(baseLanguage: string, translations: {[id: string]: {[language: string]: {[columnName: string]: string}}}) {
     const columnsAssign = this.getTranslatableColumnNames();
+    const columnsPlaceholders = [];
     for (let i = 0; i < columnsAssign.length; i++) {
       columnsAssign[i] = columnsAssign[i] + '=' + '$' + (i + 1).toString();
+      columnsPlaceholders.push('$' + (i+1).toString());
     }
+
+    /*const columnsUpdated = this.getTranslatableColumnNames();
+    for (let i = 0; i < columnsUpdated.length; i++) {
+      columnsUpdated[i] = '(t1.' + columnsUpdated[i] + ' != $' + (i + 1).toString() + ' OR t1.' + columnsUpdated[i] + ' ISNULL)';
+    }*/
 
     const columnsUpdated = this.getTranslatableColumnNames();
     for (let i = 0; i < columnsUpdated.length; i++) {
-      columnsUpdated[i] = '(t1.' + columnsUpdated[i] + ' != $' + (i + 1).toString() + ' OR t1.' + columnsUpdated[i] + ' ISNULL)';
+      columnsUpdated[i] = this.getTableName() + '.' + columnsUpdated[i] + ' IS DISTINCT FROM EXCLUDED.' + columnsUpdated[i];
     }
 
 
-    let q = `
+    let q = `INSERT INTO ` + this.getTableName() + ` (` + this.getTranslatableColumnNames().join(', ') + `, ` + this.getIdColumnName() + `, lang, translation_date, "translationState", translated)
+    VALUES(` + columnsPlaceholders.join(', ') + `, $` + (columnsPlaceholders.length+1).toString() + `, $` + (columnsPlaceholders.length+2).toString() + `, NOW(), 1, TRUE)
+    ON CONFLICT (` + this.getIdColumnName() + `, lang, translated)
+    DO UPDATE SET ` + columnsAssign.join(', ') + `, translation_date = NOW()
+    WHERE (SELECT translation_date FROM ` + this.getTableName()  + ` WHERE ` + this.getIdColumnName() + ` = $` + (columnsPlaceholders.length+1).toString() + ` AND lang = '` + baseLanguage + `' AND translated = TRUE) > ` + this.getTableName() + `.translation_date AND (` + columnsUpdated.join(' OR ')  + `)
+    ;
+    `
+
+
+    //WHERE (SELECT translation_date FROM ` + this.getTableName()  + ` WHERE ` + this.getIdColumnName() + ` = $` + (columnsPlaceholders.length+1).toString() + ` AND lang = '` + baseLanguage + `' AND translated = TRUE) > 
+
+
+    /*let q = `
     UPDATE ` + this.getTableName() + ` AS t1
     SET ` + columnsAssign.join(', ') + `
     WHERE "translationState" = 1 AND "translated" = TRUE
     AND "lang" = $` + (columnsAssign.length + 1).toString() + `
     AND "` + this.getIdColumnName() + `" = $` + (columnsAssign.length + 2).toString() + `
     AND ` + columnsUpdated.join(' AND ') + `;
-    `;
+    `;*/
     console.log(q);
     /*let q = `
     UPDATE ` + this.getTableName() + ` AS t1
@@ -134,8 +153,8 @@ export abstract class BaseTranslationRepository<
           continue;
         }
 
-        args.push(language);
         args.push(id);
+        args.push(language);
         await this.dataSource.execute(q, args);
       }
     }
