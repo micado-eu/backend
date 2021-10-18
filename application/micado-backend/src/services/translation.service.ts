@@ -49,7 +49,7 @@ export class TranslationService {
     
     // Map component names to their repos. TODO: should be done automatically.
     this.componentRepos = {
-      /*'comments': this.commentsTranslationRepository,
+      'comments': this.commentsTranslationRepository,
       'document_type': this.documentTypeTranslationRepository,
       'event_category': this.eventCategoryTranslationRepository,
       'event_tag': this.eventTagTranslationRepository,
@@ -62,10 +62,10 @@ export class TranslationService {
       'picture_hotspot': this.pictureHotspotTranslationRepository,
       'process': this.processTranslationRepository,
       'step_link': this.stepLinkTranslationRepository,
-      'step': this.stepTranslationRepository,*/
-      'topic': this.topicTranslationRepository/*,
+      'step': this.stepTranslationRepository,
+      'topic': this.topicTranslationRepository,
       'user_types': this.userTypesTranslationRepository,
-      't_settings': this.tSettingsTranslationRepository,*/
+      't_settings': this.tSettingsTranslationRepository,
     };
   }
 
