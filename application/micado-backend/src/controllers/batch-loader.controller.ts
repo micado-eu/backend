@@ -162,26 +162,12 @@ export class BatchLoaderController {
               element.id = newEntity.id
               element.translationDate = new Date().toISOString()
               console.log(element)
-              act_lang.forEach((alang: any) => {
-                if (alang.lang === def_lang) {
-                  this.glossaryTranslationRepository.create(element)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                } else {
-                  let empty = {
-                    lang: alang.lang,
-                    id: newEntity.id,
-                    title: '',
-                    description: '',
-                    translationDate: new Date().toISOString()
-                  }
-                  this.glossaryTranslationRepository.create(empty)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                }
-              });
+              Promise.all([
+                this.glossaryTranslationRepository.create(Object.assign({translated: false}, element)),
+                this.glossaryTranslationRepository.create(Object.assign({translated: true}, element))
+              ]).then(newTranslation => {
+                console.log(newTranslation)
+              })
             })
 
         });
@@ -243,29 +229,13 @@ export class BatchLoaderController {
                 description: element.description,
                 translationDate: new Date().toISOString()
               }
-
-              act_lang.forEach((alang: any) => {
-                if (alang.lang === def_lang) {
-                  this.eventTranslationRepository.create(newTransl)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                } else {
-                  let empty = {
-                    lang: alang.lang,
-                    id: newEntity.id,
-                    event: '',
-                    description: '',
-                    translationDate: new Date().toISOString()
-                  }
-                  this.eventTranslationRepository.create(empty)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                }
-              });
+              Promise.all([
+                this.eventTranslationRepository.create(Object.assign({translated: false}, newTransl)),
+                this.eventTranslationRepository.create(Object.assign({translated: true}, newTransl))
+              ]).then(newTranslation => {
+                console.log(newTranslation)
+              })
             })
-
         });
         break;
       case "information":
@@ -289,20 +259,12 @@ export class BatchLoaderController {
                 translationDate: new Date().toISOString()
               }
 
-              act_lang.forEach((alang: any) => {
-                if (alang.lang === def_lang) {
-                  this.informationTranslationRepository.create(newTransl)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                } else {
-                  let empty = { lang: alang.lang, id: newEntity.id, information: '', description: '' }
-                  this.informationTranslationRepository.create(empty)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                }
-              });
+              Promise.all([
+                this.informationTranslationRepository.create(Object.assign({translated: false}, newTransl)),
+                this.informationTranslationRepository.create(Object.assign({translated: true}, newTransl))
+              ]).then(newTranslation => {
+                console.log(newTranslation)
+              })
             })
 
         });
@@ -326,26 +288,12 @@ export class BatchLoaderController {
                 translationDate: new Date().toISOString()
               }
 
-              act_lang.forEach((alang: any) => {
-                if (alang.lang === def_lang) {
-                  this.informationCategoryTranslationRepository.create(newTransl)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                } else {
-                  let empty = {
-                    lang: alang.lang,
-                    id: newEntity.id,
-                    informationCategory: '',
-                    translationState: 0,
-                    translationDate: new Date().toISOString()
-                  }
-                  this.informationCategoryTranslationRepository.create(empty)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                }
-              });
+              Promise.all([
+                this.informationCategoryTranslationRepository.create(Object.assign({translated: false}, newTransl)),
+                this.informationCategoryTranslationRepository.create(Object.assign({translated: true}, newTransl))
+              ]).then(newTranslation => {
+                console.log(newTranslation)
+              })
             })
 
         });
@@ -369,26 +317,12 @@ export class BatchLoaderController {
                 translationDate: new Date().toISOString()
               }
 
-              act_lang.forEach((alang: any) => {
-                if (alang.lang === def_lang) {
-                  this.eventCategoryTranslationRepository.create(newTransl)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                } else {
-                  let empty = {
-                    lang: alang.lang,
-                    id: newEntity.id,
-                    eventCategory: '',
-                    translationState: 0,
-                    translationDate: new Date().toISOString()
-                  }
-                  this.eventCategoryTranslationRepository.create(empty)
-                    .then(newTranslation => {
-                      console.log(newTranslation)
-                    })
-                }
-              });
+              Promise.all([
+                this.eventCategoryTranslationRepository.create(Object.assign({translated: false}, newTransl)),
+                this.eventCategoryTranslationRepository.create(Object.assign({translated: true}, newTransl))
+              ]).then(newTranslation => {
+                console.log(newTranslation)
+              })
             })
 
         });
