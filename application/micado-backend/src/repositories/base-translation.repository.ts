@@ -49,7 +49,7 @@ export abstract class BaseTranslationRepository<
     //const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().map(c => `"${c}"`).join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (1,2)) > 0;';
     //const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().map(c => `"${c}"`).join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE "lang"=$1 AND (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (0,1) AND translated = TRUE) > 0;';
     const q = 'SELECT "' + this.getIdColumnName() + '" as "id", "lang", ' + this.getTranslatableColumnNames().map(c => `"${c}"`).join(',') + ', "translationState" FROM ' + this.getTableName() + ' t1 WHERE (SELECT COUNT(*) from ' + this.getTableName() + ' WHERE "' + this.getIdColumnName() + '"=t1.' + this.getIdColumnName() + ' AND "translationState" in (0,1) AND translated = TRUE) > 0;';
-    console.log(q);
+    //console.log(q);
     //const results = await this.dataSource.execute(q, [language]);
     const results = await this.dataSource.execute(q);
 
@@ -118,7 +118,7 @@ export abstract class BaseTranslationRepository<
     AND "` + this.getIdColumnName() + `" = $` + (columnsAssign.length + 2).toString() + `
     AND ` + columnsUpdated.join(' AND ') + `;
     `;*/
-    console.log(q);
+    //console.log(q);
     /*let q = `
     UPDATE ` + this.getTableName() + ` AS t1
     SET ` + columnsAssign.join(', ') + `,
@@ -184,16 +184,16 @@ export abstract class BaseTranslationRepository<
 
     const linkedTable = this.getLinkedTable();
     let q = '';
-    if (linkedTable === null) {
+    //if (linkedTable === null) {
+    if(true) {
       q = `
     INSERT INTO ` + this.getProdModelTableName() + `(` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"';}).join(',') + `)
       SELECT DISTINCT` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"';}).join(',') + `
       FROM ` + this.getTableName() + ` t1
-      WHERE t1."translationState" = 3 AND t1."` + this.getIdColumnName() + `"
-      IN (SELECT t2."` + this.getBaseModelIdColumnName() + `" FROM ` + this.getBaseModelTableName() + ` t2 WHERE t2.published=TRUE)
+      WHERE t1."translationState" = 1 AND t1."translated" = TRUE 
     ON CONFLICT ("` + this.getIdColumnName() + `", "lang") DO UPDATE SET ` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"=EXCLUDED."' + f + '"';}).join(',') + `
   `;
-    } else {
+    } /*else {
       q = `
       INSERT INTO ` + this.getProdModelTableName() + `(` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"';}).join(',') + `)
         SELECT DISTINCT ` + prodTranslationModelFields.map((f: any) => {return 't1."' + f + '"';}).join(',') + `
@@ -201,7 +201,7 @@ export abstract class BaseTranslationRepository<
         WHERE t1."translationState" = 3 AND t2."published" = TRUE AND t2."` + linkedTable.idColumn + `" = (SELECT "` + linkedTable.foreignKey + `" FROM ` + this.getBaseModelTableName() + ` WHERE "` + this.getBaseModelIdColumnName() + `" = t1."` + this.getIdColumnName() + `")
       ON CONFLICT ("` + this.getIdColumnName() + `", "lang") DO UPDATE SET ` + prodTranslationModelFields.map((f: any) => {return '"' + f + '"=EXCLUDED."' + f + '"';}).join(',') + `
     `;
-    }
+    }*/
 
     return q;
   }

@@ -422,7 +422,7 @@ export class TranslationService {
     });
 
     await repo.updateToTranslated(this.sourceLanguage, data);
-    //await repo.updateToProduction();
+    await repo.updateToProduction();
   }
 
   private generateFiles(componentName: string, fileDict: any) {
