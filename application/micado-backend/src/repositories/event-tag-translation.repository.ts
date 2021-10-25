@@ -27,6 +27,6 @@ export class EventTagTranslationRepository extends BaseTranslationRepository<
     }
 
     public getProdModelTableName(): string {
-        return 'event_tags_translation';
+        return 'event_tags_translation_prod';
     }
 }
