@@ -23,7 +23,7 @@ export class CommentTranslationProd extends Entity {
 
   @property({
     type: 'date',
-    postgresql: {columnName: 'translationdate', dataType: 'date', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+    postgresql: {columnName: 'translation_date', dataType: 'date', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   translationdate?: string;
 
