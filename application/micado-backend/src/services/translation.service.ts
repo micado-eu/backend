@@ -254,7 +254,17 @@ export class TranslationService {
     });
 
     // Add empty files for languages if not already in git.
-    languagesThatShouldBeInGit.forEach((translatable: any) => {
+    activeLanguages.forEach((lang: any) => {
+      if (lang === this.sourceLanguage) {
+        return;
+      }
+
+      if (!(lang in files)) {
+	files[lang] = {};
+      }
+    });
+	  
+    /*languagesThatShouldBeInGit.forEach((translatable: any) => {
       if (translatable.lang === this.sourceLanguage) {
         return;
       }
@@ -262,7 +272,7 @@ export class TranslationService {
       if (!existsSync(MICADO_TRANSLATIONS_DIR + '/' + componentName + '.' + translatable.lang + '.json')) {
         files[translatable.lang] = {};
       }
-    });
+    });*/
 
     if (!files.hasOwnProperty(this.sourceLanguage)) {
       // We need atleast an empty file for the source language in weblate.
