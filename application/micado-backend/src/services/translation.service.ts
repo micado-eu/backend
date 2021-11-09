@@ -431,8 +431,12 @@ export class TranslationService {
       }
     });
 
-    await repo.updateToTranslated(this.sourceLanguage, data);
-    await repo.updateToProduction();
+    try {
+    	await repo.updateToTranslated(this.sourceLanguage, data);
+    	await repo.updateToProduction();
+    } catch (error) {
+    	console.log(error);
+    }
   }
 
   private generateFiles(componentName: string, fileDict: any) {
