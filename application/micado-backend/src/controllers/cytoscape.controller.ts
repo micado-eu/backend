@@ -83,7 +83,7 @@ export class CytoscapeController {
       await this.asyncForEach(steps, async (astep: any) => {
         console.log("nel primo asynforeach")
         console.log(astep)
-        let curTransl = astep.translations.filter(function (atransl: any) { return atransl.lang == lang }, lang)[0]
+        let curTransl = astep.translations.filter(function (atransl: any) { return (atransl.lang == lang && atransl.translated == false)}, lang)[0]
         let docarray = JSON.parse("[]")
 
         if (astep.documents != null) {
@@ -139,7 +139,7 @@ export class CytoscapeController {
 
     steplinks.forEach(asteplink => {
       console.log(asteplink)
-      let curTransl = asteplink.translations.filter(function (atransl) { return atransl.lang == lang }, lang)[0]
+      let curTransl = asteplink.translations.filter(function (atransl) { return (atransl.lang == lang && atransl.translated == false) }, lang)[0]
       console.log(curTransl)
       let element = {
         group: "edges", data: {
