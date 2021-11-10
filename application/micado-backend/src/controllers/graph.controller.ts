@@ -134,7 +134,7 @@ export class GraphController {
             let trid = cstep.id
             console.log(editingTranslation)
             let where = {
-              id: { eq: editingTranslation.id }, lang: { eq: editingTranslation.lang }
+              id: { eq: editingTranslation.id }, lang: { eq: editingTranslation.lang }, translated: { eq: editingTranslation.translated}
             }
             this.stepRepository.translations(trid).patch(editingTranslation, where)
               .then((trres) => {
@@ -242,7 +242,7 @@ export class GraphController {
             let trid = cstep.id
             console.log(editingTranslation)
             let where = {
-              id: { eq: editingTranslation.id }, lang: { eq: editingTranslation.lang }
+              id: { eq: editingTranslation.id }, lang: { eq: editingTranslation.lang }, translated: { eq: editingTranslation.translated}
             }
             this.stepLinkRepository.translations(trid).patch(editingTranslation, where)
               .then((trres) => {
