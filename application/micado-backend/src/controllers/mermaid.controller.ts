@@ -136,18 +136,26 @@ export class MermaidController {
 
         let my_nexts = steplinks.filter(alink => {
           return alink.fromStep == astep.id
-        }).map(function (o) { return o.toStep })
+        })
         console.log("NEXT")
+        var next :any = []
+        var transl = null
+        if(my_nexts.length > 0){
+          next = my_nexts.map(function (o) { return o.toStep })
+          transl = my_nexts[0].translations.filter((tran)=>{
+            return tran.lang == lang
+          })[0].description
+        }
         console.log(my_nexts)
-
+       
         console.log(curTransl)
         let node_element = {
           id: astep.id,
-          text: curTransl.step,
+          text: '"' + curTransl.step + '"',
           description: curTransl.description,
-          link: "---",
+          link: "--" +((transl != null) ? transl : '-' ) +"-",
           editable: true,
-          next: my_nexts,
+          next: next,
           data: {
             location: astep.location,
             cost: astep.cost,
@@ -202,6 +210,8 @@ export class MermaidController {
     @param.query.number('processid') processid = 0,
     @param.query.string('lang') lang = 'en'
   ): Promise<any> {
+    const lod = require('lodash'); 
+
     let mermaidRet = JSON.parse("[]")
     let steps = await this.stepRepository.find({
       where: {
@@ -285,18 +295,26 @@ export class MermaidController {
 
         let my_nexts = steplinks.filter(alink => {
           return alink.fromStep == astep.id
-        }).map(function (o) { return o.toStep })
+        })
         console.log("NEXT")
+        var next :any = []
+        var transl = null
+        if(my_nexts.length > 0){
+          next = my_nexts.map(function (o) { return o.toStep })
+          transl = my_nexts[0].translations.filter((tran)=>{
+            return tran.lang == lang
+          })[0].description
+        }
         console.log(my_nexts)
 
         console.log(curTransl)
         let node_element = {
           id: astep.id,
-          text: curTransl.step,
+          text: '"' + curTransl.step + '"',
           description: curTransl.description,
-          link: "---",
+          link: "--" +((transl != null) ? transl : '-' ) +"-",
           editable: true,
-          next: my_nexts,
+          next: next,
           data: {
             location: astep.location,
             cost: astep.cost,
