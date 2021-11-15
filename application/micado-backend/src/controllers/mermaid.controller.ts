@@ -165,7 +165,7 @@ export class MermaidController {
           id: astep.id,
           text: '"' + curTransl.step + '"',
           description: curTransl.description,
-          link: "--" +((transl != null) ? transl : '-' ) +"---",
+          link: ((transl != null && transl.length >0) ? "--" + transl + "---" : "---" ),
           editable: true,
           next: next,
           data: {
@@ -324,7 +324,7 @@ export class MermaidController {
           id: astep.id,
           text: '"' + curTransl.step + '"',
           description: curTransl.description,
-          link: "--" +((transl != null) ? transl : '-' ) +"---",
+          link: ((transl != null && transl.length >0) ? "--" + transl + "---" : "---" ),
           editable: true,
           next: next,
           data: {
