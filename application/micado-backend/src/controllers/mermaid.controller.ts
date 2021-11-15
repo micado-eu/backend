@@ -51,7 +51,8 @@ export class MermaidController {
   })
   async mermaid (
     @param.query.number('processid') processid = 0,
-    @param.query.string('lang') lang = 'en'
+    @param.query.string('lang') lang = 'en',
+    @param.query.string('defaultlang') defaultlang = 'en'
   ): Promise<any> {
     let mermaidRet = JSON.parse("[]")
     let steps = await this.stepRepository.find({
@@ -76,11 +77,11 @@ export class MermaidController {
 
       include: [
         {
-          relation: "translations"
+          relation: "translations_prod"
         }
       ]
     });
-    let defaultlang = 'en'
+    //let defaultlang = 'en'
     const start = async () => {
       await this.asyncForEach(steps, async (astep: any) => {
         console.log("nel primo asynforeach")
@@ -90,6 +91,7 @@ export class MermaidController {
         console.log(curTransl)
         if(!curTransl){
           console.log("inside if")
+          console.log(" INSIDE IF USING BASE LANGUAG--------------------------------")
           curTransl = astep.translations_prod.filter(function (atransl: any) { return atransl.lang == defaultlang }, defaultlang)[0]
         }
         let docarray = JSON.parse("[]")
@@ -140,11 +142,21 @@ export class MermaidController {
         console.log("NEXT")
         var next :any = []
         var transl = null
+        console.log(my_nexts)
         if(my_nexts.length > 0){
           next = my_nexts.map(function (o) { return o.toStep })
-          transl = my_nexts[0].translations.filter((tran)=>{
+          console.log(" INSIDE IF AFTER SETTING THE NEXT------------------------")
+           var temp_transl = my_nexts[0].translations_prod.filter((tran)=>{
             return tran.lang == lang
-          })[0].description
+          })
+          if(temp_transl.length >0){
+            transl = temp_transl[0].description
+          }
+          else{
+            transl = my_nexts[0].translations_prod.filter((tran)=>{
+              return tran.lang == defaultlang
+            })[0].description
+          }
         }
         console.log(my_nexts)
        
