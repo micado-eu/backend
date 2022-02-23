@@ -1,17 +1,22 @@
-import { BootMixin } from '@loopback/boot';
-import { ApplicationConfig } from '@loopback/core';
+// ---------- ADD IMPORTS -------------
+import {AuthenticationComponent} from '@loopback/authentication';
+import {
+  JWTAuthenticationComponent
+} from '@loopback/authentication-jwt';
+import {BootMixin} from '@loopback/boot';
+import {ApplicationConfig} from '@loopback/core';
+import {RepositoryMixin} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
+import {CrudRestComponent} from '@loopback/rest-crud';
 import {
   RestExplorerBindings,
-  RestExplorerComponent,
+  RestExplorerComponent
 } from '@loopback/rest-explorer';
-import { RepositoryMixin } from '@loopback/repository';
-import { RestApplication } from '@loopback/rest';
-import { ServiceMixin } from '@loopback/service-proxy';
-import path from 'path';
-import { MySequence } from './sequence';
-import { CrudRestComponent } from '@loopback/rest-crud';
+import {ServiceMixin} from '@loopback/service-proxy';
 import multer from 'multer';
-import { STORAGE_DIRECTORY, FILE_UPLOAD_SERVICE } from './services/file-upload-service.service'
+import path from 'path';
+import {MySequence} from './sequence';
+import {FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY} from './services/file-upload-service.service';
 
 export class MicadoBackendApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -45,6 +50,11 @@ export class MicadoBackendApplication extends BootMixin(
       },
     };
     this.component(CrudRestComponent);
+    // ------ ADD SNIPPET AT THE BOTTOM ---------
+    // Mount authentication system
+    this.component(AuthenticationComponent);
+    // Mount jwt component
+    this.component(JWTAuthenticationComponent);
   }
 
   /**

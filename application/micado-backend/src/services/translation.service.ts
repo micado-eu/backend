@@ -1,13 +1,12 @@
+import {inject} from '@loopback/context';
 import {bind, BindingScope} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {existsSync, mkdirSync, promises as fsAsync, readdirSync, readFileSync, unlinkSync} from 'fs';
 import simpleGit, {SimpleGit} from 'simple-git';
-import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, UserTypesTranslationRepository, TSettingsTranslationRepository, LanguagesRepository} from '../repositories';
-import { Languages } from '../models';
+import {CommentsTranslationRepository, DocumentTypeTranslationRepository, EventCategoryTranslationRepository, EventTagTranslationRepository, EventTranslationRepository, GlossaryTranslationRepository, InformationCategoryTranslationRepository, InformationTagTranslationRepository, InformationTranslationRepository, InterventionCategoryTranslationRepository, InterventionTypesTranslationRepository, LanguagesRepository, PictureHotspotTranslationRepository, ProcessTranslationRepository, StepLinkTranslationRepository, StepTranslationRepository, TopicTranslationRepository, TSettingsTranslationRepository, UserTypesTranslationRepository} from '../repositories';
 import {
   WeblateService
-} from '../services/weblate.service'
-import { inject } from '@loopback/context';
+} from '../services/weblate.service';
 
 // Should come from a config file or the database.
 const MICADO_GIT_URL = process.env.MICADO_GIT_URL ?? '';
@@ -46,7 +45,7 @@ export class TranslationService {
     @inject('services.Weblate') protected weblateService: WeblateService,
   ) {
     this.gitInitialized = false;
-    
+
     // Map component names to their repos. TODO: should be done automatically.
     this.componentRepos = {
       'comments': this.commentsTranslationRepository,
@@ -108,7 +107,7 @@ export class TranslationService {
   public initializeService(): Promise<null> {
     return new Promise((resolve, reject) => {
       if (this.gitInitialized) {
-        resolve();
+        resolve(null);
       }
 
       if (!existsSync(MICADO_TRANSLATIONS_DIR)) {
@@ -118,40 +117,40 @@ export class TranslationService {
       this.git = simpleGit(MICADO_TRANSLATIONS_DIR);
 
       this.getDefaultActiveLanguage()
-      .then((lang) => {
-        this.sourceLanguage = lang;
-	console.log('Source language: ' + this.sourceLanguage);
-      }).then(() => {
-        this.git.checkIsRepo()
-        .then((isRepo) => {
-          if (!isRepo) {
-            if (MICADO_GIT_URL === '') {
-              console.log('MICADO_GIT_URL environment variable is not set, this is required for the translation service to work.');
-              return Promise.reject('No MICADO_GIT_URL given');
-            }
-            return this.git.clone(MICADO_GIT_URL, '.')
-              .then(() => {
-                return this.git.pull('origin', 'master');
-              })
-              .then(() => {
-                return this.git.addConfig('user.name', 'backend');
-              })
-              .then(() => {
-                return this.git.addConfig('user.email', 'backend@backend.backend')
-              }).then(() => {
-                return this.install();
-              });
-          }
-        })
-        .then(() => {
-          this.gitInitialized = true;
-          resolve();
-        })
-        .catch((reason) => {
-          console.log('Could not initialize git: ', reason);
-          reject(reason);
+        .then((lang) => {
+          this.sourceLanguage = lang;
+          console.log('Source language: ' + this.sourceLanguage);
+        }).then(() => {
+          this.git.checkIsRepo()
+            .then((isRepo) => {
+              if (!isRepo) {
+                if (MICADO_GIT_URL === '') {
+                  console.log('MICADO_GIT_URL environment variable is not set, this is required for the translation service to work.');
+                  return Promise.reject('No MICADO_GIT_URL given');
+                }
+                return this.git.clone(MICADO_GIT_URL, '.')
+                  .then(() => {
+                    return this.git.pull('origin', 'master');
+                  })
+                  .then(() => {
+                    return this.git.addConfig('user.name', 'backend');
+                  })
+                  .then(() => {
+                    return this.git.addConfig('user.email', 'backend@backend.backend')
+                  }).then(() => {
+                    return this.install();
+                  });
+              }
+            })
+            .then(() => {
+              this.gitInitialized = true;
+              resolve(null);
+            })
+            .catch((reason) => {
+              console.log('Could not initialize git: ', reason);
+              reject(reason);
+            });
         });
-      });
     });
   }
 
@@ -174,7 +173,7 @@ export class TranslationService {
 
     */
 
-    if(MICADO_WEBLATE_KEY !== '') {
+    if (MICADO_WEBLATE_KEY !== '') {
       await this.weblateService.git(MICADO_WEBLATE_PROJECT, 'commit', MICADO_WEBLATE_KEY, 'weblate:8080');
       await this.weblateService.git(MICADO_WEBLATE_PROJECT, 'push', MICADO_WEBLATE_KEY, 'weblate:8080');
     }
@@ -183,7 +182,7 @@ export class TranslationService {
 
     // Merge changes from weblate to database.
     for (const componentName in this.componentRepos) {
-       await this.importTranslatablesComponent(componentName);
+      await this.importTranslatablesComponent(componentName);
     }
 
     const componentBaseLanguageStrings: any = {};
@@ -212,8 +211,8 @@ export class TranslationService {
 
   private async getDefaultActiveLanguage(): Promise<string> {
     let activeLanguagesObjects = await this.languagesRepository.findActive();
-    for(let i = 0; i < activeLanguagesObjects.length; i++) {
-      if(activeLanguagesObjects[i].isDefault) {
+    for (let i = 0; i < activeLanguagesObjects.length; i++) {
+      if (activeLanguagesObjects[i].isDefault) {
         return activeLanguagesObjects[i].lang;
       }
     }
@@ -236,8 +235,8 @@ export class TranslationService {
     // All languages for this component that should be in git. (so we can create an empty file if it's not in git yet so that weblate will add that language)
     let languagesThatShouldBeInGit = await repo.getTranslatableLanguages();
     let activeLanguagesObjects = await this.languagesRepository.findActive();
-    const activeLanguages = activeLanguagesObjects.map((l:any) => l.lang);
-    languagesThatShouldBeInGit = languagesThatShouldBeInGit.filter((l:any) => activeLanguages.indexOf(l.lang) > -1); 
+    const activeLanguages = activeLanguagesObjects.map((l: any) => l.lang);
+    languagesThatShouldBeInGit = languagesThatShouldBeInGit.filter((l: any) => activeLanguages.indexOf(l.lang) > -1);
 
     const files: {[language: string]: {[key: string]: string}} = {};
 
@@ -260,10 +259,10 @@ export class TranslationService {
       }
 
       if (!(lang in files)) {
-	files[lang] = {};
+        files[lang] = {};
       }
     });
-	  
+
     /*languagesThatShouldBeInGit.forEach((translatable: any) => {
       if (translatable.lang === this.sourceLanguage) {
         return;
@@ -432,10 +431,10 @@ export class TranslationService {
     });
 
     try {
-    	await repo.updateToTranslated(this.sourceLanguage, data);
-    	await repo.updateToProduction();
+      await repo.updateToTranslated(this.sourceLanguage, data);
+      await repo.updateToProduction();
     } catch (error) {
-    	console.log(error);
+      console.log(error);
     }
   }
 

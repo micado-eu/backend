@@ -1,25 +1,19 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody
 } from '@loopback/rest';
-import { Process } from '../models';
-import { ProcessRepository } from '../repositories';
-import { SettingsRepository } from '../repositories';
-import { LanguagesRepository } from '../repositories';
+import {Process} from '../models';
+import {LanguagesRepository, ProcessRepository, SettingsRepository} from '../repositories';
+
 
 
 export class ProcessController {
@@ -33,11 +27,11 @@ export class ProcessController {
     responses: {
       '200': {
         description: 'Process model instance',
-        content: { 'application/json': { schema: getModelSchemaRef(Process) } },
+        content: {'application/json': {schema: getModelSchemaRef(Process)}},
       },
     },
   })
-  async create (
+  async create(
     @requestBody({
       content: {
         'application/json': {
@@ -57,11 +51,11 @@ export class ProcessController {
     responses: {
       '200': {
         description: 'Process model count',
-        content: { 'application/json': { schema: CountSchema } },
+        content: {'application/json': {schema: CountSchema}},
       },
     },
   })
-  async count (
+  async count(
     @param.where(Process) where?: Where<Process>,
   ): Promise<Count> {
     return this.processRepository.count(where);
@@ -75,14 +69,15 @@ export class ProcessController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Process, { includeRelations: true }),
+              items: getModelSchemaRef(Process, {includeRelations: true}),
             },
           },
         },
       },
     },
   })
-  async find (
+  @authenticate('jwt')
+  async find(
     @param.filter(Process) filter?: Filter<Process>,
   ): Promise<Process[]> {
     return this.processRepository.find(filter);
@@ -92,15 +87,15 @@ export class ProcessController {
     responses: {
       '200': {
         description: 'Process PATCH success count',
-        content: { 'application/json': { schema: CountSchema } },
+        content: {'application/json': {schema: CountSchema}},
       },
     },
   })
-  async updateAll (
+  async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Process, { partial: true }),
+          schema: getModelSchemaRef(Process, {partial: true}),
         },
       },
     })
@@ -116,15 +111,15 @@ export class ProcessController {
         description: 'Process model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Process, { includeRelations: true }),
+            schema: getModelSchemaRef(Process, {includeRelations: true}),
           },
         },
       },
     },
   })
-  async findById (
+  async findById(
     @param.path.number('id') id: number,
-    @param.filter(Process, { exclude: 'where' }) filter?: FilterExcludingWhere<Process>
+    @param.filter(Process, {exclude: 'where'}) filter?: FilterExcludingWhere<Process>
   ): Promise<Process> {
     return this.processRepository.findById(id, filter);
   }
@@ -136,12 +131,12 @@ export class ProcessController {
       },
     },
   })
-  async updateById (
+  async updateById(
     @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Process, { partial: true }),
+          schema: getModelSchemaRef(Process, {partial: true}),
         },
       },
     })
@@ -157,7 +152,7 @@ export class ProcessController {
       },
     },
   })
-  async replaceById (
+  async replaceById(
     @param.path.number('id') id: number,
     @requestBody() process: Process,
   ): Promise<void> {
@@ -171,7 +166,7 @@ export class ProcessController {
       },
     },
   })
-  async deleteById (@param.path.number('id') id: number): Promise<void> {
+  async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.processRepository.deleteById(id);
   }
 
@@ -182,7 +177,7 @@ export class ProcessController {
       },
     },
   })
-  async translatedunion (
+  async translatedunion(
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<void> {
@@ -199,7 +194,7 @@ export class ProcessController {
       },
     },
   })
-  async tempunion (
+  async tempunion(
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<void> {
@@ -216,21 +211,45 @@ export class ProcessController {
       },
     },
   })
-  async publish (
-    @param.query.number('id') id:number,
+  async publish(
+    @param.query.number('id') id: number,
   ): Promise<void> {
     //let settings = await this.settingsRepository.find({});
     //   let lang_filter = { where: { active: true } }
-    let languages = await this.languagesRepository.find({ where: { active: true } });
+    let languages = await this.languagesRepository.find({where: {active: true}});
     //let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
     //let idx = languages.findIndex(el => el.lang == def_lang.value)
     //languages.splice(idx, 1)
 
-     //this.processRepository.dataSource.execute("insert into process_translation_prod(id, lang ,process , description ,translation_date) select process_translation.id, process_translation.lang, process_translation.process, process_translation.description , process_translation.translation_date from process_translation  where "+'"translationState"'+" >= '2' and id=$1 and lang=$2", [id, def_lang.value]);
-     languages.forEach((lang:any)=>{
-      this.processRepository.dataSource.execute("insert into process_translation_prod(id, lang ,process , description ,translation_date) select process_translation.id, process_translation.lang, process_translation.process, process_translation.description , process_translation.translation_date from process_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
-     })
+    //this.processRepository.dataSource.execute("insert into process_translation_prod(id, lang ,process , description ,translation_date) select process_translation.id, process_translation.lang, process_translation.process, process_translation.description , process_translation.translation_date from process_translation  where "+'"translationState"'+" >= '2' and id=$1 and lang=$2", [id, def_lang.value]);
+    languages.forEach((lang: any) => {
+      this.processRepository.dataSource.execute("insert into process_translation_prod(id, lang ,process , description ,translation_date) select process_translation.id, process_translation.lang, process_translation.process, process_translation.description , process_translation.translation_date from process_translation  where " + '"translationState"' + " = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
+    })
   }
+
+  @get('/processes/to-json', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  async getJson(
+    @param.query.number('id') id: number,
+  ): Promise<any> {
+    //let process_documents:any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in (select ppd.id_document from process_produced_documents ppd where ppd.id_process ="  + id +")")
+    let process: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from process_translation pt where pt.id = p.id) as translations, (select to_jsonb(array_agg(sub)) from (select *, ( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in ( select ppd.id_document from process_produced_documents ppd where ppd.id_process = p.id)) sub) as documents from process p where p.id = " + id)
+    let steps: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from step_translation pt where pt.id = s.id) as translations, ( select to_jsonb(array_agg(sd)) from step_document sd where sd.id_step = s.id) as step_documents,	(select to_jsonb(array_agg(sub)) from (select *,( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in ( select sd.id_document from step_document sd where sd.id_step = s.id)) sub) as documents from step s where id_process =" + id)
+    let steplinks: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(slt)) from step_link_translation slt  where slt.id = sl.id) as translations from step_link sl where id_process = " + id)
+    let full_process = {
+      process: process,
+      steps: steps,
+      steplinks: steplinks
+    }
+    return full_process
+
+  }
+
 }
 
 
