@@ -1,4 +1,3 @@
-import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -76,7 +75,7 @@ export class ProcessController {
       },
     },
   })
-  @authenticate('jwt')
+  //@authenticate('jwt')
   async find(
     @param.filter(Process) filter?: Filter<Process>,
   ): Promise<Process[]> {
@@ -216,7 +215,7 @@ export class ProcessController {
   ): Promise<void> {
     //let settings = await this.settingsRepository.find({});
     //   let lang_filter = { where: { active: true } }
-    let languages = await this.languagesRepository.find({where: {active: true}});
+    const languages = await this.languagesRepository.find({where: {active: true}});
     //let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
     //let idx = languages.findIndex(el => el.lang == def_lang.value)
     //languages.splice(idx, 1)
@@ -238,10 +237,10 @@ export class ProcessController {
     @param.query.number('id') id: number,
   ): Promise<any> {
     //let process_documents:any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in (select ppd.id_document from process_produced_documents ppd where ppd.id_process ="  + id +")")
-    let process: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from process_translation pt where pt.id = p.id) as translations, (select to_jsonb(array_agg(sub)) from (select *, ( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in ( select ppd.id_document from process_produced_documents ppd where ppd.id_process = p.id)) sub) as documents from process p where p.id = " + id)
-    let steps: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from step_translation pt where pt.id = s.id) as translations, ( select to_jsonb(array_agg(sd)) from step_document sd where sd.id_step = s.id) as step_documents,	(select to_jsonb(array_agg(sub)) from (select *,( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in ( select sd.id_document from step_document sd where sd.id_step = s.id)) sub) as documents from step s where id_process =" + id)
-    let steplinks: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(slt)) from step_link_translation slt  where slt.id = sl.id) as translations from step_link sl where id_process = " + id)
-    let full_process = {
+    const process: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from process_translation pt where pt.id = p.id) as translations, (select to_jsonb(array_agg(sub)) from (select *, ( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in ( select ppd.id_document from process_produced_documents ppd where ppd.id_process = p.id)) sub) as documents from process p where p.id = " + id)
+    const steps: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from step_translation pt where pt.id = s.id) as translations, ( select to_jsonb(array_agg(sd)) from step_document sd where sd.id_step = s.id) as step_documents,	(select to_jsonb(array_agg(sub)) from (select *,( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in ( select sd.id_document from step_document sd where sd.id_step = s.id)) sub) as documents from step s where id_process =" + id)
+    const steplinks: any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(slt)) from step_link_translation slt  where slt.id = sl.id) as translations from step_link sl where id_process = " + id)
+    const full_process = {
       process: process,
       steps: steps,
       steplinks: steplinks
