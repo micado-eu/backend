@@ -1,4 +1,5 @@
-import { service } from '@loopback/core';
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+import { inject, service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -16,8 +17,10 @@ import {
   put,
   del,
   requestBody,
+  RestBindings,
+  Response
 } from '@loopback/rest';
-import { Information } from '../models';
+import { Information, InformationTranslation } from '../models';
 import { InformationRepository, LanguagesRepository } from '../repositories';
 
 export class InformationController {
@@ -406,5 +409,61 @@ export class InformationController {
     languages.forEach((lang:any)=>{
       this.informationRepository.dataSource.execute("insert into information_translation_prod(id, lang ,information, description, translation_date) select information_translation.id, information_translation.lang, information_translation.information, information_translation.description, information_translation.translation_date from information_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
     })
+  }
+
+  @get('/information/export', {
+    responses: {
+      '200': {
+        description: 'export information to CSV',
+
+      },
+    },
+  })
+  async export(
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+    @param.query.number('id') id?: number
+  ) {
+    let informationElements
+    let idString = id !== undefined ? id : 'full'
+    if (id !== undefined) {
+      console.log("Start export for id: " + id);
+      informationElements = await this.informationRepository.find({ where: { id } })
+    } else {
+      console.log("Start export for full");
+      informationElements = await this.informationRepository.find()
+    }
+    let records: Array<Object> = []
+    const promises: Promise<InformationTranslation[]>[] = []
+    informationElements.forEach((informationElement) => {
+      promises.push(new Promise(async (resolve, reject) => {
+        const translations = await this.informationRepository.translations(informationElement.id).find()
+        translations.forEach((translation) => {
+          if (translation.lang && translation.information) {
+              records.push({
+                id: translation.id,
+                lang: translation.lang,
+                title: translation.information,
+                description: translation.description
+              })
+          }
+        })
+        resolve(translations)
+      }))
+    })
+    await Promise.all(promises);
+    console.log("Records created")
+    const csvWriter = createCsvWriter({
+      path: `./.sandbox/information-${idString}.csv`,
+      header: [
+        { id: 'id', title: 'id' },
+        { id: 'lang', title: 'lang' },
+        { id: 'title', title: 'title' },
+        { id: 'description', title: 'description' }
+      ]
+    })
+    console.log(`Writing file in information-${idString}.csv`)
+    await csvWriter.writeRecords(records)
+    response.download(`.sandbox/information-${idString}.csv`, `information-${idString}.csv`)
+    return response
   }
 }

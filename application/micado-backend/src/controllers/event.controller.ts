@@ -1,4 +1,4 @@
-import { service } from '@loopback/core';
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 import {
   Count,
   CountSchema,
@@ -16,9 +16,12 @@ import {
   put,
   del,
   requestBody,
+  RestBindings,
+  Response
 } from '@loopback/rest';
-import { Event } from '../models';
+import { Event, EventTranslation } from '../models';
 import { EventRepository, LanguagesRepository } from '../repositories';
+import { inject } from '@loopback/core';
 
 export class EventController {
   constructor(
@@ -406,5 +409,61 @@ export class EventController {
     languages.forEach((lang:any)=>{
       this.eventRepository.dataSource.execute("insert into event_translation_prod(id, lang ,event, description, translation_date) select event_translation.id, event_translation.lang, event_translation.event, event_translation.description, event_translation.translation_date from event_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
     })
+  }
+
+  @get('/events/export', {
+    responses: {
+      '200': {
+        description: 'export events to CSV',
+
+      },
+    },
+  })
+  async export(
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+    @param.query.number('id') id?: number
+  ) {
+    let eventElements
+    let idString = id !== undefined ? id : 'full'
+    if (id !== undefined) {
+      console.log("Start export for id: " + id);
+      eventElements = await this.eventRepository.find({ where: { id } })
+    } else {
+      console.log("Start export for full");
+      eventElements = await this.eventRepository.find()
+    }
+    let records: Array<Object> = []
+    const promises: Promise<EventTranslation[]>[] = []
+    eventElements.forEach((eventElement) => {
+      promises.push(new Promise(async (resolve, reject) => {
+        const translations = await this.eventRepository.translations(eventElement.id).find()
+        translations.forEach((translation) => {
+          if (translation.lang && translation.event) {
+              records.push({
+                id: translation.id,
+                lang: translation.lang,
+                title: translation.event,
+                description: translation.description
+              })
+          }
+        })
+        resolve(translations)
+      }))
+    })
+    await Promise.all(promises);
+    console.log("Records created")
+    const csvWriter = createCsvWriter({
+      path: `./.sandbox/event-${idString}.csv`,
+      header: [
+        { id: 'id', title: 'id' },
+        { id: 'lang', title: 'lang' },
+        { id: 'title', title: 'title' },
+        { id: 'description', title: 'description' }
+      ]
+    })
+    console.log(`Writing file in event-${idString}.csv`)
+    await csvWriter.writeRecords(records)
+    response.download(`.sandbox/event-${idString}.csv`, `event-${idString}.csv`)
+    return response
   }
 }

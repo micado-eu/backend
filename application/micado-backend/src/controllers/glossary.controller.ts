@@ -1,4 +1,5 @@
-import { service } from '@loopback/core';
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+import { inject, service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -16,15 +17,17 @@ import {
   put,
   del,
   requestBody,
+  RestBindings,
+  Response
 } from '@loopback/rest';
-import { Glossary } from '../models';
+import { Glossary, GlossaryTranslation } from '../models';
 import { GlossaryRepository, LanguagesRepository } from '../repositories';
 
 export class GlossaryController {
   constructor(
     @repository(GlossaryRepository)
     public glossaryRepository: GlossaryRepository,
-    @repository(LanguagesRepository) 
+    @repository(LanguagesRepository)
     public languagesRepository: LanguagesRepository,
   ) { }
 
@@ -281,12 +284,68 @@ export class GlossaryController {
       },
     },
   })
-  async publish (
-    @param.query.number('id') id:number,
+  async publish(
+    @param.query.number('id') id: number,
   ): Promise<void> {
     let languages = await this.languagesRepository.find({ where: { active: true } });
-    languages.forEach((lang:any)=>{
-      this.glossaryRepository.dataSource.execute("insert into glossary_translation_prod(id, lang ,title, description, translation_date) select glossary_translation.id, glossary_translation.lang, glossary_translation.title, glossary_translation.description, glossary_translation.translation_date from glossary_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
+    languages.forEach((lang: any) => {
+      this.glossaryRepository.dataSource.execute("insert into glossary_translation_prod(id, lang ,title, description, translation_date) select glossary_translation.id, glossary_translation.lang, glossary_translation.title, glossary_translation.description, glossary_translation.translation_date from glossary_translation  where " + '"translationState"' + " = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
     })
+  }
+
+  @get('/glossaries/export', {
+    responses: {
+      '200': {
+        description: 'export glossary to CSV',
+
+      },
+    },
+  })
+  async export(
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+    @param.query.number('id') id?: number
+  ) {
+    let glossaryElements
+    let idString = id !== undefined ? id : 'full'
+    if (id !== undefined) {
+      console.log("Start export for id: " + id);
+      glossaryElements = await this.glossaryRepository.find({ where: { id } })
+    } else {
+      console.log("Start export for full");
+      glossaryElements = await this.glossaryRepository.find()
+    }
+    let records: Array<Object> = []
+    const promises: Promise<GlossaryTranslation[]>[] = []
+    glossaryElements.forEach((glossaryElement) => {
+      promises.push(new Promise(async (resolve, reject) => {
+        const translations = await this.glossaryRepository.translations(glossaryElement.id).find()
+        translations.forEach((translation) => {
+          if (translation.lang && translation.title) {
+              records.push({
+                id: translation.id,
+                lang: translation.lang,
+                title: translation.title,
+                description: translation.description
+              })
+          }
+        })
+        resolve(translations)
+      }))
+    })
+    await Promise.all(promises);
+    console.log("Records created")
+    const csvWriter = createCsvWriter({
+      path: `./.sandbox/glossary-${idString}.csv`,
+      header: [
+        { id: 'id', title: 'id' },
+        { id: 'lang', title: 'lang' },
+        { id: 'title', title: 'title' },
+        { id: 'description', title: 'description' }
+      ]
+    })
+    console.log(`Writing file in glossary-${idString}.csv`)
+    await csvWriter.writeRecords(records)
+    response.download(`.sandbox/glossary-${idString}.csv`, `glossary-${idString}.csv`)
+    return response
   }
 }
