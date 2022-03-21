@@ -90,3 +90,4 @@ export * from './survey.repository';
 export * from './t-settings-translation-prod.repository';
 export * from './t-settings-translation.repository';
 export * from './t-settings.repository';
+export * from './board.repository';

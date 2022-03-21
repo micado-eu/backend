@@ -97,6 +97,20 @@ export class Charts extends Entity {
   })
   updated?: string;
 
+  @property({
+    type: 'string',
+    jsonSchema: {nullable: true},
+    postgresql: {columnName: 'link', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  link?: string;
+
+  @property({
+    type: 'string',
+    jsonSchema: {nullable: true},
+    postgresql: {columnName: 'function', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
+  })
+  function?: string;
+
   // Define well-known properties here
 
   // Indexer property to allow additional data

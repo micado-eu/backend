@@ -98,3 +98,4 @@ export * from './t-settings-translation-prod.model';
 export * from './mixed-icons.model';
 export * from './survey.model';
 export * from './survey-answers.model';
+export * from './board.model';
