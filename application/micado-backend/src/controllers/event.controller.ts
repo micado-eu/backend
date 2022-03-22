@@ -17,18 +17,27 @@ import {
   del,
   requestBody,
   RestBindings,
-  Response
+  Response,
+  Request
 } from '@loopback/rest';
 import { Event, EventTranslation } from '../models';
-import { EventRepository, LanguagesRepository } from '../repositories';
+import { EventRepository, EventTranslationRepository, LanguagesRepository, SettingsRepository } from '../repositories';
 import { inject } from '@loopback/core';
+import { FileUploadService, FILE_UPLOAD_SERVICE } from '../services';
+import csv from 'csv-parser'
+import fs from 'fs';
 
 export class EventController {
   constructor(
+    @inject(FILE_UPLOAD_SERVICE) private handler: FileUploadService,
     @repository(EventRepository)
     public eventRepository: EventRepository,
+    @repository(EventTranslationRepository)
+    public eventTranslationRepository: EventTranslationRepository,
     @repository(LanguagesRepository) 
     public languagesRepository: LanguagesRepository,
+    @repository(SettingsRepository) 
+    protected settingsRepository: SettingsRepository,
   ) { }
 
   @post('/events', {
@@ -443,7 +452,11 @@ export class EventController {
                 id: translation.id,
                 lang: translation.lang,
                 title: translation.event,
-                description: translation.description
+                description: translation.description,
+                startDate: eventElement.startDate,
+                endDate: eventElement.endDate,
+                location: eventElement.location,
+                cost: eventElement.cost
               })
           }
         })
@@ -458,12 +471,105 @@ export class EventController {
         { id: 'id', title: 'id' },
         { id: 'lang', title: 'lang' },
         { id: 'title', title: 'title' },
-        { id: 'description', title: 'description' }
+        { id: 'description', title: 'description' },
+        { id: 'startDate', title: 'startDate' },
+        { id: 'endDate', title: 'endDate' },
+        { id: 'location', title: 'location' },
+        { id: 'cost', title: 'cost' }
       ]
     })
     console.log(`Writing file in event-${idString}.csv`)
     await csvWriter.writeRecords(records)
     response.download(`.sandbox/event-${idString}.csv`, `event-${idString}.csv`)
     return response
+  }
+
+  @post('/events/import', {
+    responses: {
+      '200': {
+        description: 'export glossary to CSV',
+
+      },
+    },
+  })
+  async import(
+    @requestBody.file()
+    request: Request,
+    @inject(RestBindings.Http.RESPONSE) response: Response
+  ) {
+    let settings = await this.settingsRepository.find({});
+    let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
+    return new Promise<object>((resolve, reject) => {
+      this.handler(request, response, (err: unknown) => {
+        if (err) reject(err);
+        else {
+          let uploadedPayload: any = EventController.getFilesAndFields(request)
+          const results: any = [];
+          let csv_options: any = { trim: true }
+          fs.createReadStream('.sandbox' + "/" + uploadedPayload.files[0].originalname)
+            .pipe(csv(csv_options))
+            .on('data', (data: any) => results.push(data))
+            .on('end', () => {
+              this.loadData(results, def_lang.value)
+              resolve(uploadedPayload);
+            });
+        }
+      });
+    });
+  }
+
+  /**
+   * Get files and fields for the request
+   * @param request - Http request
+   */
+   private static getFilesAndFields(request: Request) {
+    const uploadedFiles = request.files;
+    const mapper = (f: globalThis.Express.Multer.File) => ({
+      fieldname: f.fieldname,
+      originalname: f.originalname,
+      encoding: f.encoding,
+      mimetype: f.mimetype,
+      size: f.size,
+    });
+    let files: object[] = [];
+    if (Array.isArray(uploadedFiles)) {
+      files = uploadedFiles.map(mapper);
+    } else {
+      for (const filename in uploadedFiles) {
+        files.push(...uploadedFiles[filename].map(mapper));
+      }
+    }
+    return { files, fields: request.body };
+  }
+
+  private loadData(csv: any, def_lang: any) {
+    const results = new Map();
+    csv.forEach((element: any) => {
+      results.has(element.id) ? results.get(element.id).push(element) : results.set(element.id, [element]);
+    });
+    results.forEach((value: any, key: any) => {
+      this.eventRepository.create({
+        startDate: value[0].startDate,
+        endDate: value[0].endDate,
+        location: value[0].location,
+        cost: value[0].cost,
+      }).then((newEntity) => {
+        const promises = []
+        for (const translation of value) {
+          const toSave = {
+            id: newEntity.id,
+            lang: translation.lang,
+            event: translation.title,
+            description: translation.description,
+            translationDate: new Date().toISOString()
+          }
+          if (translation.lang === def_lang) {
+            promises.push(this.eventTranslationRepository.create(Object.assign({translated: false}, toSave)))
+          }
+          promises.push(this.eventTranslationRepository.create(Object.assign({translated: true}, toSave)));
+        }
+        return Promise.all(promises)
+      })
+    });
   }
 }

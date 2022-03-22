@@ -18,17 +18,26 @@ import {
   del,
   requestBody,
   RestBindings,
-  Response
+  Response,
+  Request
 } from '@loopback/rest';
 import { Glossary, GlossaryTranslation } from '../models';
-import { GlossaryRepository, LanguagesRepository } from '../repositories';
+import { GlossaryRepository, GlossaryTranslationRepository, LanguagesRepository, SettingsRepository } from '../repositories';
+import { FileUploadService, FILE_UPLOAD_SERVICE } from '../services';
+import csv from 'csv-parser'
+import fs from 'fs';
 
 export class GlossaryController {
   constructor(
+    @inject(FILE_UPLOAD_SERVICE) private handler: FileUploadService,
     @repository(GlossaryRepository)
     public glossaryRepository: GlossaryRepository,
+    @repository(GlossaryTranslationRepository)
+    public glossaryTranslationRepository: GlossaryTranslationRepository,
     @repository(LanguagesRepository)
     public languagesRepository: LanguagesRepository,
+    @repository(SettingsRepository) 
+    protected settingsRepository: SettingsRepository,
   ) { }
 
   @post('/glossaries', {
@@ -347,5 +356,89 @@ export class GlossaryController {
     await csvWriter.writeRecords(records)
     response.download(`.sandbox/glossary-${idString}.csv`, `glossary-${idString}.csv`)
     return response
+  }
+
+  @post('/glossaries/import', {
+    responses: {
+      '200': {
+        description: 'export glossary to CSV',
+
+      },
+    },
+  })
+  async import(
+    @requestBody.file()
+    request: Request,
+    @inject(RestBindings.Http.RESPONSE) response: Response
+  ) {
+    let settings = await this.settingsRepository.find({});
+    let def_lang = settings.filter((el: any) => { return el.key === 'default_language' })[0]
+    return new Promise<object>((resolve, reject) => {
+      this.handler(request, response, (err: unknown) => {
+        if (err) reject(err);
+        else {
+          let uploadedPayload: any = GlossaryController.getFilesAndFields(request)
+          const results: any = [];
+          let csv_options: any = { trim: true }
+          fs.createReadStream('.sandbox' + "/" + uploadedPayload.files[0].originalname)
+            .pipe(csv(csv_options))
+            .on('data', (data: any) => results.push(data))
+            .on('end', () => {
+              this.loadData(results, def_lang.value)
+              resolve(uploadedPayload);
+            });
+        }
+      });
+    });
+  }
+
+  /**
+   * Get files and fields for the request
+   * @param request - Http request
+   */
+   private static getFilesAndFields(request: Request) {
+    const uploadedFiles = request.files;
+    const mapper = (f: globalThis.Express.Multer.File) => ({
+      fieldname: f.fieldname,
+      originalname: f.originalname,
+      encoding: f.encoding,
+      mimetype: f.mimetype,
+      size: f.size,
+    });
+    let files: object[] = [];
+    if (Array.isArray(uploadedFiles)) {
+      files = uploadedFiles.map(mapper);
+    } else {
+      for (const filename in uploadedFiles) {
+        files.push(...uploadedFiles[filename].map(mapper));
+      }
+    }
+    return { files, fields: request.body };
+  }
+
+  private loadData(csv: any, def_lang: any) {
+    const results = new Map();
+    csv.forEach((element: any) => {
+      results.has(element.id) ? results.get(element.id).push(element) : results.set(element.id, [element]);
+    });
+    results.forEach((value: any, key: any) => {
+      this.glossaryRepository.create({}).then((newEntity) => {
+        const promises = []
+        for (const translation of value) {
+          const toSave = {
+            id: newEntity.id,
+            lang: translation.lang,
+            title: translation.title,
+            description: translation.description,
+            translationDate: new Date().toISOString()
+          }
+          if (translation.lang === def_lang) {
+            promises.push(this.glossaryTranslationRepository.create(Object.assign({translated: false}, toSave)))
+          }
+          promises.push(this.glossaryTranslationRepository.create(Object.assign({translated: true}, toSave)));
+        }
+        return Promise.all(promises)
+      })
+    });
   }
 }
