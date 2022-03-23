@@ -498,6 +498,11 @@ export class InformationController {
           let uploadedPayload: any = InformationController.getFilesAndFields(request)
           const results: any = [];
           let csv_options: any = { trim: true }
+          if (uploadedPayload.files[0] === undefined) {
+            console.log('No file uploaded')
+            resolve({ status: 'No file uploaded' })
+            return
+          }
           fs.createReadStream('.sandbox' + "/" + uploadedPayload.files[0].originalname)
             .pipe(csv(csv_options))
             .on('data', (data: any) => results.push(data))
