@@ -1,8 +1,7 @@
 // ---------- ADD IMPORTS -------------
 import {AuthenticationComponent} from '@loopback/authentication';
-import {
-  JWTAuthenticationComponent
-} from '@loopback/authentication-jwt';
+//import {  JWTAuthenticationComponent} from '@loopback/authentication-jwt';
+//import {AuthenticationComponent, Strategies} from 'loopback4-authentication';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
 import {RepositoryMixin} from '@loopback/repository';
@@ -17,11 +16,23 @@ import multer from 'multer';
 import path from 'path';
 import {MySequence} from './sequence';
 import {FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY} from './services/file-upload-service.service';
-
+//import { KeycloakVerifyProvider } from './modules/keycloak-verify.provider';
+import {registerAuthenticationStrategy} from '@loopback/authentication';
+import {MicadoAuthenticationStrategy} from './modules/micado-strategy'
 export class MicadoBackendApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
-  constructor(options: ApplicationConfig = {}) {
+  constructor(options: ApplicationConfig = {
+    cors: {
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      preflightContinue: true,
+      optionsSuccessStatus: 204,
+      maxAge: 86400,
+      credentials: false,
+    }
+    
+  }) {
     super(options);
 
     // Set up the custom sequence
@@ -53,8 +64,11 @@ export class MicadoBackendApplication extends BootMixin(
     // ------ ADD SNIPPET AT THE BOTTOM ---------
     // Mount authentication system
     this.component(AuthenticationComponent);
+    registerAuthenticationStrategy(this, MicadoAuthenticationStrategy);
     // Mount jwt component
-    this.component(JWTAuthenticationComponent);
+  //  this.component(JWTAuthenticationComponent);
+  // Customize authentication verify handlers
+    //this.bind(Strategies.Passport.KEYCLOAK_VERIFIER).toProvider(   KeycloakVerifyProvider,  );
   }
 
   /**

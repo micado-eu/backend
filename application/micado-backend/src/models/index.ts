@@ -99,3 +99,4 @@ export * from './mixed-icons.model';
 export * from './survey.model';
 export * from './survey-answers.model';
 export * from './board.model';
+export * from './auth-user.model';

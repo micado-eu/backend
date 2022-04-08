@@ -1,0 +1,255 @@
+{
+  "name": "keycloak",
+  "connector": "rest",
+  "baseURL": "",
+  "debug": true,
+  "options": {
+    "strictSSL": false
+  },
+  "crud": false,
+  "operations": [
+    {
+      "template": {
+        "method": "POST",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/users",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "username": "{username}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "createUser": [
+          "username",
+          "realm",
+          "token",
+          "baseurl"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "POST",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/groups",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "name": "{name}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "createGroup": [
+          "name",
+          "realm",
+          "token",
+          "baseurl"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "POST",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/users/{userId}/groups/{groupId}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "name": "{name}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "addToGroup": [
+          "userId",
+          "groupId",
+          "realm",
+          "token",
+          "baseurl"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/clients/{clientId}/roles",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getClientRoles": [
+          "baseurl",
+          "realm",
+          "clientId",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/groups",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getGroupId": [
+          "baseurl",
+          "realm",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/roles",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getRealmRoles": [
+          "baseurl",
+          "realm",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/clients?clientId={clientId}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getClientId": [
+          "baseurl",
+          "realm",
+          "clientId",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/clients/{clientId}/roles?name={roleName}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getRoleId": [
+          "baseurl",
+          "realm",
+          "clientId",
+          "roleName",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "POST",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/users/{userid}/role-mappings/realm",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "payload": "{payload}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "addRole": [
+          "baseurl",
+          "realm",
+          "userid",
+          "token",
+          "payload"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "http://{baseurl}/auth/admin/realms/{realm}/users?username={username}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getUser": [
+          "baseurl",
+          "realm",
+          "username",
+          "token"
+        ]
+      }
+    }
+  ]
+}
