@@ -13,7 +13,6 @@ import {inject} from '@loopback/context';
 import {
   FindRoute,
   InvokeMethod,
-  InvokeMiddleware,
   ParseParams,
   Reject,
   RequestContext,
@@ -27,9 +26,6 @@ const SequenceActions = RestBindings.SequenceActions;
 
 
 export class MySequence implements SequenceHandler {
-  //-----snippet added to try to fix cors----------
-@inject(SequenceActions.INVOKE_MIDDLEWARE, {optional: true}) protected invokeMiddleware: InvokeMiddleware = () => false;
-//---------end snippet---------
   constructor(
     @inject(SequenceActions.FIND_ROUTE) protected findRoute: FindRoute,
     @inject(SequenceActions.PARSE_PARAMS) protected parseParams: ParseParams,
@@ -44,13 +40,7 @@ export class MySequence implements SequenceHandler {
       const {request, response} = context;
       response.header('Access-Control-Allow-Origin', '*');
             response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin');
-            const finished = await this.invokeMiddleware(context);
-      if (finished) return;
-      const route = this.findRoute(request);
-      const args = await this.parseParams(request, route);
-      const result = await this.invoke(route, args);
-      this.send(response, result);
-            /*if (request.method == 'OPTIONS') {
+            if (request.method == 'OPTIONS') {
                 response.status(200)
                 this.send(response, 'ok');
             } else {
@@ -67,11 +57,11 @@ export class MySequence implements SequenceHandler {
                 response,
               );
               */
-              /*console.log('nella sequence')
+              console.log('nella sequence')
               const args = await this.parseParams(request, route);
               const result = await this.invoke(route, args);
               this.send(response, result);
-            }*/
+            }
     } catch (err) {
       // ------ ADD SNIPPET ---------
       if (
