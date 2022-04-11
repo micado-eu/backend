@@ -26,7 +26,7 @@ export class MicadoBackendApplication extends BootMixin(
     cors: {
       origin: '*',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      preflightContinue: true,
+      preflightContinue: false,
       optionsSuccessStatus: 204,
       maxAge: 86400,
       credentials: false,
