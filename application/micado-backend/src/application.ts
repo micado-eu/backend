@@ -27,7 +27,7 @@ export class MicadoBackendApplication extends BootMixin(
       origin: '*',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       preflightContinue: true,
-      //allowedHeaders:['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'Access-Control-Allow-Origin'],
+      allowedHeaders:['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'Access-Control-Allow-Origin'],
       optionsSuccessStatus: 204,
       maxAge: 86400,
       credentials: false,

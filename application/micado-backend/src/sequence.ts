@@ -45,6 +45,7 @@ export class MySequence implements SequenceHandler {
       response.header('Access-Control-Allow-Origin', '*');
             response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin');
             if (request.method == 'OPTIONS') {
+                console.log("I AM IN THE SEQUENCE FOR AN OPTION REQUEST")
                 response.status(200)
                 this.send(response, 'ok');
             } else {
@@ -55,7 +56,7 @@ export class MySequence implements SequenceHandler {
               //call authentication action
               //console.log(request)
               const authUser: any = await this.authenticateRequest(request);
-              console.log(authUser)
+              //console.log(authUser)
               // ------------- END OF SNIPPET -------------
               /*
               const authUser: AuthUser = await this.authenticateRequest(
