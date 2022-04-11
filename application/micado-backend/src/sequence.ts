@@ -13,6 +13,7 @@ import {inject} from '@loopback/context';
 import {
   FindRoute,
   InvokeMethod,
+  InvokeMiddleware,
   ParseParams,
   Reject,
   RequestContext,
@@ -26,6 +27,9 @@ const SequenceActions = RestBindings.SequenceActions;
 
 
 export class MySequence implements SequenceHandler {
+  //-----snippet added to try to fix cors----------
+@inject(SequenceActions.INVOKE_MIDDLEWARE, {optional: true}) protected invokeMiddleware: InvokeMiddleware = () => false;
+//---------end snippet---------
   constructor(
     @inject(SequenceActions.FIND_ROUTE) protected findRoute: FindRoute,
     @inject(SequenceActions.PARSE_PARAMS) protected parseParams: ParseParams,
@@ -39,11 +43,13 @@ export class MySequence implements SequenceHandler {
     try {
       const {request, response} = context;
       response.header('Access-Control-Allow-Origin', '*');
-            response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin');
+            response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin');
             if (request.method == 'OPTIONS') {
                 response.status(200)
                 this.send(response, 'ok');
             } else {
+              const finished = await this.invokeMiddleware(context);
+              if (finished) return;
               const route = this.findRoute(request);
               // ------ ADD SNIPPET ---------
               //call authentication action

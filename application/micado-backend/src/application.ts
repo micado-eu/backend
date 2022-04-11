@@ -1,6 +1,5 @@
 // ---------- ADD IMPORTS -------------
 import {AuthenticationComponent} from '@loopback/authentication';
-import {DefaultSequence} from '@loopback/rest';
 //import {  JWTAuthenticationComponent} from '@loopback/authentication-jwt';
 //import {AuthenticationComponent, Strategies} from 'loopback4-authentication';
 import {BootMixin} from '@loopback/boot';
@@ -38,7 +37,7 @@ export class MicadoBackendApplication extends BootMixin(
     super(options);
 
     // Set up the custom sequence
-    this.sequence(DefaultSequence);
+    this.sequence(MySequence);
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
