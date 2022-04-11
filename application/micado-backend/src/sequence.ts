@@ -42,9 +42,10 @@ export class MySequence implements SequenceHandler {
   async handle(context: RequestContext) {
     try {
       const {request, response} = context;
-      response.header('Access-Control-Allow-Origin', '*');
-            response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin');
-            if (request.method == 'OPTIONS') {
+      //response.header('Access-Control-Allow-Origin', '*');
+        //    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin');
+        console.log(request.method)    
+        if (request.method == 'OPTIONS') {
                 console.log("I AM IN THE SEQUENCE FOR AN OPTION REQUEST")
                 response.status(200)
                 this.send(response, 'ok');
