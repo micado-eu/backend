@@ -45,11 +45,11 @@ export class MySequence implements SequenceHandler {
       //response.header('Access-Control-Allow-Origin', '*');
         //    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin');
         console.log(request.method)    
-        if (request.method == 'OPTIONS') {
+        /*if (request.method == 'OPTIONS') {
                 console.log("I AM IN THE SEQUENCE FOR AN OPTION REQUEST")
                 response.status(200)
                 this.send(response, 'ok');
-            } else {
+            } else {*/
               const finished = await this.invokeMiddleware(context);
               if (finished) return;
               const route = this.findRoute(request);
@@ -69,7 +69,7 @@ export class MySequence implements SequenceHandler {
               const args = await this.parseParams(request, route);
               const result = await this.invoke(route, args);
               this.send(response, result);
-            }
+            //}
     } catch (err) {
       // ------ ADD SNIPPET ---------
       if (
