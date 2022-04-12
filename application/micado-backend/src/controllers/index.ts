@@ -139,3 +139,4 @@ export * from './survey.controller';
 export * from './mixed-icons.controller';
 export * from './step-mixed-icons.controller';
 export * from './board.controller';
+export * from './user-entity.controller';

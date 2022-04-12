@@ -92,3 +92,4 @@ export * from './t-settings-translation.repository';
 export * from './t-settings.repository';
 export * from './board.repository';
 export * from './auth-user.repository';
+export * from './user-entity.repository';
