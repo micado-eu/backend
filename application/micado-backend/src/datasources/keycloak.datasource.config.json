@@ -11,7 +11,7 @@
     {
       "template": {
         "method": "POST",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/users",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -37,7 +37,7 @@
     {
       "template": {
         "method": "POST",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/groups",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/groups",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -62,15 +62,12 @@
     },
     {
       "template": {
-        "method": "POST",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/users/{userId}/groups/{groupId}",
+        "method": "PUT",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userId}/groups/{groupId}",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
           "Authorization": "Bearer {token}"
-        },
-        "body": {
-          "name": "{name}"
         },
         "options": {
           "strictSSL": false,
@@ -90,7 +87,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/clients/{clientId}/roles",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/clients/{clientId}/roles",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -113,7 +110,74 @@
     {
       "template": {
         "method": "GET",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/groups",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/groups",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getGroupList": [
+          "baseurl",
+          "realm",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{id}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getUser": [
+          "baseurl",
+          "realm",
+          "id",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getUserList": [
+          "baseurl",
+          "realm",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/groups",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -135,7 +199,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/roles",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/roles",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -157,7 +221,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/clients?clientId={clientId}",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/clients?clientId={clientId}",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -180,7 +244,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/clients/{clientId}/roles?name={roleName}",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/clients/{clientId}/roles?name={roleName}",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
@@ -204,15 +268,13 @@
     {
       "template": {
         "method": "POST",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/users/{userid}/role-mappings/realm",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userid}/role-mappings/realm",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",
           "Authorization": "Bearer {token}"
         },
-        "body": {
-          "payload": "{payload}"
-        },
+        "body": "{payload}",
         "options": {
           "strictSSL": false,
           "useQuerystring": true
@@ -231,7 +293,7 @@
     {
       "template": {
         "method": "GET",
-        "url": "http://{baseurl}/auth/admin/realms/{realm}/users?username={username}",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users?username={username}",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",

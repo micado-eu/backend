@@ -9,6 +9,9 @@ export interface KeycloakService {
   // json file.
 
   createUser(username: String, realm: String, token: String, baseurl: String): Promise<any>;
+  getUser(id:String, realm: String, token: String, baseurl: String): Promise<any>;
+  getUserList(realm: String, token: String, baseurl: String): Promise<any>;
+  getGroupList(realm: String, token: String, baseurl: String): Promise<any>;
   getClientRoles(baseurl: String, realm: String, clientId: String, token: String): Promise<any>;
   getRealmRoles(baseurl: String, realm: String, token: String): Promise<any>;
   getRoleId(baseurl: String, realm: String, clientId: String, roleName:String, token: String): Promise<any>;
