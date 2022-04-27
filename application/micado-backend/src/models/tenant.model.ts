@@ -7,7 +7,8 @@ import { UmTenant } from './um-tenant.model';
 export class Tenant extends Entity {
   @property({
     type: 'number',
-    required: true,
+    required: false,
+    generated:true,
     scale: 0,
     id: 1,
     postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },

@@ -38,8 +38,8 @@ export class TenantController {
       content: {
         'application/json': {
           schema: getModelSchemaRef(Tenant, {
-            title: 'NewTenant'
-
+            title: 'NewTenant',
+            exclude: ['id'],
           }),
         },
       },
