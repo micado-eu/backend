@@ -42,6 +42,12 @@ export class Tenant extends Entity {
   })
   address?: string;
 
+  @property({
+    type: 'string',
+    postgresql: { columnName: 'realm', dataType: 'text', dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  realm?: string;
+
   @hasOne(() => UmTenant, { keyTo: 'umId' })
   tenantData: UmTenant;
   // Define well-known properties here
