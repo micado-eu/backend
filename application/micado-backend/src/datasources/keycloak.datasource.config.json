@@ -11,6 +11,27 @@
     {
       "template": {
         "method": "POST",
+        "url": "https://{baseurl}/auth/realms/master/protocol/openid-connect/token",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/x-www-form-urlencoded"
+        },
+        "body": "{payload}",
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getNgoManager": [
+          "baseurl",
+          "payload"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "POST",
         "url": "https://{baseurl}/auth/admin/realms/{realm}/users",
         "headers": {
           "accept": "*/*",

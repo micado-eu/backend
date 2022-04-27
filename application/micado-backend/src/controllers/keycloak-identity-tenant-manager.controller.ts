@@ -4,23 +4,24 @@ import {get, param, post} from '@loopback/rest';
 import {
   KeycloakService
 } from '../services/keycloak.service';
+const querystring = require('querystring');
 
 
+const innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":8443")
 export class KeycloakIdentityTenantManagerController {
   constructor(
     //@repository(TenantRepository) public tenantRepository: TenantRepository,
     @inject('services.Keycloak') protected keycloakService: KeycloakService,
   ) { }
 
-
   @post('/createKeycloakUser')
   async createUser(
     @param({name: 'username', in: 'query', required: false}) username: string,
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
-    @param({name: 'baseurl', in: 'query', required: false}) baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
   ): Promise<any> {
     //Preconditions
+    
     console.log(username)
     console.log(realm)
     console.log(token)
@@ -28,7 +29,7 @@ export class KeycloakIdentityTenantManagerController {
       username,
       realm,
       token,
-      baseurl
+      process.env.IDENTITY_HOSTNAME + innerPort
     );
   }
   @post('/createKeycloakUserWithRole')
@@ -36,13 +37,12 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'username', in: 'query', required: false}) username: string,
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'role', in: 'query', required: false}) role: string,
   ): Promise<any> {
     //Preconditions
-    await this.createUser(username, realm, token, baseurl)
+    await this.createUser(username, realm, token)
     const user = await this.keycloakService.getUser(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       username,
       token
@@ -52,7 +52,7 @@ export class KeycloakIdentityTenantManagerController {
     if (role.length > 0) {
       console.log("inside if")
       console.log(user)
-      await this.addRole(baseurl, realm,  token, user[0].id, role)
+      await this.addRole(realm,  token, user[0].id, role)
       return user
     }
     else {
@@ -64,27 +64,42 @@ export class KeycloakIdentityTenantManagerController {
   async createKeycloakUserWithRoleAndGroup(
     @param({name: 'username', in: 'query', required: false}) username: string,
     @param({name: 'realm', in: 'query', required: false}) realm: string,
-    @param({name: 'token', in: 'query', required: false}) token: string,
-    @param({name: 'baseurl', in: 'query', required: false}) baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'role', in: 'query', required: false}) role: string,
     @param({name: 'group', in: 'query', required: false}) group: string,
   ): Promise<any> {
     //Preconditions
-    await this.createUser(username, realm, token, baseurl)
+    let data= {
+      username: process.env.WSO2_IDENTITY_ADMIN_USER,
+      password: process.env.WSO2_IDENTITY_ADMIN_PWD,
+      client_id:"ngo-realm",
+      client_secret:process.env.NGO_REALM_CLIENT_SECRET,
+      grant_type:"password",
+    }
+    console.log(data)
+    let manager =  await this.keycloakService.getNgoManager(
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      querystring.stringify(data)
+
+
+    )
+    let token = JSON.parse(manager).access_token
+
+    
+    await this.createUser(username, realm, token)
     var user = await this.keycloakService.getUser(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       username,
       token
     )
     console.log("I am new user")
     console.log(user)
-    await this.addToGroup(user[0].id, group, realm, token, baseurl)
+    await this.addToGroup(user[0].id, group, realm, token)
     let roles_array = JSON.parse(role)
     if (roles_array.length > 0) {
       console.log("inside if")
       console.log(user)
-      await this.addRole(baseurl, realm, token, user[0].id, roles_array)
+      await this.addRole(realm, token, user[0].id, roles_array)
       return user
     }
     else {
@@ -94,14 +109,13 @@ export class KeycloakIdentityTenantManagerController {
 
   @get('/getClientRoles')
   async getClientRoles(
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'clientId', in: 'query', required: false}) clientId: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     //Preconditions
     return this.keycloakService.getClientRoles(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       clientId,
       token
@@ -111,14 +125,13 @@ export class KeycloakIdentityTenantManagerController {
 
   @get('/getUser')
   async getUser(
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'id', in: 'query', required: false}) id: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     //Preconditions
     return this.keycloakService.getUser(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       id,
       token
@@ -127,13 +140,12 @@ export class KeycloakIdentityTenantManagerController {
 
   @get('/getUserList')
   async getUserList(
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     //Preconditions
     return this.keycloakService.getUserList(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       token
     );
@@ -141,12 +153,11 @@ export class KeycloakIdentityTenantManagerController {
 
   @get('/getGroupList')
   async getGroupList(
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     return this.keycloakService.getGroupList(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       token
     );
@@ -154,14 +165,13 @@ export class KeycloakIdentityTenantManagerController {
 
   @get('/getClientId')
   async getClientId(
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'clientId', in: 'query', required: false}) clientId: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     //Preconditions
     return this.keycloakService.getClientId(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       clientId,
       token
@@ -171,13 +181,12 @@ export class KeycloakIdentityTenantManagerController {
 
   @get('/getGroupId')
   async getGroupId(
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     //Preconditions
     return this.keycloakService.getGroupId(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       token
     );
@@ -190,10 +199,9 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'groupId', in: 'query', required: false}) groupId: string,
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
   ): Promise<any> {
     //Preconditions
-    let groups = await this.getGroupList(baseurl, realm, token)
+    let groups = await this.getGroupList(realm, token)
     let groupStringId = groups.filter((group:any)=>{
       return group.name == groupId
     })[0].id
@@ -203,7 +211,7 @@ export class KeycloakIdentityTenantManagerController {
       groupStringId,
       realm,
       token,
-      baseurl
+      process.env.IDENTITY_HOSTNAME + innerPort
     );
 
   }
@@ -213,7 +221,6 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'name', in: 'query', required: false}) name: string,
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
   ): Promise<any> {
     //Preconditions
     /*const axios = require('axios').default;
@@ -233,14 +240,13 @@ export class KeycloakIdentityTenantManagerController {
       name,
       realm,
       token,
-      baseurl
+      process.env.IDENTITY_HOSTNAME + innerPort
     );
 
   }
 
   @post('/addRoleToUser')
   async addRole(
-    @param({name: 'baseurl', in: 'query', required: false})  baseurl = (process.env.IDENTITY_HOSTNAME != null ? process.env.IDENTITY_HOSTNAME : ''),
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
     @param({name: 'userid', in: 'query', required: false}) userid: string,
@@ -252,7 +258,7 @@ export class KeycloakIdentityTenantManagerController {
     console.log("getting role")
 
     const roles = await this.keycloakService.getRealmRoles(
-      baseurl,
+      process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
       token
     );
@@ -270,7 +276,7 @@ export class KeycloakIdentityTenantManagerController {
       console.log("I A PAYLOAD")
       console.log(payload)
       console.log("adding role")
-      const url = 'https://' + baseurl + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
+      const url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
       console.log(url)
       const axios = require('axios').default;
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;

@@ -21,6 +21,7 @@ export interface KeycloakService {
   createGroup(name: String, realm: String, token: String, baseurl:String): Promise<any>;
   addToGroup(userId: String, groupId: String, realm: String, token: String, baseurl:String): Promise<any>;
   getGroupId(baseurl: String, realm: String, token: String): Promise<any>;
+  getNgoManager(baseurl: String,payload:any): Promise<any>;
 
 }
 
