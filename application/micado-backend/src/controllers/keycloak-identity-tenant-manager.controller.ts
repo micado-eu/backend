@@ -220,22 +220,20 @@ export class KeycloakIdentityTenantManagerController {
   async createGroup(
     @param({name: 'name', in: 'query', required: false}) name: string,
     @param({name: 'realm', in: 'query', required: false}) realm: string,
-    @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
-    //Preconditions
-    /*const axios = require('axios').default;
-    const url = 'http://' + baseurl + '/auth/admin/realms/' + realm + '/groups'
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-    axios({
-      url: url,
-      method: "post",
-      data: {
-        name: name, // This is the body part
-      }
+    let data= {
+      username: process.env.WSO2_IDENTITY_ADMIN_USER,
+      password: process.env.WSO2_IDENTITY_ADMIN_PWD,
+      client_id:"ngo-realm",
+      client_secret:process.env.NGO_REALM_CLIENT_SECRET,
+      grant_type:"password",
     }
-    ).then((user:any)=>{
-      console.log(user)
-    })*/
+    console.log(data)
+    let manager =  await this.keycloakService.getNgoManager(
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      querystring.stringify(data)
+    )
+    let token = JSON.parse(manager).access_token
     return this.keycloakService.createGroup(
       name,
       realm,
