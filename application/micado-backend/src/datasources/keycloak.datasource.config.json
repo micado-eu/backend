@@ -39,7 +39,18 @@
           "Authorization": "Bearer {token}"
         },
         "body": {
-          "username": "{username}"
+          "username": "{username}",
+          "firstName":"{firstName}",
+          "lastName":"{lastName}",
+          "email":"{email}",
+          "enabled":true,
+          "credentials":[
+            {
+              "type":"password",
+              "value":"{password}",
+              "temporary":false
+            }
+          ]
         },
         "options": {
           "strictSSL": false,
@@ -49,6 +60,10 @@
       "functions": {
         "createUser": [
           "username",
+          "firstName",
+          "lastName",
+          "email",
+          "password",
           "realm",
           "token",
           "baseurl"

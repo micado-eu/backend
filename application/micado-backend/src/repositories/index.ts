@@ -44,7 +44,6 @@ export * from './event-category.repository';
 export * from './event-category-translation.repository';
 export * from './information-category.repository';
 export * from './information-category-translation.repository';
-export * from './user.repository';
 export * from './user-attribute.repository';
 export * from './event-tag.repository';
 export * from './event-tag-translation.repository';
@@ -93,3 +92,6 @@ export * from './t-settings.repository';
 export * from './board.repository';
 export * from './auth-user.repository';
 export * from './user-entity.repository';
+export * from './user.repository';
+export * from './userone.repository';
+

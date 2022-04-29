@@ -49,12 +49,12 @@ export class IndividualInterventionPlanInterventions extends Entity {
   completed?: boolean;
 
   @property({
-    type: 'number',
+    type: 'string',
     scale: 0,
     jsonSchema: { nullable: true },
-    postgresql: {columnName: 'validating_user_id', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+    postgresql: {columnName: 'validating_user_id', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
-  validatingUserId?: number;
+  validatingUserId?: string;
 
   @property({
     type: 'number',

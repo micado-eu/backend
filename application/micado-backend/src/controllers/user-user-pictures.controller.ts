@@ -39,7 +39,7 @@ export class UserUserPicturesController {
     },
   })
   async get(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<UserPictures>,
   ): Promise<UserPictures> {
     return this.userRepository.userPicture(id).get(filter);
@@ -54,14 +54,14 @@ export class UserUserPicturesController {
     },
   })
   async create(
-    @param.path.number('id') id: typeof User.prototype.umId,
+    @param.path.string('id') id: typeof User.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(UserPictures, {
             title: 'NewUserPicturesInUser',
             exclude: ['id'],
-            optional: ['id']
+            optional: ['userId']
           }),
         },
       },
@@ -79,7 +79,7 @@ export class UserUserPicturesController {
     },
   })
   async patch(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -102,7 +102,7 @@ export class UserUserPicturesController {
     },
   })
   async delete(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.query.object('where', getWhereSchemaFor(UserPictures)) where?: Where<UserPictures>,
   ): Promise<Count> {
     return this.userRepository.userPicture(id).delete(where);

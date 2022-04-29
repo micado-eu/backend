@@ -5,7 +5,7 @@ import {UserPreferences} from './user-preferences.model';
 import {UserConsent} from './user-consent.model';
 
 @model()
-export class User extends Entity {
+export class Userone extends Entity {
   @property({
     type: 'string',
     id: true,
@@ -36,13 +36,13 @@ export class User extends Entity {
   @hasOne(() => UserConsent, {keyTo: 'idUser'})
   userConsent: UserConsent;
 
-  constructor(data?: Partial<User>) {
+  constructor(data?: Partial<Userone>) {
     super(data);
   }
 }
 
-export interface UserRelations {
+export interface UseroneRelations {
   // describe navigational properties here
 }
 
-export type UserWithRelations = User & UserRelations;
+export type UseroneWithRelations = Userone & UseroneRelations;

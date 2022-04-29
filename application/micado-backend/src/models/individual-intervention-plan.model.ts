@@ -46,11 +46,11 @@ export class IndividualInterventionPlan extends Entity {
   caseManager?: string;
 
   @property({
-    type: 'number',
+    type: 'string',
     scale: 0,
-    postgresql: {columnName: 'user_id', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+    postgresql: {columnName: 'user_id', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
-  userId?: number;
+  userId?: string;
 
   @property({
     type: 'number',

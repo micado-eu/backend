@@ -120,7 +120,7 @@ export class UserConsentController {
     },
   })
   async findById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.filter(UserConsent, {exclude: 'where'}) filter?: FilterExcludingWhere<UserConsent>
   ): Promise<UserConsent> {
     return this.userConsentRepository.findById(id, filter);
@@ -134,7 +134,7 @@ export class UserConsentController {
     },
   })
   async updateById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -155,7 +155,7 @@ export class UserConsentController {
     },
   })
   async replaceById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody() userConsent: UserConsent,
   ): Promise<void> {
     await this.userConsentRepository.replaceById(id, userConsent);
@@ -168,7 +168,7 @@ export class UserConsentController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.userConsentRepository.deleteById(id);
   }
 }

@@ -12,6 +12,9 @@ import {
 } from '@loopback/rest';
 import {Process} from '../models';
 import {LanguagesRepository, ProcessRepository, SettingsRepository} from '../repositories';
+import {AuthenticationBindings, authenticate} from '@loopback/authentication';
+import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import {inject} from '@loopback/context';
 
 
 
@@ -20,6 +23,7 @@ export class ProcessController {
     @repository(ProcessRepository) public processRepository: ProcessRepository,
     @repository(SettingsRepository) protected settingsRepository: SettingsRepository,
     @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
+    @inject(SecurityBindings.USER, {optional:true}) private userProfile: UserProfile, 
   ) { }
 
   @post('/processes', {
@@ -75,7 +79,7 @@ export class ProcessController {
       },
     },
   })
-  //@authenticate('jwt')
+  @authenticate('micado')
   async find(
     @param.filter(Process) filter?: Filter<Process>,
   ): Promise<Process[]> {

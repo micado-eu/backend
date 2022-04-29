@@ -39,7 +39,7 @@ export class UserUserConsentController {
     },
   })
   async get(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<UserConsent>,
   ): Promise<UserConsent> {
     return this.userRepository.userConsent(id).get(filter);
@@ -54,7 +54,7 @@ export class UserUserConsentController {
     },
   })
   async create(
-    @param.path.number('id') id: typeof User.prototype.umId,
+    @param.path.string('id') id: typeof User.prototype.id,
     @requestBody({
       content: {
         'application/json': {
@@ -79,7 +79,7 @@ export class UserUserConsentController {
     },
   })
   async patch(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -102,7 +102,7 @@ export class UserUserConsentController {
     },
   })
   async delete(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.query.object('where', getWhereSchemaFor(UserConsent)) where?: Where<UserConsent>,
   ): Promise<Count> {
     return this.userRepository.userConsent(id).delete(where);

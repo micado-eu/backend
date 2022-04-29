@@ -52,7 +52,6 @@ export * from './event-category-translation.model';
 export * from './information-category-translation.model';
 export * from './step-document.model';
 export * from './user-types-translation.model';
-export * from './user.model';
 export * from './user-attribute.model';
 export * from './document-type-picture.model';
 export * from './step-link.model';
@@ -101,3 +100,6 @@ export * from './survey-answers.model';
 export * from './board.model';
 export * from './auth-user.model';
 export * from './user-entity.model';
+export * from './user.model';
+export * from './userone.model';
+

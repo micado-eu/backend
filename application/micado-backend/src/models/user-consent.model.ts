@@ -5,13 +5,13 @@ import {Entity, model, property} from '@loopback/repository';
 })
 export class UserConsent extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
     scale: 0,
     id: 1,
-    postgresql: {columnName: 'id_user', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
+    postgresql: {columnName: 'id_user', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO'},
   })
-  idUser: number;
+  idUser: string;
 
   @property({
     type: 'string',

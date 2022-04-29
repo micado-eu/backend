@@ -17,66 +17,66 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {User} from '../models';
-import {UserRepository} from '../repositories';
+import {Userone} from '../models';
+import {UserRepositoryOne} from '../repositories';
 
-export class UserController {
+export class UseroneController {
   constructor(
-    @repository(UserRepository)
-    public userRepository : UserRepository,
+    @repository(UserRepositoryOne)
+    public userRepository : UserRepositoryOne,
   ) {}
 
-  @post('/users')
+  @post('/usersone')
   @response(200, {
     description: 'User model instance',
-    content: {'application/json': {schema: getModelSchemaRef(User)}},
+    content: {'application/json': {schema: getModelSchemaRef(Userone)}},
   })
   async create(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {
+          schema: getModelSchemaRef(Userone, {
             title: 'NewUser',
             
           }),
         },
       },
     })
-    user: User,
-  ): Promise<User> {
+    user: Userone,
+  ): Promise<Userone> {
     return this.userRepository.create(user);
   }
 
-  @get('/users/count')
+  @get('/usersone/count')
   @response(200, {
     description: 'User model count',
     content: {'application/json': {schema: CountSchema}},
   })
   async count(
-    @param.where(User) where?: Where<User>,
+    @param.where(Userone) where?: Where<Userone>,
   ): Promise<Count> {
     return this.userRepository.count(where);
   }
 
-  @get('/users')
+  @get('/usersone')
   @response(200, {
     description: 'Array of User model instances',
     content: {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(User, {includeRelations: true}),
+          items: getModelSchemaRef(Userone, {includeRelations: true}),
         },
       },
     },
   })
   async find(
-    @param.filter(User) filter?: Filter<User>,
-  ): Promise<User[]> {
+    @param.filter(Userone) filter?: Filter<Userone>,
+  ): Promise<Userone[]> {
     return this.userRepository.find(filter);
   }
 
-  @patch('/users')
+  @patch('/usersone')
   @response(200, {
     description: 'User PATCH success count',
     content: {'application/json': {schema: CountSchema}},
@@ -85,33 +85,33 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(Userone, {partial: true}),
         },
       },
     })
-    user: User,
-    @param.where(User) where?: Where<User>,
+    user: Userone,
+    @param.where(Userone) where?: Where<Userone>,
   ): Promise<Count> {
     return this.userRepository.updateAll(user, where);
   }
 
-  @get('/users/{id}')
+  @get('/usersone/{id}')
   @response(200, {
     description: 'User model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(User, {includeRelations: true}),
+        schema: getModelSchemaRef(Userone, {includeRelations: true}),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
-  ): Promise<User> {
+    @param.filter(Userone, {exclude: 'where'}) filter?: FilterExcludingWhere<Userone>
+  ): Promise<Userone> {
     return this.userRepository.findById(id, filter);
   }
 
-  @patch('/users/{id}')
+  @patch('/usersone/{id}')
   @response(204, {
     description: 'User PATCH success',
   })
@@ -120,27 +120,27 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(Userone, {partial: true}),
         },
       },
     })
-    user: User,
+    user: Userone,
   ): Promise<void> {
     await this.userRepository.updateById(id, user);
   }
 
-  @put('/users/{id}')
+  @put('/usersone/{id}')
   @response(204, {
     description: 'User PUT success',
   })
   async replaceById(
     @param.path.string('id') id: string,
-    @requestBody() user: User,
+    @requestBody() user: Userone,
   ): Promise<void> {
     await this.userRepository.replaceById(id, user);
   }
 
-  @del('/users/{id}')
+  @del('/usersone/{id}')
   @response(204, {
     description: 'User DELETE success',
   })

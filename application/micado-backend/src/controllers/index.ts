@@ -68,8 +68,7 @@ export * from './event-category.controller';
 export * from './event-category-event-category-translation.controller'
 export * from './information-category.controller';
 export * from './information-category-information-category-translation.controller'
-export * from './user.controller';
-export * from './user-user-attribute.controller';
+//export * from './user-user-attribute.controller';
 export * from './user-individual-intervention-plan.controller';
 export * from './individual-intervention-plan-individual-intervention-plan-interventions.controller';
 export * from './individual-intervention-plan.controller';
@@ -97,7 +96,7 @@ export * from './batch-loader.controller';
 export * from './ratings.controller';
 export * from './migrant-app-config.controller';
 export * from './um-tenant.controller';
-export * from './user-tenant.controller';
+//export * from './user-tenant.controller';
 export * from './tenant.controller';
 export * from './process-produced-documents.controller';
 export * from './process-process-produced-documents.controller';
@@ -140,3 +139,6 @@ export * from './mixed-icons.controller';
 export * from './step-mixed-icons.controller';
 export * from './board.controller';
 export * from './user-entity.controller';
+export * from './user.controller';
+export * from './userone.controller';
+

@@ -8,7 +8,7 @@ export interface KeycloakService {
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.
 
-  createUser(username: String, realm: String, token: String, baseurl: String): Promise<any>;
+  createUser(username: String, firstName: String, lastName:String, email: String, password:String, realm: String, token: String, baseurl: String): Promise<any>;
   getUser(id:String, realm: String, token: String, baseurl: String): Promise<any>;
   getUserList(realm: String, token: String, baseurl: String): Promise<any>;
   getGroupList(realm: String, token: String, baseurl: String): Promise<any>;

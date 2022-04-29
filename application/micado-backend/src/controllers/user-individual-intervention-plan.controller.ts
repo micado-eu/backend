@@ -39,7 +39,7 @@ export class UserIndividualInterventionPlanController {
     },
   })
   async find(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<IndividualInterventionPlan>,
   ): Promise<IndividualInterventionPlan[]> {
     return this.userRepository.interventionPlans(id).find(filter);
@@ -54,7 +54,7 @@ export class UserIndividualInterventionPlanController {
     },
   })
   async create(
-    @param.path.number('id') id: typeof User.prototype.umId,
+    @param.path.string('id') id: typeof User.prototype.id,
     @requestBody({
       content: {
         'application/json': {
@@ -79,7 +79,7 @@ export class UserIndividualInterventionPlanController {
     },
   })
   async patch(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -102,7 +102,7 @@ export class UserIndividualInterventionPlanController {
     },
   })
   async delete(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.query.object('where', getWhereSchemaFor(IndividualInterventionPlan)) where?: Where<IndividualInterventionPlan>,
   ): Promise<Count> {
     return this.userRepository.interventionPlans(id).delete(where);
