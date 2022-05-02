@@ -147,4 +147,17 @@ export class UserController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.userRepository.deleteById(id);
   }
+
+  @post('/users/webhook')
+  async webhook(
+    @requestBody({
+      content: {
+        'text/plain':{}
+      }
+    })
+    user: string,
+  ): Promise<any> {
+    console.log("webhook called")
+    console.log(user)
+  }
 }

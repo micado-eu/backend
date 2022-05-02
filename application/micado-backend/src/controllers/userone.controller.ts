@@ -147,4 +147,5 @@ export class UseroneController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.userRepository.deleteById(id);
   }
+
 }
