@@ -12,26 +12,10 @@ Userone,
   typeof Userone.prototype.id,
   UserRelations
 > {
-
-  public readonly interventionPlans: HasManyRepositoryFactory<IndividualInterventionPlan, typeof Userone.prototype.id>;
-
-  public readonly userPicture: HasOneRepositoryFactory<UserPictures, typeof Userone.prototype.id>;
-
-  public readonly userPreferences: HasManyRepositoryFactory<UserPreferences, typeof Userone.prototype.id>;
-
-  public readonly userConsent: HasOneRepositoryFactory<UserConsent, typeof Userone.prototype.id>;
-
   constructor(
     @inject('datasources.micadoDS') dataSource: MicadoDsDataSource, @repository.getter('IndividualInterventionPlanRepository') protected individualInterventionPlanRepositoryGetter: Getter<IndividualInterventionPlanRepository>, @repository.getter('UserPicturesRepository') protected userPicturesRepositoryGetter: Getter<UserPicturesRepository>, @repository.getter('UserPreferencesRepository') protected userPreferencesRepositoryGetter: Getter<UserPreferencesRepository>, @repository.getter('UserConsentRepository') protected userConsentRepositoryGetter: Getter<UserConsentRepository>,
   ) {
     super(Userone, dataSource);
-    this.userConsent = this.createHasOneRepositoryFactoryFor('userConsent', userConsentRepositoryGetter);
-    this.registerInclusionResolver('userConsent', this.userConsent.inclusionResolver);
-    this.userPreferences = this.createHasManyRepositoryFactoryFor('userPreferences', userPreferencesRepositoryGetter,);
-    this.registerInclusionResolver('userPreferences', this.userPreferences.inclusionResolver);
-    this.userPicture = this.createHasOneRepositoryFactoryFor('userPicture', userPicturesRepositoryGetter);
-    this.registerInclusionResolver('userPicture', this.userPicture.inclusionResolver);
-    this.interventionPlans = this.createHasManyRepositoryFactoryFor('interventionPlans', individualInterventionPlanRepositoryGetter,);
-    this.registerInclusionResolver('interventionPlans', this.interventionPlans.inclusionResolver);
+    
   }
 }

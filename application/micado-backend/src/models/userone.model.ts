@@ -24,21 +24,6 @@ export class Userone extends Entity {
   })
   group?: string;
 
-  @hasMany(() => IndividualInterventionPlan)
-  interventionPlans: IndividualInterventionPlan[];
-
-  @hasOne(() => UserPictures)
-  userPicture: UserPictures;
-
-  @hasMany(() => UserPreferences, {keyTo: 'idUser'})
-  userPreferences: UserPreferences[];
-
-  @hasOne(() => UserConsent, {keyTo: 'idUser'})
-  userConsent: UserConsent;
-
-  constructor(data?: Partial<Userone>) {
-    super(data);
-  }
 }
 
 export interface UseroneRelations {
