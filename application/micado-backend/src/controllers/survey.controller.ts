@@ -183,11 +183,11 @@ export class SurveyController {
   })
   async specificSurvey (
     @param.query.number('destinationApp') destinationApp: number,
-    @param.query.number('userid') userid = 0,
+    @param.query.string('userid') userid = '',
   ): Promise<any> {
     let surveys = await this.surveyRepository.dataSource.execute('select * from survey where survey.active = true and survey.destination_app =' + destinationApp + ' and survey.expiry_date >= current_date')
-    if (userid != 0) {
-      let completed_survey = await this.surveyAnswersRepository.dataSource.execute('select * from survey_answers where  EXISTS(SELECT * from survey_answers WHERE id_user =' + userid + ')')
+    if (userid != '') {
+      let completed_survey = await this.surveyAnswersRepository.dataSource.execute('select * from survey_answers where  EXISTS(SELECT * from survey_answers WHERE id_user =\'' + userid + '\')')
       console.log(completed_survey)
       if (completed_survey.length > 0) {
         console.log("This survey was already answered")
