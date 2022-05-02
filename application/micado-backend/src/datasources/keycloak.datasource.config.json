@@ -23,7 +23,7 @@
         }
       },
       "functions": {
-        "getNgoManager": [
+        "getManager": [
           "baseurl",
           "payload"
         ]
@@ -63,6 +63,79 @@
           "firstName",
           "lastName",
           "email",
+          "password",
+          "realm",
+          "token",
+          "baseurl"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "PUT",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userid}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "firstName":"{firstName}",
+          "lastName":"{lastName}",
+          "email":"{email}",
+          "enabled":true,
+          "credentials":[
+            {
+              "type":"password",
+              "value":"{password}",
+              "temporary":false
+            }
+          ]
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "updateUser": [
+          "userid",
+          "firstName",
+          "lastName",
+          "email",
+          "password",
+          "realm",
+          "token",
+          "baseurl"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "PUT",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userid}",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "credentials":[
+            {
+              "type":"password",
+              "value":"{password}",
+              "temporary":false
+            }
+          ]
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "updateUserPassword": [
+          "userid",
           "password",
           "realm",
           "token",
@@ -139,6 +212,29 @@
           "baseurl",
           "realm",
           "clientId",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/groups/{groupId}/members",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getGroupMembers": [
+          "baseurl",
+          "realm",
+          "groupId",
           "token"
         ]
       }

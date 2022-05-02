@@ -1,6 +1,6 @@
 // Uncomment these imports to begin using these cool features!
 import {inject} from '@loopback/context';
-import {get, param, post} from '@loopback/rest';
+import {get, param, post, put} from '@loopback/rest';
 import {
   KeycloakService
 } from '../services/keycloak.service';
@@ -13,6 +13,65 @@ export class KeycloakIdentityTenantManagerController {
     //@repository(TenantRepository) public tenantRepository: TenantRepository,
     @inject('services.Keycloak') protected keycloakService: KeycloakService,
   ) { }
+
+
+  @get('/getAdminToken')
+  async getAdminToken(
+    @param({name: 'realm', in: 'query', required: false}) realm: string,
+  ): Promise<any> {
+    //Preconditions
+    let data
+    switch (realm) {
+      case 'migrant':
+        console.log('migrant');
+
+        data= {
+          username: process.env.WSO2_IDENTITY_ADMIN_USER,
+          password: process.env.WSO2_IDENTITY_ADMIN_PWD,
+          client_id:'migrant-realm',
+          client_secret:process.env.MIGRANT_REALM_CLIENT_SECRET,
+          grant_type:"password",
+        }
+        console.log(data)
+        break;
+      case 'pa':
+        console.log('pa');
+
+        data= {
+          username: process.env.WSO2_IDENTITY_ADMIN_USER,
+          password: process.env.WSO2_IDENTITY_ADMIN_PWD,
+          client_id:'pa-realm',
+          client_secret:process.env.PA_REALM_CLIENT_SECRET,
+          grant_type:"password",
+        }
+        break;
+      case 'ngo':
+        console.log('Ngo realm chosen');
+
+        data= {
+          username: process.env.WSO2_IDENTITY_ADMIN_USER,
+          password: process.env.WSO2_IDENTITY_ADMIN_PWD,
+          client_id:'ngo-realm',
+          client_secret:process.env.NGO_REALM_CLIENT_SECRET,
+          grant_type:"password",
+        }
+        break;
+      default:
+        console.log('No realm chosen');
+
+    }
+    console.log("I am")
+    console.log(data)
+    let manager =  await this.keycloakService.getManager(
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      querystring.stringify(data)
+    )
+    let token = JSON.parse(manager).access_token
+    console.log(token)
+    return token
+  }
+
+
 
   @post('/createKeycloakUser')
   async createUser(
@@ -84,23 +143,8 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'group', in: 'query', required: false}) group: string,
   ): Promise<any> {
     //Preconditions
-    let data= {
-      username: process.env.WSO2_IDENTITY_ADMIN_USER,
-      password: process.env.WSO2_IDENTITY_ADMIN_PWD,
-      client_id:"ngo-realm",
-      client_secret:process.env.NGO_REALM_CLIENT_SECRET,
-      grant_type:"password",
-    }
-    console.log(data)
-    let manager =  await this.keycloakService.getNgoManager(
-      process.env.IDENTITY_HOSTNAME + innerPort,
-      querystring.stringify(data)
 
-
-    )
-    let token = JSON.parse(manager).access_token
-
-    
+    let token = await this.getAdminToken('ngo')
     await this.createUser(username,firstName,lastName,email, password, realm, token)
     var user = await this.keycloakService.getUser(
       process.env.IDENTITY_HOSTNAME + innerPort,
@@ -154,15 +198,47 @@ export class KeycloakIdentityTenantManagerController {
     );
   }
 
-  @get('/getUserList')
-  async getUserList(
-    @param({name: 'realm', in: 'query', required: false}) realm: string,
-    @param({name: 'token', in: 'query', required: false}) token: string,
+  @get('/getPaUserList')
+  async getPaUserList(
   ): Promise<any> {
     //Preconditions
+    let token = await this.getAdminToken('pa')
     return this.keycloakService.getUserList(
       process.env.IDENTITY_HOSTNAME + innerPort,
-      realm,
+      'pa',
+      token
+    );
+  }
+
+  @get('/getMigrantUserList')
+  async getMigrantUserList(
+    ): Promise<any> {
+    //Preconditions
+    let token = await this.getAdminToken('migrant')
+    return this.keycloakService.getUserList(
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      'migrant',
+      token
+    );
+  }
+
+  @get('/getNgoUserList')
+  async getNgoUserList(
+    @param({name: 'group_name', in: 'query', required: false}) group_name: string,
+    ): Promise<any> {
+    //Preconditions
+    let token = await this.getAdminToken('ngo')
+    let groupId = await this.keycloakService.getGroupId(process.env.IDENTITY_HOSTNAME + innerPort,'ngo', token)
+    console.log("I am groupid")
+    console.log(groupId)
+     let groupIdString = groupId.filter((group:any)=>{
+      return group.name == group_name
+    })[0].id
+    console.log(groupIdString)
+    return this.keycloakService.getGroupMembers(
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      'ngo',
+      groupIdString,
       token
     );
   }
@@ -245,7 +321,7 @@ export class KeycloakIdentityTenantManagerController {
       grant_type:"password",
     }
     console.log(data)
-    let manager =  await this.keycloakService.getNgoManager(
+    let manager =  await this.keycloakService.getManager(
       process.env.IDENTITY_HOSTNAME + innerPort,
       querystring.stringify(data)
     )
@@ -304,6 +380,48 @@ export class KeycloakIdentityTenantManagerController {
 
 
     })
+  }
+
+  @put('/updateUser')
+  async updateUser(
+    @param({name: 'userid', in: 'query', required: false}) userid: string,
+    @param({name: 'firstName', in: 'query', required: false}) firstName: string,
+    @param({name: 'lastName', in: 'query', required: false}) lastName: string,
+    @param({name: 'email', in: 'query', required: false}) email: string,
+    @param({name: 'password', in: 'query', required: false}) password: string,
+    @param({name: 'realm', in: 'query', required: false}) realm: string,
+  ): Promise<any> {
+    //Preconditions
+    let token = await this.getAdminToken(realm)
+
+    return this.keycloakService.updateUser(
+      userid,
+      firstName,
+      lastName,
+      email,
+      password,
+      realm,
+      token,
+      process.env.IDENTITY_HOSTNAME + innerPort
+    );
+  }
+
+  @put('/updateUserPassword')
+  async updateUserPassword(
+    @param({name: 'userid', in: 'query', required: false}) userid: string,
+    @param({name: 'password', in: 'query', required: false}) password: string,
+    @param({name: 'realm', in: 'query', required: false}) realm: string,
+  ): Promise<any> {
+    //Preconditions
+    let token = await this.getAdminToken(realm)
+
+    return this.keycloakService.updateUserPassword(
+      userid,
+      password,
+      realm,
+      token,
+      process.env.IDENTITY_HOSTNAME + innerPort
+    );
   }
 
 }
