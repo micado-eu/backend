@@ -152,12 +152,16 @@ export class UseroneController {
   async webhook(
     @requestBody({
       content: {
-        'text/plain':{}
-      }
+        'application/json': {       // Make sure this matches the POST request type
+          'x-parser': 'raw',        // This is the key to skipping parsing
+          schema: {type: 'object'},
+        },
+      },
     })
-    user: string,
+    user: Buffer,
   ): Promise<any> {
     console.log("webhook called")
-    console.log(user)
+    const rawBody = user.toString('utf8');
+    console.log(rawBody)
   }
 }
