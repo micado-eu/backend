@@ -148,16 +148,5 @@ export class UserController {
     await this.userRepository.deleteById(id);
   }
 
-  @post('/users/webhook')
-  async webhook(
-    @requestBody({
-      content: {
-        'text/plain':{}
-      }
-    })
-    user: string,
-  ): Promise<any> {
-    console.log("webhook called")
-    console.log(user)
-  }
+
 }
