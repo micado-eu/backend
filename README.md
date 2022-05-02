@@ -32,6 +32,8 @@ WSO2_SHARED_PWD=secretpassword4
 WSO2_API_PWD=secretpassword5
 MICADO_DB_PWD=secretpassword6
 NGO_REALM_CLIENT_SECRET=secret
+MIGRANT_REALM_CLIENT_SECRET=secret
+PA_REALM_CLIENT_SECRET=secret
 PGADMIN_DEFAULT_PASSWORD=secretpassword7
 
 # -------- DATABASE PART --------
