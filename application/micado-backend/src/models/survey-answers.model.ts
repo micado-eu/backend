@@ -21,11 +21,11 @@ export class SurveyAnswers extends Entity {
   idSurvey?: number;
 
   @property({
-    type: 'number',
+    type: 'string',
     scale: 0,
-    postgresql: {columnName: 'id_user', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+    postgresql: {columnName: 'id_user', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
-  idUser?: number;
+  idUser?: string;
 
   @property({
     type: 'string',
