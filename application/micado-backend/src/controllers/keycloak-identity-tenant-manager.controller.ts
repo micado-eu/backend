@@ -145,7 +145,14 @@ export class KeycloakIdentityTenantManagerController {
     //Preconditions
 
     let token = await this.getAdminToken('ngo')
-    await this.createUser(username,firstName,lastName,email, password, realm, token)
+    let group_array = []
+    group_array.push(group)
+    console.log( JSON.stringify(group_array))
+    await this.keycloakService.createUserWithGroup(
+      username,firstName,lastName,email, password, group_array, realm, token,       process.env.IDENTITY_HOSTNAME + innerPort,
+
+    )
+    //await this.createUser(username,firstName,lastName,email, password, realm, token)
     var user = await this.keycloakService.getUser(
       process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
@@ -154,7 +161,7 @@ export class KeycloakIdentityTenantManagerController {
     )
     console.log("I am new user")
     console.log(user)
-    await this.addToGroup(user[0].id, group, realm, token)
+    //await this.addToGroup(user[0].id, group, realm, token)
     let roles_array = JSON.parse(role)
     if (roles_array.length > 0) {
       console.log("inside if")

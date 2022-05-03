@@ -252,19 +252,7 @@ export class ProcessController {
     return full_process
 
   }
-  @get('/users/webhook', {
-    responses: {
-      '204': {
-        description: 'User DELETE success',
-      },
-    },
-  })
-  async webhook(
-    @param({name: 'event', in: 'query', required: false}) event: string
-    ): Promise<void> {
-    console.log("In user hook")
-    console.log(event)
-  }
+
 
 }
 

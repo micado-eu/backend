@@ -72,6 +72,49 @@
     },
     {
       "template": {
+        "method": "POST",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "username": "{username}",
+          "firstName":"{firstName}",
+          "lastName":"{lastName}",
+          "email":"{email}",
+          "groups":"{group}",
+          "enabled":true,
+          "credentials":[
+            {
+              "type":"password",
+              "value":"{password}",
+              "temporary":false
+            }
+          ]
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "createUserWithGroup": [
+          "username",
+          "firstName",
+          "lastName",
+          "email",
+          "password",
+          "group",
+          "realm",
+          "token",
+          "baseurl"
+        ]
+      }
+    },
+    {
+      "template": {
         "method": "PUT",
         "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userid}",
         "headers": {

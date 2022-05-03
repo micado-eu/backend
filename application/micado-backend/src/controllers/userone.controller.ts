@@ -148,20 +148,6 @@ export class UseroneController {
     await this.userRepository.deleteById(id);
   }
   
-  @post('/users/webhook')
-  async webhook(
-    @requestBody({
-      content: {
-        'application/json': {       // Make sure this matches the POST request type
-          'x-parser': 'raw',        // This is the key to skipping parsing
-          schema: {type: 'object'},
-        },
-      },
-    })
-    user: Buffer,
-  ): Promise<any> {
-    console.log("webhook called")
-    const rawBody = user.toString('utf8');
-    console.log(rawBody)
-  }
+
+
 }
