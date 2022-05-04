@@ -50,7 +50,21 @@
               "value":"{password}",
               "temporary":false
             }
-          ]
+          ],
+          "attributes": {
+            "birthdate": [
+              "{birthdate}"
+            ],
+            "nationality": [
+              "{nationality}"
+            ],
+            "gender": [
+              "{gender}"
+            ],
+            "phone number": [
+              "{phone_number}"
+            ]
+          }
         },
         "options": {
           "strictSSL": false,
@@ -64,6 +78,10 @@
           "lastName",
           "email",
           "password",
+          "birthdate",
+          "nationality",
+          "gender",
+          "phone_number",
           "realm",
           "token",
           "baseurl"
@@ -92,7 +110,21 @@
               "value":"{password}",
               "temporary":false
             }
-          ]
+          ],
+          "attributes": {
+            "birthdate": [
+              "{birthdate}"
+            ],
+            "nationality": [
+              "{nationality}"
+            ],
+            "gender": [
+              "{gender}"
+            ],
+            "phone number": [
+              "{phone_number}"
+            ]
+          }
         },
         "options": {
           "strictSSL": false,
@@ -107,6 +139,10 @@
           "email",
           "password",
           "group",
+          "birthdate",
+          "nationality",
+          "gender",
+          "phone_number",
           "realm",
           "token",
           "baseurl"
@@ -126,7 +162,21 @@
           "firstName":"{firstName}",
           "lastName":"{lastName}",
           "email":"{email}",
-          "enabled":true
+          "enabled":true,
+          "attributes": {
+            "birthdate": [
+              "{birthdate}"
+            ],
+            "nationality": [
+              "{nationality}"
+            ],
+            "gender": [
+              "{gender}"
+            ],
+            "phone number": [
+              "{phone_number}"
+            ]
+          }
         },
         "options": {
           "strictSSL": false,
@@ -139,6 +189,10 @@
           "firstName",
           "lastName",
           "email",
+          "birthdate",
+          "nationality",
+          "gender",
+          "phone_number",
           "realm",
           "token",
           "baseurl"

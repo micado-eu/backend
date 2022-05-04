@@ -80,11 +80,15 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'lastName', in: 'query', required: false}) lastName: string,
     @param({name: 'email', in: 'query', required: false}) email: string,
     @param({name: 'password', in: 'query', required: false}) password: string,
+    @param({name: 'birthdate', in: 'query', required: false}) birthdate: string= "",
+    @param({name: 'nationality', in: 'query', required: false}) nationality: string= "",
+    @param({name: 'gender', in: 'query', required: false}) gender: string = "",
+    @param({name: 'phone_number', in: 'query', required: false}) phone_number: string ="",
     @param({name: 'realm', in: 'query', required: false}) realm: string,
-    @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     //Preconditions
-    
+    let token = await this.getAdminToken(realm)
+
     console.log(username)
     console.log(realm)
     console.log(token)
@@ -94,6 +98,10 @@ export class KeycloakIdentityTenantManagerController {
       lastName,
       email,
       password,
+      birthdate,
+      nationality,
+      gender,
+      phone_number,
       realm,
       token,
       process.env.IDENTITY_HOSTNAME + innerPort
@@ -106,12 +114,16 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'lastName', in: 'query', required: false}) lastName: string,
     @param({name: 'email', in: 'query', required: false}) email: string,
     @param({name: 'password', in: 'query', required: false}) password: string,
+    @param({name: 'birthdate', in: 'query', required: false}) birthdate: string= "",
+    @param({name: 'nationality', in: 'query', required: false}) nationality: string= "",
+    @param({name: 'gender', in: 'query', required: false}) gender: string = "",
+    @param({name: 'phone_number', in: 'query', required: false}) phone_number: string ="",
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
     @param({name: 'role', in: 'query', required: false}) role: string,
   ): Promise<any> {
     //Preconditions
-    await this.createUser(username,firstName,lastName,email, password, realm, token)
+   await this.createUser(username,firstName,lastName,email, password, birthdate,nationality,gender,phone_number , realm)
     const user = await this.keycloakService.getUser(
       process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
@@ -138,6 +150,10 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'lastName', in: 'query', required: false}) lastName: string,
     @param({name: 'email', in: 'query', required: false}) email: string,
     @param({name: 'password', in: 'query', required: false}) password: string,
+    @param({name: 'birthdate', in: 'query', required: false}) birthdate: string= "",
+    @param({name: 'nationality', in: 'query', required: false}) nationality: string= "",
+    @param({name: 'gender', in: 'query', required: false}) gender: string = "",
+    @param({name: 'phone_number', in: 'query', required: false}) phone_number: string ="",
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'role', in: 'query', required: false}) role: string,
     @param({name: 'group', in: 'query', required: false}) group: string,
@@ -149,10 +165,10 @@ export class KeycloakIdentityTenantManagerController {
     group_array.push(group)
     console.log( JSON.stringify(group_array))
     await this.keycloakService.createUserWithGroup(
-      username,firstName,lastName,email, password, group_array, realm, token,       process.env.IDENTITY_HOSTNAME + innerPort,
+      username,firstName,lastName,email, password, group_array, birthdate,nationality,gender,phone_number ,realm, token, process.env.IDENTITY_HOSTNAME + innerPort,
 
     )
-    //await this.createUser(username,firstName,lastName,email, password, realm, token)
+    //await this.createUser(username,firstName,lastName,email, password,birthdate,nationality,gender,phone_number, realm, token)
     var user = await this.keycloakService.getUser(
       process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
@@ -395,6 +411,10 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'firstName', in: 'query', required: false}) firstName: string,
     @param({name: 'lastName', in: 'query', required: false}) lastName: string,
     @param({name: 'email', in: 'query', required: false}) email: string,
+    @param({name: 'birthdate', in: 'query', required: false}) birthdate: string= "",
+    @param({name: 'nationality', in: 'query', required: false}) nationality: string= "",
+    @param({name: 'gender', in: 'query', required: false}) gender: string = "",
+    @param({name: 'phone_number', in: 'query', required: false}) phone_number: string ="",
     @param({name: 'realm', in: 'query', required: false}) realm: string,
   ): Promise<any> {
     //Preconditions
@@ -405,6 +425,10 @@ export class KeycloakIdentityTenantManagerController {
       firstName,
       lastName,
       email,
+      birthdate,
+      nationality,
+      gender,
+      phone_number,
       realm,
       token,
       process.env.IDENTITY_HOSTNAME + innerPort
