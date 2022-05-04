@@ -119,11 +119,11 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'gender', in: 'query', required: false}) gender: string = "",
     @param({name: 'phone_number', in: 'query', required: false}) phone_number: string ="",
     @param({name: 'realm', in: 'query', required: false}) realm: string,
-    @param({name: 'token', in: 'query', required: false}) token: string,
     @param({name: 'role', in: 'query', required: false}) role: string,
   ): Promise<any> {
     //Preconditions
    await this.createUser(username,firstName,lastName,email, password, birthdate,nationality,gender,phone_number , realm)
+   let token = await this.getAdminToken(realm)
     const user = await this.keycloakService.getUser(
       process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
@@ -210,13 +210,13 @@ export class KeycloakIdentityTenantManagerController {
   async getUser(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'id', in: 'query', required: false}) id: string,
-    @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     //Preconditions
+    let token = await this.getAdminToken(realm)
     return this.keycloakService.getUser(
       process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
-      id,
+      querystring.stringify(id),
       token
     );
   }
