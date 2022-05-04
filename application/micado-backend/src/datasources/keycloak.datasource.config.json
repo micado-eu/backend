@@ -126,14 +126,7 @@
           "firstName":"{firstName}",
           "lastName":"{lastName}",
           "email":"{email}",
-          "enabled":true,
-          "credentials":[
-            {
-              "type":"password",
-              "value":"{password}",
-              "temporary":false
-            }
-          ]
+          "enabled":true
         },
         "options": {
           "strictSSL": false,
@@ -146,7 +139,6 @@
           "firstName",
           "lastName",
           "email",
-          "password",
           "realm",
           "token",
           "baseurl"

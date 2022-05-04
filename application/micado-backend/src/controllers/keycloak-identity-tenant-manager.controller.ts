@@ -395,7 +395,6 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'firstName', in: 'query', required: false}) firstName: string,
     @param({name: 'lastName', in: 'query', required: false}) lastName: string,
     @param({name: 'email', in: 'query', required: false}) email: string,
-    @param({name: 'password', in: 'query', required: false}) password: string,
     @param({name: 'realm', in: 'query', required: false}) realm: string,
   ): Promise<any> {
     //Preconditions
@@ -406,7 +405,6 @@ export class KeycloakIdentityTenantManagerController {
       firstName,
       lastName,
       email,
-      password,
       realm,
       token,
       process.env.IDENTITY_HOSTNAME + innerPort
