@@ -23,10 +23,10 @@ export class Glossary extends Entity {
   published?: boolean;
 
   @property({
-    type: 'number',
-    postgresql: { columnName: 'creator', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    type: 'string',
+    postgresql: { columnName: 'creator', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
-  creator?: number;
+  creator?: string;
 
   @property({
     type: 'date',

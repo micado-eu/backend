@@ -144,7 +144,7 @@ export class BatchLoaderController {
     return { files, fields: request.body };
   }
 
-  private loadData(entity: string, csv: any, def_lang: any, act_lang: any, creator?: number) {
+  private loadData(entity: string, csv: any, def_lang: any, act_lang: any, creator?: string) {
     console.log("in load data")
     console.log(csv)
     switch (entity) {
