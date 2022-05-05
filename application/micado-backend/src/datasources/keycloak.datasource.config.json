@@ -513,6 +513,31 @@
     },
     {
       "template": {
+        "method": "DELETE",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userid}/role-mappings/realm",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "body": "{payload}",
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "deleteRole": [
+          "baseurl",
+          "realm",
+          "userid",
+          "token",
+          "payload"
+        ]
+      }
+    },
+    {
+      "template": {
         "method": "GET",
         "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userid}/role-mappings/realm",
         "headers": {

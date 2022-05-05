@@ -1,6 +1,6 @@
 // Uncomment these imports to begin using these cool features!
 import {inject} from '@loopback/context';
-import {get, param, post, put} from '@loopback/rest';
+import {get, param, post, put, del} from '@loopback/rest';
 import {
   KeycloakService
 } from '../services/keycloak.service';
@@ -468,6 +468,87 @@ export class KeycloakIdentityTenantManagerController {
       token,
       process.env.IDENTITY_HOSTNAME + innerPort
     );
+  }
+
+  @post('/updateUserRoles')
+  async updateUserRoles(
+    @param({name: 'realm', in: 'query', required: false}) realm: string,
+    @param({name: 'userid', in: 'query', required: false}) userid: string,
+    @param({name: 'roles_to_delete', in: 'query', required: false}) roles_to_delete: string,
+    @param({name: 'roles_to_add', in: 'query', required: false}) roles_to_add: string,
+  ): Promise<any> {
+    //Preconditions
+    console.log("in adding role")
+    console.log("Gettign client id")
+    console.log("getting role")
+    let token = await this.getAdminToken(realm)
+
+    const user_roles = await this.getUserRoles(
+      realm,
+      userid
+    );
+
+    const realm_roles = await this.keycloakService.getRealmRoles(
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      realm,
+      token
+    );
+
+    
+    
+    const deleting_roles = JSON.parse(roles_to_delete)
+    const adding_roles = JSON.parse(roles_to_add)
+console.log(userid)
+    console.log("I am roles")
+    console.log("I am roles to delete")
+    console.log(deleting_roles)
+    deleting_roles.forEach((rol: any) => {
+      const selected_role = user_roles.filter((role: any) => {
+        return role.name == rol
+      })
+      if(selected_role.length > 0){
+        console.log(selected_role)
+        const payload =selected_role
+        console.log(payload)
+        //this.keycloakService.deleteRole(process.env.IDENTITY_HOSTNAME + innerPort, realm, userid, token, payload )
+        console.log("I A PAYLOAD")
+        console.log(payload)
+        console.log("adding role")
+        const url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
+        console.log(url)
+        const axios = require('axios').default;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+        axios.defaults.headers.post['Content-Type'] = 'application/json' // for POST requests
+        axios({
+          url: url,
+          method: "delete",
+          data: payload
+        }
+        )
+      }
+    })
+    adding_roles.forEach((rol: any) => {
+      const selected_role = realm_roles.filter((role: any) => {
+        return role.name == rol
+      })
+      if(selected_role.length > 0){
+        const payload =selected_role
+        console.log("I A PAYLOAD")
+        console.log(payload)
+        console.log("adding role")
+        const url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
+        console.log(url)
+        const axios = require('axios').default;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+        axios.defaults.headers.post['Content-Type'] = 'application/json' // for POST requests
+        axios({
+          url: url,
+          method: "post",
+          data: payload
+        }
+        )
+      }
+    })
   }
 
 }
