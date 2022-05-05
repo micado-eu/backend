@@ -294,6 +294,22 @@ export class KeycloakIdentityTenantManagerController {
     );
 
   }
+  @get('/getUserRoles')
+  async getUserRoles(
+    @param({name: 'realm', in: 'query', required: false}) realm: string,
+    @param({name: 'userid', in: 'query', required: false}) userid: string,
+  ): Promise<any> {
+    //Preconditions
+    let token = await this.getAdminToken(realm)
+
+    return this.keycloakService.getUserRole(
+      process.env.IDENTITY_HOSTNAME + innerPort,
+      realm,
+      userid,
+      token
+    );
+
+  }
 
   @get('/getGroupId')
   async getGroupId(

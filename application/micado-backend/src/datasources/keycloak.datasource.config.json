@@ -514,6 +514,29 @@
     {
       "template": {
         "method": "GET",
+        "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userid}/role-mappings/realm",
+        "headers": {
+          "accept": "*/*",
+          "content-type": "application/json",
+          "Authorization": "Bearer {token}"
+        },
+        "options": {
+          "strictSSL": false,
+          "useQuerystring": true
+        }
+      },
+      "functions": {
+        "getUserRole": [
+          "baseurl",
+          "realm",
+          "userid",
+          "token"
+        ]
+      }
+    },
+    {
+      "template": {
+        "method": "GET",
         "url": "https://{baseurl}/auth/admin/realms/{realm}/users?username={username}",
         "headers": {
           "accept": "*/*",
