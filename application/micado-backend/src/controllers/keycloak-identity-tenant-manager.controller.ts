@@ -132,10 +132,11 @@ export class KeycloakIdentityTenantManagerController {
     )
     console.log("I am new user")
     console.log(user)
-    if (role.length > 0) {
+    let parsed_roles = JSON.parse(role)
+    if (parsed_roles.length > 0) {
       console.log("inside if")
       console.log(user)
-      await this.addRole(realm,  token, user[0].id, role)
+      await this.addRole(realm,  token, user[0].id, parsed_roles)
       return user
     }
     else {
@@ -216,7 +217,7 @@ export class KeycloakIdentityTenantManagerController {
     return this.keycloakService.getUser(
       process.env.IDENTITY_HOSTNAME + innerPort,
       realm,
-      querystring.stringify(id),
+      id,
       token
     );
   }
