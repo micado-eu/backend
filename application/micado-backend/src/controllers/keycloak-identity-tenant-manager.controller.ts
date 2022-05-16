@@ -3,8 +3,9 @@ import {inject} from '@loopback/context';
 import {get, param, post, put, del} from '@loopback/rest';
 import {
   KeycloakService
-} from '../services/keycloak.service';
+} from '../services/keycloak.service'; 
 const querystring = require('querystring');
+const https = require('https')
 
 
 const innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":8443")
@@ -415,9 +416,8 @@ export class KeycloakIdentityTenantManagerController {
         url: url,
         method: "post",
         data: payload,
-        rejectUnauthorized: false,//add when working with https sites
-        requestCert: false,//add when working with https sites
-        agent: false,//add when working with https sites
+        httpsAgent:new https.Agent({ rejectUnauthorized: false})
+
       }
       )
 

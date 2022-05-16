@@ -61,6 +61,7 @@
     "csv-parser": "^2.3.5",
     "csv-writer": "^1.6.0",
     "emailjs": "^3.7.0",
+    "https": "^1.0.0",
     "jsdom": "^16.7.0",
     "json2csv": "^5.0.6",
     "keycloak-backend": "^2.0.1",
