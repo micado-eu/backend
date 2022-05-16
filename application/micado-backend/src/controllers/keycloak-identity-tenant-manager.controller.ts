@@ -414,7 +414,10 @@ export class KeycloakIdentityTenantManagerController {
       axios({
         url: url,
         method: "post",
-        data: payload
+        data: payload,
+        rejectUnauthorized: false,//add when working with https sites
+        requestCert: false,//add when working with https sites
+        agent: false,//add when working with https sites
       }
       )
 
