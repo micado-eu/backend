@@ -6,6 +6,7 @@ import {UserProfile} from '@loopback/security';
 import { Request} from '@loopback/rest';
 import jwt_decode from 'jwt-decode';
 const https = require('https')
+const innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":8443")
 
 
 //import {Keycloak} from 'keycloak-backend'
@@ -35,13 +36,16 @@ let decoded:any = jwt_decode(tokenparts[1])
 //console.log(decoded)
 
 //console.log(tokenparts[1])
-let iss = decoded.iss
+var iss = decoded.iss
+
+var iss_array = iss.split("/");
+var realm = iss_array[iss_array.length - 1]
 
 console.log('prima di keycloak')
 
 const axios = require('axios').default;
 return axios({
-  url: iss + '/protocol/openid-connect/userinfo',
+  url: 'https://' +process.env.IDENTITY_HOSTNAME + innerPort + '/auth/realms/' + realm + '/protocol/openid-connect/userinfo',
   method: "get",
   headers: {'Authorization': 'Bearer ' + tokenparts[1]},
   httpsAgent:new https.Agent({ rejectUnauthorized: false})
