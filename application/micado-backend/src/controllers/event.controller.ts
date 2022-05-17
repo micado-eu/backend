@@ -26,6 +26,8 @@ import { inject } from '@loopback/core';
 import { FileUploadService, FILE_UPLOAD_SERVICE } from '../services';
 import csv from 'csv-parser'
 import fs from 'fs';
+import {authenticate} from '@loopback/authentication';
+
 
 export class EventController {
   constructor(
@@ -48,6 +50,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async create(
     @requestBody({
       content: {
@@ -72,6 +75,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async createUnpublished(
     @requestBody({
       content: {
@@ -98,6 +102,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async count(
     @param.where(Event) where?: Where<Event>,
   ): Promise<Count> {
@@ -119,6 +124,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async find(
     @param.filter(Event) filter?: Filter<Event>,
   ): Promise<Event[]> {
@@ -155,6 +161,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async updateAll(
     @requestBody({
       content: {
@@ -176,6 +183,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async removeCategory(
     @param.path.number('id') id: number
   ): Promise<void> {
@@ -194,6 +202,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async findById(
     @param.path.number('id') id: number,
     @param.filter(Event, { exclude: 'where' }) filter?: FilterExcludingWhere<Event>
@@ -208,6 +217,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -229,6 +239,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async updateByIdUnpublished(
     @param.path.number('id') id: number,
     @requestBody({
@@ -251,6 +262,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() event: Event,
@@ -265,6 +277,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.eventRepository.deleteById(id);
   }
@@ -411,6 +424,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async publish (
     @param.query.number('id') id:number,
   ): Promise<void> {
@@ -428,6 +442,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async export(
     @inject(RestBindings.Http.RESPONSE) response: Response,
     @param.query.number('id') id?: number
@@ -492,6 +507,7 @@ export class EventController {
       },
     },
   })
+  @authenticate('micado')
   async import(
     @requestBody.file()
     request: Request,

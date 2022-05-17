@@ -12,7 +12,9 @@ import {
   } from '@loopback/rest';
   import {InformationUserTypes} from '../models';
   import {InformationUserTypesRepository} from '../repositories';
-  
+  import {authenticate} from '@loopback/authentication';
+
+  @authenticate('micado')
   export class InformationUserTypesController {
     constructor(
       @repository(InformationUserTypesRepository)

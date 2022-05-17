@@ -20,7 +20,9 @@ import {
   EventTopic,
 } from '../models';
 import {EventRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class EventEventTopicController {
   constructor(
     @repository(EventRepository) protected eventRepository: EventRepository,

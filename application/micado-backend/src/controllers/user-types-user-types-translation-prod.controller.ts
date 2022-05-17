@@ -20,7 +20,9 @@ import {
   UserTypesTranslationProd,
 } from '../models';
 import {UserTypesRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class UserTypesUserTypesTranslationProdController {
   constructor(
     @repository(UserTypesRepository) protected userTypesRepository: UserTypesRepository,

@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import {UserConsent} from '../models';
 import {UserConsentRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class UserConsentController {
   constructor(
     @repository(UserConsentRepository)

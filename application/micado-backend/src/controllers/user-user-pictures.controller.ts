@@ -20,7 +20,9 @@ import {
   UserPictures,
 } from '../models';
 import {UserRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class UserUserPicturesController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,

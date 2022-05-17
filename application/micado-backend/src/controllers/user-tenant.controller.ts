@@ -20,7 +20,9 @@ import {
   Tenant,
 } from '../models';
 import {UserRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class UserTenantController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,

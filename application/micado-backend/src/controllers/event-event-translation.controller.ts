@@ -22,7 +22,9 @@ import {
 } from '../models';
 import { EventRepository } from '../repositories';
 import { MarkdownConverterService } from '../services/markdown-converter.service';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class EventEventTranslationController {
   constructor(
     @repository(EventRepository) protected eventRepository: EventRepository

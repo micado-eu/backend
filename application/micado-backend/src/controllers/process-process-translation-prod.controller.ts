@@ -22,7 +22,9 @@ import {
 } from '../models';
 import {ProcessRepository} from '../repositories';
 import {ProcessTranslationProdRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class ProcessProcessTranslationProdController {
   constructor(
     @repository(ProcessRepository) protected processRepository: ProcessRepository,

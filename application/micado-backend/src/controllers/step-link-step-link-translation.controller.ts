@@ -20,7 +20,9 @@ import {
   StepLinkTranslation,
 } from '../models';
 import { StepLinkRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class StepLinkStepLinkTranslationController {
   constructor(
     @repository(StepLinkRepository) protected stepLinkRepository: StepLinkRepository,

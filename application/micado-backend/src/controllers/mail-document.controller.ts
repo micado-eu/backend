@@ -20,7 +20,9 @@ import {
 import { SMTPClient, Message } from 'emailjs';
 import { DocumentPicturesRepository, FeedbackRepository, SettingsRepository } from '../repositories';
 const nodemailer = require("nodemailer")
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class MailDocumentController {
   constructor(
     @repository(DocumentPicturesRepository) protected documentPicturesRepository: DocumentPicturesRepository,
@@ -41,6 +43,7 @@ export class MailDocumentController {
       },
     },
   })
+  @authenticate('micado')
   async maildocument (
     @param.query.number('documentId') documentId = 0,
     @param.query.string('email') email = 'en'

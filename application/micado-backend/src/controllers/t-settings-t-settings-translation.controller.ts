@@ -20,7 +20,9 @@ import {
   TSettingsTranslation,
 } from '../models';
 import {TSettingsRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class TSettingsTSettingsTranslationController {
   constructor(
     @repository(TSettingsRepository) protected tSettingsRepository: TSettingsRepository,

@@ -20,7 +20,9 @@ import {
   InformationCategoryTranslationProd,
 } from '../models';
 import {InformationCategoryRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class InformationCategoryInformationCategoryTranslationProdController {
   constructor(
     @repository(InformationCategoryRepository) protected informationCategoryRepository: InformationCategoryRepository,

@@ -20,7 +20,9 @@ import {
   IndividualInterventionPlan,
 } from '../models';
 import {UserRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class UserIndividualInterventionPlanController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,

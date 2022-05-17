@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import {Charts} from '../models';
 import {ChartsRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class ChartsController {
   constructor(
     @repository(ChartsRepository)

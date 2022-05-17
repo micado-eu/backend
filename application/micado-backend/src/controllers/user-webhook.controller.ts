@@ -51,7 +51,7 @@ export class UserWebhookController {
     if(registration.type == "REGISTER")
     {
       console.log("inside if")
-      await this.userRepository.dataSource.execute('insert into "user" (id, realm, "group") values (' + "'" +  registration.userId+ "'" + ', '+ "'" + registration.realmId + "'" + ', null); ')  
+      await this.userRepository.dataSource.execute('insert into "user" (id, realm, "group") values (' + "'" +  registration.userId+ "'" + ', '+ "'" + registration.realmId + "'" + ', \'\'); ')  
     }
     else{
       console.log("Not registration, nothing to do")

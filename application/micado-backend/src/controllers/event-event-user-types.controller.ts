@@ -20,7 +20,9 @@ import {
     EventUserTypes,
   } from '../models';
   import {EventRepository} from '../repositories';
-  
+  import {authenticate} from '@loopback/authentication';
+
+  @authenticate('micado')
   export class EventEventUserTypesController {
     constructor(
       @repository(EventRepository) protected eventRepository: EventRepository,

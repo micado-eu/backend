@@ -20,7 +20,9 @@ import {
   ProcessTopic,
 } from '../models';
 import {ProcessRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class ProcessProcessTopicController {
   constructor(
     @repository(ProcessRepository) protected processRepository: ProcessRepository,

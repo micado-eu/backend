@@ -20,6 +20,8 @@ import {
   ProcessComments,
 } from '../models';
 import {ProcessRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+
 
 export class ProcessProcessCommentsController {
   constructor(
@@ -53,6 +55,7 @@ export class ProcessProcessCommentsController {
       },
     },
   })
+  @authenticate('micado')
   async create(
     @param.path.number('id') id: typeof Process.prototype.id,
     @requestBody({
@@ -78,6 +81,7 @@ export class ProcessProcessCommentsController {
       },
     },
   })
+  @authenticate('micado')
   async patch(
     @param.path.number('id') id: number,
     @requestBody({
@@ -101,6 +105,7 @@ export class ProcessProcessCommentsController {
       },
     },
   })
+  @authenticate('micado')
   async delete(
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(ProcessComments)) where?: Where<ProcessComments>,

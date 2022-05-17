@@ -20,7 +20,9 @@ import {
   InformationTopic,
 } from '../models';
 import {InformationRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class InformationInformationTopicController {
   constructor(
     @repository(InformationRepository) protected informationRepository: InformationRepository,

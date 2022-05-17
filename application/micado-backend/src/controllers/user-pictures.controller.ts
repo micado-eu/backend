@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import {UserPictures} from '../models';
 import {UserPicturesRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class UserPicturesController {
   constructor(
     @repository(UserPicturesRepository)

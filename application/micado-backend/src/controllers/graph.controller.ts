@@ -22,7 +22,9 @@ import {
 import { JSONObject } from '@loopback/core';
 import { StepStepDocumentController } from './step-step-document.controller';
 import { StepRepository, StepLinkRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class GraphController {
   constructor(
     @repository(StepRepository) public stepRepository: StepRepository,

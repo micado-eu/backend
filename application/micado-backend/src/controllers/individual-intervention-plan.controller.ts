@@ -19,7 +19,9 @@ import {
 import { IndividualInterventionPlan } from '../models';
 import { IndividualInterventionPlanRepository } from '../repositories';
 import { InterventionTypesRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class IndividualInterventionPlanController {
   constructor(
     @repository(IndividualInterventionPlanRepository)

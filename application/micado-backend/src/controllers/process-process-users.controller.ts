@@ -20,7 +20,9 @@ import {
   ProcessUsers,
 } from '../models';
 import {ProcessRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class ProcessProcessUsersController {
   constructor(
     @repository(ProcessRepository) protected processRepository: ProcessRepository,

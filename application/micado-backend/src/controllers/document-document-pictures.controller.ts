@@ -20,7 +20,9 @@ import {
   DocumentPictures
 } from '../models';
 import {DocumentRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class DocumentDocumentPicturesController {
   constructor(
     @repository(DocumentRepository) protected documentRepository: DocumentRepository,

@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import { EventTag } from '../models';
 import { EventTagRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class EventTagController {
     constructor(
         @repository(EventTagRepository)

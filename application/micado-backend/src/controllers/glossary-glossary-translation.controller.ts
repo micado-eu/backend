@@ -22,7 +22,9 @@ import {
 } from '../models';
 import { GlossaryRepository } from '../repositories';
 import { MarkdownConverterService } from '../services/markdown-converter.service';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class GlossaryGlossaryTranslationController {
   constructor(
     @repository(GlossaryRepository) protected glossaryRepository: GlossaryRepository

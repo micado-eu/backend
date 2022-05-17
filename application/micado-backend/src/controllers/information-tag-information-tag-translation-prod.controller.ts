@@ -20,7 +20,9 @@ import {
     InformationTagsTranslationProd,
 } from '../models';
 import { InformationTagRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class InformationTagInformationTagsTranslationProdController {
     constructor(
         @repository(InformationTagRepository) protected informationTagRepository: InformationTagRepository,

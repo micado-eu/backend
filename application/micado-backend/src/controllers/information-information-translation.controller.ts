@@ -22,7 +22,9 @@ import {
 } from '../models';
 import { InformationRepository } from '../repositories';
 import { MarkdownConverterService } from '../services/markdown-converter.service';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class InformationInformationTranslationController {
   constructor(
     @repository(InformationRepository) protected informationRepository: InformationRepository

@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import {ProcessUsers} from '../models';
 import {ProcessUsersRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class ProcessUsersController {
   constructor(
     @repository(ProcessUsersRepository)

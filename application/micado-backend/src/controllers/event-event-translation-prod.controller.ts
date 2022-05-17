@@ -20,7 +20,9 @@ import {
   EventTranslationProd,
 } from '../models';
 import {EventRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class EventEventTranslationProdController {
   constructor(
     @repository(EventRepository) protected eventRepository: EventRepository,

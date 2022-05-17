@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import {ProcessTopic} from '../models';
 import {ProcessTopicRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class ProcessTopicController {
   constructor(
     @repository(ProcessTopicRepository)

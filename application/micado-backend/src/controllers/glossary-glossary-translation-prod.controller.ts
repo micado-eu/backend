@@ -20,7 +20,9 @@ import {
   GlossaryTranslationProd,
 } from '../models';
 import {GlossaryRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class GlossaryGlossaryTranslationProdController {
   constructor(
     @repository(GlossaryRepository) protected glossaryRepository: GlossaryRepository,

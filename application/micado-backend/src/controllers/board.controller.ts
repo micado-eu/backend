@@ -19,7 +19,10 @@ import {
 } from '@loopback/rest';
 import {Board} from '../models';
 import {BoardRepository} from '../repositories';
+import {AuthenticationBindings, authenticate} from '@loopback/authentication';
 
+
+@authenticate('micado')
 export class BoardController {
   constructor(
     @repository(BoardRepository)

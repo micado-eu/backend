@@ -23,7 +23,9 @@ import {
 import { TopicTranslation } from '../models';
 import { TopicTranslationRepository } from '../repositories';
 import fs from 'fs';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class TopicExporterController {
   constructor(
     @repository(TopicTranslationRepository)

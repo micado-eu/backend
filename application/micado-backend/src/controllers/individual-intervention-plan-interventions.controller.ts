@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import {IndividualInterventionPlanInterventions} from '../models';
 import {IndividualInterventionPlanInterventionsRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class IndividualInterventionPlanInterventionsController {
   constructor(
     @repository(IndividualInterventionPlanInterventionsRepository)

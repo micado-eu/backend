@@ -21,7 +21,9 @@ import {
   ProcessTranslation,
 } from '../models';
 import { ProcessRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class ProcessProcessTranslationController {
   constructor(
     @repository(ProcessRepository) protected processRepository: ProcessRepository,

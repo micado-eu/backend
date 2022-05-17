@@ -24,8 +24,9 @@ import { StepRepository } from '../repositories';
 import { StepLinkRepository } from '../repositories';
 import { DocumentTypeTranslationRepository } from '../repositories';
 
+import {authenticate} from '@loopback/authentication';
 
-
+@authenticate('micado')
 export class CytoscapeController {
   constructor(
     @repository(StepRepository)

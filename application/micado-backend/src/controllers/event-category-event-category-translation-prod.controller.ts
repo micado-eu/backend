@@ -20,7 +20,9 @@ import {
   EventCategoryTranslationProd,
 } from '../models';
 import {EventCategoryRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class EventCategoryEventCategoryTranslationProdController {
   constructor(
     @repository(EventCategoryRepository) protected eventCategoryRepository: EventCategoryRepository,

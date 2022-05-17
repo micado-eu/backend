@@ -24,6 +24,7 @@ import {
 import { Glossary, GlossaryTranslation } from '../models';
 import { GlossaryRepository, GlossaryTranslationRepository, LanguagesRepository, SettingsRepository } from '../repositories';
 import { FileUploadService, FILE_UPLOAD_SERVICE } from '../services';
+import {authenticate} from '@loopback/authentication';
 import csv from 'csv-parser'
 import fs from 'fs';
 
@@ -48,6 +49,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async create(
     @requestBody({
       content: {
@@ -72,6 +74,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async count(
     @param.where(Glossary) where?: Where<Glossary>,
   ): Promise<Count> {
@@ -93,6 +96,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async find(
     @param.filter(Glossary) filter?: Filter<Glossary>,
   ): Promise<Glossary[]> {
@@ -128,6 +132,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async updateAll(
     @requestBody({
       content: {
@@ -154,6 +159,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async findById(
     @param.path.number('id') id: number,
     @param.filter(Glossary, { exclude: 'where' }) filter?: FilterExcludingWhere<Glossary>
@@ -168,6 +174,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -189,6 +196,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() glossary: Glossary,
@@ -203,6 +211,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.glossaryRepository.deleteById(id);
   }
@@ -293,6 +302,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async publish(
     @param.query.number('id') id: number,
   ): Promise<void> {
@@ -310,6 +320,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async export(
     @inject(RestBindings.Http.RESPONSE) response: Response,
     @param.query.number('id') id?: number
@@ -366,6 +377,7 @@ export class GlossaryController {
       },
     },
   })
+  @authenticate('micado')
   async import(
     @requestBody.file()
     request: Request,

@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import { InformationTag } from '../models';
 import { InformationTagRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class InformationTagController {
     constructor(
         @repository(InformationTagRepository)

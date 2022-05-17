@@ -20,7 +20,9 @@ import {
   TopicTranslation,
 } from '../models';
 import {TopicRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class TopicTopicTranslationController {
   constructor(
     @repository(TopicRepository) protected topicRepository: TopicRepository,

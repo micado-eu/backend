@@ -18,6 +18,8 @@ import {
 } from '@loopback/rest';
 import {InformationCategory} from '../models';
 import {InformationCategoryRepository, LanguagesRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+
 
 export class InformationCategoryController {
   constructor(
@@ -35,6 +37,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async create(
     @requestBody({
       content: {
@@ -59,6 +62,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async count(
     @param.where(InformationCategory) where?: Where<InformationCategory>,
   ): Promise<Count> {
@@ -80,6 +84,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async find(
     @param.filter(InformationCategory) filter?: Filter<InformationCategory>,
   ): Promise<InformationCategory[]> {
@@ -94,6 +99,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async updateAll(
     @requestBody({
       content: {
@@ -120,6 +126,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async findById(
     @param.path.number('id') id: number,
     @param.filter(InformationCategory, {exclude: 'where'}) filter?: FilterExcludingWhere<InformationCategory>
@@ -134,6 +141,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -155,6 +163,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() informationCategory: InformationCategory,
@@ -169,6 +178,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.informationCategoryRepository.deleteById(id);
   }
@@ -338,6 +348,7 @@ export class InformationCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async publish (
     @param.query.number('id') id:number,
   ): Promise<void> {

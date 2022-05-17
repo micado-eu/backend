@@ -20,7 +20,9 @@ import {
   SurveyAnswers,
 } from '../models';
 import {SurveyRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class SurveySurveyAnswersController {
   constructor(
     @repository(SurveyRepository) protected surveyRepository: SurveyRepository,

@@ -20,7 +20,9 @@ import {
   InterventionCategoryTranslation,
 } from '../models';
 import { InterventionCategoryRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class InterventionCategoryInterventionCategoryTranslationController {
   constructor(
     @repository(InterventionCategoryRepository) protected interventionCategoryRepository: InterventionCategoryRepository,

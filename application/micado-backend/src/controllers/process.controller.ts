@@ -17,7 +17,6 @@ import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {inject} from '@loopback/context';
 
 
-
 export class ProcessController {
   constructor(
     @repository(ProcessRepository) public processRepository: ProcessRepository,
@@ -34,6 +33,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async create(
     @requestBody({
       content: {
@@ -58,6 +58,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async count(
     @param.where(Process) where?: Where<Process>,
   ): Promise<Count> {
@@ -94,6 +95,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async updateAll(
     @requestBody({
       content: {
@@ -120,6 +122,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async findById(
     @param.path.number('id') id: number,
     @param.filter(Process, {exclude: 'where'}) filter?: FilterExcludingWhere<Process>
@@ -134,6 +137,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -155,6 +159,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() process: Process,
@@ -169,6 +174,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.processRepository.deleteById(id);
   }
@@ -214,6 +220,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async publish(
     @param.query.number('id') id: number,
   ): Promise<void> {
@@ -237,6 +244,7 @@ export class ProcessController {
       },
     },
   })
+  @authenticate('micado')
   async getJson(
     @param.query.number('id') id: number,
   ): Promise<any> {

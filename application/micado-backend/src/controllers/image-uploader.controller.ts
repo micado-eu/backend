@@ -22,9 +22,9 @@ import { ImageUploadService, IMAGE_UPLOAD_SERVICE } from '../services/image-uplo
 import csv from 'csv-parser'
 import fs from 'fs';
 import path from 'path';
+import {authenticate} from '@loopback/authentication';
 
-
-
+@authenticate('micado')
 export class ImageUploaderController {
   constructor(
     @inject(IMAGE_UPLOAD_SERVICE) private handler: ImageUploadService,

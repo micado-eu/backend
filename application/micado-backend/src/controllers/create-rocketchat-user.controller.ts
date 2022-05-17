@@ -2,7 +2,9 @@ import { inject } from '@loopback/context';
 import { get, post, param, del, patch, HttpErrors } from '@loopback/rest';
 import { create } from 'domain';
 import {RocketchatService,} from '../services/rocketchat.service'
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class CreateRocketchatUserController {
   constructor(
     @inject('services.Rocketchat') protected RocketchatService: RocketchatService,

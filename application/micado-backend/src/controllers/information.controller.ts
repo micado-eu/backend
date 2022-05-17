@@ -26,6 +26,8 @@ import { InformationRepository, InformationTranslationRepository, LanguagesRepos
 import { FileUploadService, FILE_UPLOAD_SERVICE } from '../services';
 import csv from 'csv-parser'
 import fs from 'fs';
+import {authenticate} from '@loopback/authentication';
+
 
 export class InformationController {
   constructor(
@@ -48,6 +50,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async create(
     @requestBody({
       content: {
@@ -72,6 +75,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async createUnpublished(
     @requestBody({
       content: {
@@ -98,6 +102,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async count(
     @param.where(Information) where?: Where<Information>,
   ): Promise<Count> {
@@ -119,6 +124,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async find(
     @param.filter(Information) filter?: Filter<Information>,
   ): Promise<Information[]> {
@@ -154,6 +160,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async updateAll(
     @requestBody({
       content: {
@@ -180,6 +187,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async findById(
     @param.path.number('id') id: number,
     @param.filter(Information, { exclude: 'where' }) filter?: FilterExcludingWhere<Information>
@@ -194,6 +202,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -215,6 +224,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async updateByIdUnpublished(
     @param.path.number('id') id: number,
     @requestBody({
@@ -237,6 +247,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async removeCategory(
     @param.path.number('id') id: number
   ): Promise<void> {
@@ -250,6 +261,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() information: Information,
@@ -264,6 +276,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.informationRepository.deleteById(id);
   }
@@ -411,6 +424,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async publish (
     @param.query.number('id') id:number,
   ): Promise<void> {
@@ -428,6 +442,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async export(
     @inject(RestBindings.Http.RESPONSE) response: Response,
     @param.query.number('id') id?: number
@@ -484,6 +499,7 @@ export class InformationController {
       },
     },
   })
+  @authenticate('micado')
   async import(
     @requestBody.file()
     request: Request,

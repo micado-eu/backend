@@ -18,7 +18,9 @@ import {
 } from '@loopback/rest';
 import {ProcessProducedDocuments} from '../models';
 import {ProcessProducedDocumentsRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class ProcessProducedDocumentsController {
   constructor(
     @repository(ProcessProducedDocumentsRepository)

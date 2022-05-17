@@ -19,7 +19,9 @@ import {
 import { threadId } from 'worker_threads';
 import {Document} from '../models';
 import {DocumentRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+@authenticate('micado')
 export class DocumentController {
   constructor(
     @repository(DocumentRepository)

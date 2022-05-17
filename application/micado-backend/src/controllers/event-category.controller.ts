@@ -18,6 +18,8 @@ import {
 } from '@loopback/rest';
 import { EventCategory } from '../models';
 import { EventCategoryRepository, LanguagesRepository } from '../repositories';
+import {authenticate} from '@loopback/authentication';
+
 
 export class EventCategoryController {
   constructor(
@@ -35,6 +37,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async create(
     @requestBody({
       content: {
@@ -59,6 +62,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async count(
     @param.where(EventCategory) where?: Where<EventCategory>,
   ): Promise<Count> {
@@ -80,6 +84,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async find(
     @param.filter(EventCategory) filter?: Filter<EventCategory>,
   ): Promise<EventCategory[]> {
@@ -94,6 +99,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async updateAll(
     @requestBody({
       content: {
@@ -120,6 +126,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async findById(
     @param.path.number('id') id: number,
     @param.filter(EventCategory, { exclude: 'where' }) filter?: FilterExcludingWhere<EventCategory>
@@ -134,6 +141,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -155,6 +163,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() eventCategory: EventCategory,
@@ -169,6 +178,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.eventCategoryRepository.deleteById(id);
   }
@@ -338,6 +348,7 @@ export class EventCategoryController {
       },
     },
   })
+  @authenticate('micado')
   async publish (
     @param.query.number('id') id:number,
   ): Promise<void> {
