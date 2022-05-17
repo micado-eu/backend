@@ -22,6 +22,8 @@ export class User extends Entity {
 
   @property({
     type: 'string',
+    jsonSchema: {nullable: true},
+    postgresql: {columnName: 'group', dataType: 'string', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   group?: string;
 
