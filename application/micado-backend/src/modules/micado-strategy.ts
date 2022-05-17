@@ -42,6 +42,8 @@ var iss_array = iss.split("/");
 var realm = iss_array[iss_array.length - 1]
 
 console.log('prima di keycloak')
+console.log(tokenparts[1])
+console.log(realm)
 
 const axios = require('axios').default;
 return axios({
@@ -52,7 +54,7 @@ return axios({
 
 }
 ).then(function (response: any) {
-    console.log(response);
+    console.log(response.data);
     if(response.status != 200){
       return undefined
     }
