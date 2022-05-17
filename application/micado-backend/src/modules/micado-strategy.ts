@@ -33,7 +33,8 @@ if(request.headers.authorization){
 
 const tokenparts: any = request.headers.authorization?.split(' ')
 let decoded:any = jwt_decode(tokenparts[1])
-//console.log(decoded)
+console.log("I AM DECODE")
+console.log(decoded)
 
 //console.log(tokenparts[1])
 var iss = decoded.iss
@@ -47,7 +48,7 @@ console.log(realm)
 
 const axios = require('axios').default;
 return axios({
-  url: 'https://' +process.env.IDENTITY_HOSTNAME + innerPort + '/auth/realms/' + realm + '/protocol/openid-connect/userinfo',
+  url: 'https://' +process.env.IDENTITY_HOSTNAME + '/auth/realms/' + realm + '/protocol/openid-connect/userinfo',
   method: "get",
   headers: {'Authorization': 'Bearer ' + tokenparts[1]},
   httpsAgent:new https.Agent({ rejectUnauthorized: false})

@@ -11,6 +11,7 @@ const https = require('https')
 
 
 const innerPort = (process.env.MICADO_ENV != undefined && process.env.MICADO_ENV.localeCompare("dev") == 0 ? "" : ":8443")
+const hostname = (process.env.IDENTITY_HOSTNAME != undefined ? process.env.IDENTITY_HOSTNAME : "")
 export class KeycloakIdentityTenantManagerController {
   constructor(
     //@repository(TenantRepository) public tenantRepository: TenantRepository,
@@ -66,7 +67,7 @@ export class KeycloakIdentityTenantManagerController {
     console.log("I am")
     console.log(data)
     let manager =  await this.keycloakService.getManager(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       querystring.stringify(data)
     )
     let token = JSON.parse(manager).access_token
@@ -108,7 +109,7 @@ export class KeycloakIdentityTenantManagerController {
       phone_number,
       realm,
       token,
-      process.env.IDENTITY_HOSTNAME + innerPort
+      hostname 
     );
   }
   @post('/createKeycloakUserWithRole')
@@ -130,7 +131,7 @@ export class KeycloakIdentityTenantManagerController {
    await this.createUser(username,firstName,lastName,email, password, birthdate,nationality,gender,phone_number , realm)
    let token = await this.getAdminToken(realm)
     const user = await this.keycloakService.getUser(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       username,
       token
@@ -172,12 +173,12 @@ export class KeycloakIdentityTenantManagerController {
     group_array.push(group)
     console.log( JSON.stringify(group_array))
     await this.keycloakService.createUserWithGroup(
-      username,firstName,lastName,email, password, group_array, birthdate,nationality,gender,phone_number ,realm, token, process.env.IDENTITY_HOSTNAME + innerPort,
+      username,firstName,lastName,email, password, group_array, birthdate,nationality,gender,phone_number ,realm, token, hostname ,
 
     )
     //await this.createUser(username,firstName,lastName,email, password,birthdate,nationality,gender,phone_number, realm, token)
     var user = await this.keycloakService.getUser(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       username,
       token
@@ -206,7 +207,7 @@ export class KeycloakIdentityTenantManagerController {
   ): Promise<any> {
     //Preconditions
     return this.keycloakService.getClientRoles(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       clientId,
       token
@@ -223,7 +224,7 @@ export class KeycloakIdentityTenantManagerController {
     //Preconditions
     let token = await this.getAdminToken(realm)
     return this.keycloakService.getUser(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       id,
       token
@@ -237,7 +238,7 @@ export class KeycloakIdentityTenantManagerController {
     //Preconditions
     let token = await this.getAdminToken('pa')
     return this.keycloakService.getUserList(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       'pa',
       token
     );
@@ -250,7 +251,7 @@ export class KeycloakIdentityTenantManagerController {
     //Preconditions
     let token = await this.getAdminToken('migrant')
     return this.keycloakService.getUserList(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       'migrant',
       token
     );
@@ -263,7 +264,7 @@ export class KeycloakIdentityTenantManagerController {
     ): Promise<any> {
     //Preconditions
     let token = await this.getAdminToken('ngo')
-    let groupId = await this.keycloakService.getGroupId(process.env.IDENTITY_HOSTNAME + innerPort,'ngo', token)
+    let groupId = await this.keycloakService.getGroupId(hostname ,'ngo', token)
     console.log("I am groupid")
     console.log(groupId)
      let groupIdString = groupId.filter((group:any)=>{
@@ -271,7 +272,7 @@ export class KeycloakIdentityTenantManagerController {
     })[0].id
     console.log(groupIdString)
     return this.keycloakService.getGroupMembers(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       'ngo',
       groupIdString,
       token
@@ -285,7 +286,7 @@ export class KeycloakIdentityTenantManagerController {
     @param({name: 'token', in: 'query', required: false}) token: string,
   ): Promise<any> {
     return this.keycloakService.getGroupList(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       token
     );
@@ -300,7 +301,7 @@ export class KeycloakIdentityTenantManagerController {
   ): Promise<any> {
     //Preconditions
     return this.keycloakService.getClientId(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       clientId,
       token
@@ -317,7 +318,7 @@ export class KeycloakIdentityTenantManagerController {
     let token = await this.getAdminToken(realm)
 
     return this.keycloakService.getUserRole(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       userid,
       token
@@ -333,7 +334,7 @@ export class KeycloakIdentityTenantManagerController {
   ): Promise<any> {
     //Preconditions
     return this.keycloakService.getGroupId(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       token
     );
@@ -359,7 +360,7 @@ export class KeycloakIdentityTenantManagerController {
       groupStringId,
       realm,
       token,
-      process.env.IDENTITY_HOSTNAME + innerPort
+      hostname 
     );
 
   }
@@ -379,7 +380,7 @@ export class KeycloakIdentityTenantManagerController {
     }
     console.log(data)
     let manager =  await this.keycloakService.getManager(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       querystring.stringify(data)
     )
     let token = JSON.parse(manager).access_token
@@ -387,7 +388,7 @@ export class KeycloakIdentityTenantManagerController {
       name,
       realm,
       token,
-      process.env.IDENTITY_HOSTNAME + innerPort
+      hostname 
     );
 
   }
@@ -406,7 +407,7 @@ export class KeycloakIdentityTenantManagerController {
     console.log("getting role")
 
     const roles = await this.keycloakService.getRealmRoles(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       token
     );
@@ -424,7 +425,7 @@ export class KeycloakIdentityTenantManagerController {
       console.log("I A PAYLOAD")
       console.log(payload)
       console.log("adding role")
-      const url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
+      const url = 'https://' + hostname  + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
       console.log(url)
       const axios = require('axios').default;
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
@@ -469,7 +470,7 @@ export class KeycloakIdentityTenantManagerController {
       phone_number,
       realm,
       token,
-      process.env.IDENTITY_HOSTNAME + innerPort
+      hostname 
     );
   }
 
@@ -488,7 +489,7 @@ export class KeycloakIdentityTenantManagerController {
       password,
       realm,
       token,
-      process.env.IDENTITY_HOSTNAME + innerPort
+      hostname 
     );
   }
 
@@ -512,7 +513,7 @@ export class KeycloakIdentityTenantManagerController {
     );
 
     const realm_roles = await this.keycloakService.getRealmRoles(
-      process.env.IDENTITY_HOSTNAME + innerPort,
+      hostname ,
       realm,
       token
     );
@@ -533,11 +534,11 @@ console.log(userid)
         console.log(selected_role)
         const payload =selected_role
         console.log(payload)
-        //this.keycloakService.deleteRole(process.env.IDENTITY_HOSTNAME + innerPort, realm, userid, token, payload )
+        //this.keycloakService.deleteRole(hostname , realm, userid, token, payload )
         console.log("I A PAYLOAD")
         console.log(payload)
         console.log("adding role")
-        const url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
+        const url = 'https://' + hostname  + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
         console.log(url)
         const axios = require('axios').default;
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
@@ -560,7 +561,7 @@ console.log(userid)
         console.log("I A PAYLOAD")
         console.log(payload)
         console.log("adding role")
-        const url = 'https://' + process.env.IDENTITY_HOSTNAME + innerPort + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
+        const url = 'https://' + hostname  + '/auth/admin/realms/' + realm + '/users/' + userid + '/role-mappings/realm'
         console.log(url)
         const axios = require('axios').default;
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
