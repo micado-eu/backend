@@ -525,7 +525,8 @@ console.log(userid)
         axios({
           url: url,
           method: "delete",
-          data: payload
+          data: payload,
+          httpsAgent:new https.Agent({ rejectUnauthorized: false})
         }
         )
       }
@@ -547,7 +548,8 @@ console.log(userid)
         axios({
           url: url,
           method: "post",
-          data: payload
+          data: payload,
+          httpsAgent:new https.Agent({ rejectUnauthorized: false})
         }
         )
       }
