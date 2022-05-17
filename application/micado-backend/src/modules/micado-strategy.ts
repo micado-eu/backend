@@ -4,6 +4,8 @@ import {inject} from '@loopback/context';
 import { AuthUser } from '../models';
 import {UserProfile} from '@loopback/security';
 import { Request} from '@loopback/rest';
+import jwt_decode from 'jwt-decode';
+
 //import {Keycloak} from 'keycloak-backend'
 
 
@@ -22,29 +24,47 @@ export class MicadoAuthenticationStrategy implements AuthenticationStrategy {
 //      const userProfile = this.userService.convertToUserProfile(user);
 //  const up = this.userService.convertToUserProfile(null)
 console.log('we are in authenticate of micadoauthstrategy')
-console.log(request.headers)
-console.log(request.headers.authorization)
-//if(request.headers.authorization){
+//console.log(request.headers)
+//console.log(request.headers.authorization)
+if(request.headers.authorization){
+
 const tokenparts: any = request.headers.authorization?.split(' ')
-console.log(tokenparts[1])
+let decoded:any = jwt_decode(tokenparts[1])
+//console.log(decoded)
+
+//console.log(tokenparts[1])
+let iss = decoded.iss
 
 console.log('prima di keycloak')
 
 const axios = require('axios').default;
-await axios.get('http://keycloak.micado.csi.it:8100/auth/realms/micado/protocol/openid-connect/userinfo', {
+return axios.get(iss + '/protocol/openid-connect/userinfo', {
     headers: {
         'Authorization': 'Bearer ' + tokenparts[1]
     }
   })
   .then(function (response: any) {
     console.log(response);
+    if(response.status != 200){
+      return undefined
+    }
+    else{
+      let uu = new AuthUser({username: 'pippo'})
+      return uu;
+    }
   })
   .catch(function (error: any) {
     console.log(error);
+    return undefined
+
   })
-  .then(function () {
+}
+else{
+  return undefined
+}
+ /* .then(function () {
     // always executed
-  });  
+  });*/  
 
 /*
 const keycloak = require('keycloak-backend')({
@@ -63,7 +83,7 @@ console.log(token.isExpired());
 console.log(token.hasRealmRole('user'));
 */
 //}
-  let uu = new AuthUser({username: 'pippo'})
-      return uu;
+  /*let uu = new AuthUser({username: 'pippo'})
+      return uu;*/
     }
   }

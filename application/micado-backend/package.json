@@ -64,6 +64,7 @@
     "https": "^1.0.0",
     "jsdom": "^16.7.0",
     "json2csv": "^5.0.6",
+    "jwt-decode": "^3.1.2",
     "keycloak-backend": "^2.0.1",
     "loopback-connector-postgresql": "^5.5.0",
     "loopback-connector-rest": "^3.7.0",

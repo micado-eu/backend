@@ -4,6 +4,8 @@ import {get, param, post, put, del} from '@loopback/rest';
 import {
   KeycloakService
 } from '../services/keycloak.service'; 
+import {AuthenticationBindings, authenticate} from '@loopback/authentication';
+
 const querystring = require('querystring');
 const https = require('https')
 
@@ -75,6 +77,7 @@ export class KeycloakIdentityTenantManagerController {
 
 
   @post('/createKeycloakUser')
+  @authenticate('micado')
   async createUser(
     @param({name: 'username', in: 'query', required: false}) username: string,
     @param({name: 'firstName', in: 'query', required: false}) firstName: string,
@@ -109,6 +112,7 @@ export class KeycloakIdentityTenantManagerController {
     );
   }
   @post('/createKeycloakUserWithRole')
+  @authenticate('micado')
   async createUserWithRole(
     @param({name: 'username', in: 'query', required: false}) username: string,
     @param({name: 'firstName', in: 'query', required: false}) firstName: string,
@@ -146,6 +150,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @post('/createKeycloakUserWithRoleAndGroup')
+  @authenticate('micado')
   async createKeycloakUserWithRoleAndGroup(
     @param({name: 'username', in: 'query', required: false}) username: string,
     @param({name: 'firstName', in: 'query', required: false}) firstName: string,
@@ -193,6 +198,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @get('/getClientRoles')
+  @authenticate('micado')
   async getClientRoles(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'clientId', in: 'query', required: false}) clientId: string,
@@ -209,6 +215,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @get('/getUser')
+  @authenticate('micado')
   async getUser(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'id', in: 'query', required: false}) id: string,
@@ -224,6 +231,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @get('/getPaUserList')
+  @authenticate('micado')
   async getPaUserList(
   ): Promise<any> {
     //Preconditions
@@ -236,6 +244,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @get('/getMigrantUserList')
+  @authenticate('micado')
   async getMigrantUserList(
     ): Promise<any> {
     //Preconditions
@@ -248,6 +257,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @get('/getNgoUserList')
+  @authenticate('micado')
   async getNgoUserList(
     @param({name: 'group_name', in: 'query', required: false}) group_name: string,
     ): Promise<any> {
@@ -269,6 +279,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @get('/getGroupList')
+  @authenticate('micado')
   async getGroupList(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
@@ -281,6 +292,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @get('/getClientId')
+  @authenticate('micado')
   async getClientId(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'clientId', in: 'query', required: false}) clientId: string,
@@ -296,6 +308,7 @@ export class KeycloakIdentityTenantManagerController {
 
   }
   @get('/getUserRoles')
+  @authenticate('micado')
   async getUserRoles(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'userid', in: 'query', required: false}) userid: string,
@@ -313,6 +326,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @get('/getGroupId')
+  @authenticate('micado')
   async getGroupId(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
@@ -327,6 +341,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @post('/addToGroup')
+  @authenticate('micado')
   async addToGroup(
     @param({name: 'userId', in: 'query', required: false}) userId: string,
     @param({name: 'groupId', in: 'query', required: false}) groupId: string,
@@ -350,6 +365,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @post('/createGroup')
+  @authenticate('micado')
   async createGroup(
     @param({name: 'name', in: 'query', required: false}) name: string,
     @param({name: 'realm', in: 'query', required: false}) realm: string,
@@ -377,6 +393,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @post('/addRoleToUser')
+  @authenticate('micado')
   async addRole(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'token', in: 'query', required: false}) token: string,
@@ -426,6 +443,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @put('/updateUser')
+  @authenticate('micado')
   async updateUser(
     @param({name: 'userid', in: 'query', required: false}) userid: string,
     @param({name: 'firstName', in: 'query', required: false}) firstName: string,
@@ -456,6 +474,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @put('/updateUserPassword')
+  @authenticate('micado')
   async updateUserPassword(
     @param({name: 'userid', in: 'query', required: false}) userid: string,
     @param({name: 'password', in: 'query', required: false}) password: string,
@@ -474,6 +493,7 @@ export class KeycloakIdentityTenantManagerController {
   }
 
   @post('/updateUserRoles')
+  @authenticate('micado')
   async updateUserRoles(
     @param({name: 'realm', in: 'query', required: false}) realm: string,
     @param({name: 'userid', in: 'query', required: false}) userid: string,
