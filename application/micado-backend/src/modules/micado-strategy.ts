@@ -5,6 +5,8 @@ import { AuthUser } from '../models';
 import {UserProfile} from '@loopback/security';
 import { Request} from '@loopback/rest';
 import jwt_decode from 'jwt-decode';
+const https = require('https')
+
 
 //import {Keycloak} from 'keycloak-backend'
 
@@ -38,12 +40,14 @@ let iss = decoded.iss
 console.log('prima di keycloak')
 
 const axios = require('axios').default;
-return axios.get(iss + '/protocol/openid-connect/userinfo', {
-    headers: {
-        'Authorization': 'Bearer ' + tokenparts[1]
-    }
-  })
-  .then(function (response: any) {
+return axios({
+  url: iss + '/protocol/openid-connect/userinfo',
+  method: "get",
+  headers: {'Authorization': 'Bearer ' + tokenparts[1]},
+  httpsAgent:new https.Agent({ rejectUnauthorized: false})
+
+}
+).then(function (response: any) {
     console.log(response);
     if(response.status != 200){
       return undefined
