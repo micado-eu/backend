@@ -100,7 +100,8 @@ export class BatchLoaderController {
           let uploadedPayload: any = BatchLoaderController.getFilesAndFields(request)
           console.log(uploadedPayload)
           console.log(uploadedPayload.fields.entity)
-          console.log(uploadedPayload.fields.creator)
+          console.log(uploadedPayload.fields.username)
+          console.log(uploadedPayload.fields.realm)
           const results: any = [];
           let csv_options: any = { trim: true }
           fs.createReadStream('.sandbox' + "/" + uploadedPayload.files[0].originalname)
@@ -108,7 +109,7 @@ export class BatchLoaderController {
             .on('data', (data: any) => results.push(data))
             .on('end', () => {
               console.log(results);
-              this.loadData(uploadedPayload.fields.entity, results, def_lang.value, languages, uploadedPayload.fields.creator)
+              this.loadData(uploadedPayload.fields.entity, results, def_lang.value, languages, uploadedPayload.fields.username, uploadedPayload.fields.realm)
               // [
               //   { NAME: 'Daffy Duck', AGE: '24' },
               //   { NAME: 'Bugs Bunny', AGE: '22' }
@@ -144,14 +145,15 @@ export class BatchLoaderController {
     return { files, fields: request.body };
   }
 
-  private loadData(entity: string, csv: any, def_lang: any, act_lang: any, creator?: string) {
+  private loadData(entity: string, csv: any, def_lang: any, act_lang: any, username?: string, realm?: string) {
     console.log("in load data")
     console.log(csv)
     switch (entity) {
       case "glossary":
         csv.forEach((element: any) => {
           this.glossaryRepository.create({
-            creator
+            username,
+            realm
           })
             .then(newEntity => {
               console.log(newEntity)
@@ -209,7 +211,8 @@ export class BatchLoaderController {
           var creatingEntity: any = { 
             startDate: element.start_date, 
             endDate: element.end_date,
-            creator,
+            username,
+            realm,
             location: element.location ? element.location : undefined,
             cost: element.cost ? element.cost : undefined
           }
@@ -241,7 +244,8 @@ export class BatchLoaderController {
       case "information":
         csv.forEach((element: any) => {
           this.informationRepository.create({
-            creator
+            username,
+            realm
           })
             .then(newEntity => {
               console.log(newEntity)
