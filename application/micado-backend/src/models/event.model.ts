@@ -1,5 +1,5 @@
-import { Entity, model, property, hasMany, hasOne } from '@loopback/repository';
-import { EventTranslation, EventTopic } from '.';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import {EventTopic, EventTranslation} from '.';
 import {EventTranslationProd} from './event-translation-prod.model';
 
 @model({
@@ -59,9 +59,15 @@ export class Event extends Entity {
 
   @property({
     type: 'string',
-    postgresql: { columnName: 'creator', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'username', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
-  creator?: string;
+  username?: string;
+
+  @property({
+    type: 'string',
+    postgresql: { columnName: 'realm', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  realm?: string;
 
   @property({
     type: 'string',
