@@ -84,7 +84,9 @@ export class MicadoBackendApplication extends BootMixin(
         destination,
         // Use the original file name as is
         filename: (req, file, cb) => {
-          cb(null, file.originalname);
+          if (file !== undefined) {
+            cb(null, file.originalname);
+          }
         },
       }),
     };
