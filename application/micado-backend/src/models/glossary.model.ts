@@ -1,6 +1,6 @@
-import { Entity, model, property, hasMany} from '@loopback/repository';
-import {GlossaryTranslation} from './glossary-translation.model';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {GlossaryTranslationProd} from './glossary-translation-prod.model';
+import {GlossaryTranslation} from './glossary-translation.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'glossary' } }
@@ -15,7 +15,7 @@ export class Glossary extends Entity {
     //    postgresql: { columnName: 'id', dataType: 'smallint', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'NO' },
   })
   id: number;
-  
+
   @property({
     type: 'boolean',
     postgresql: {columnName: 'published', dataType: 'boolean', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
@@ -24,9 +24,15 @@ export class Glossary extends Entity {
 
   @property({
     type: 'string',
-    postgresql: { columnName: 'creator', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'username', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
-  creator?: string;
+  username?: string;
+
+  @property({
+    type: 'string',
+    postgresql: { columnName: 'realm', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  realm?: string;
 
   @property({
     type: 'date',

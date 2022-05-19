@@ -1,7 +1,7 @@
-import { Entity, model, property, hasMany, hasOne } from '@loopback/repository';
-import { InformationTranslation, InformationTopic } from '.';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import {InformationTopic, InformationTranslation} from '.';
 import {InformationTranslationProd} from './information-translation-prod.model';
-import { InformationUserTypes } from './information-user-types.model';
+import {InformationUserTypes} from './information-user-types.model';
 
 @model({
   settings: { idInjection: false, postgresql: { schema: 'micadoapp', table: 'information' } }
@@ -40,9 +40,15 @@ export class Information extends Entity {
 
   @property({
     type: 'string',
-    postgresql: { columnName: 'creator', dataType: 'uuid', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+    postgresql: { columnName: 'username', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
   })
-  creator?: string;
+  username?: string;
+
+  @property({
+    type: 'string',
+    postgresql: { columnName: 'realm', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES' },
+  })
+  realm?: string;
 
   @property({
     type: 'date',
