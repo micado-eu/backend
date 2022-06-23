@@ -240,4 +240,22 @@ export class DocumentTypeController {
       this.documentTypeRepository.dataSource.execute("insert into document_type_translation_prod(id, lang ,document,description,translation_date) select document_type_translation.id, document_type_translation.lang, document_type_translation.document, document_type_translation.description, document_type_translation.translation_date from document_type_translation  where "+'"translationState"'+" = '1' and id=$1 and lang=$2 and translated=true", [id, lang.lang]);
     })
   }
+
+  @get('/document-types/to-json', {
+    responses: {
+      '200': {
+        description: 'process GET for the frontend',
+      },
+    },
+  })
+  //@authenticate('micado')
+  async getJson(
+    @param.query.number('id') id: number,
+  ): Promise<any> {
+    //let process_documents:any = await this.processRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(pt)) from document_type_translation pt where pt.id = t.id) as translations from document_type t where id in (select ppd.id_document from process_produced_documents ppd where ppd.id_process ="  + id +")")
+    const document_type: any = await this.documentTypeRepository.dataSource.execute("select *, ( select to_jsonb(array_agg(dtt)) from document_type_translation dtt where dtt.id = dt.id) as translations, ( select to_jsonb(array_agg(dtp)) from document_type_picture dtp where dtp.document_type_id = dt.id) as pictures from document_type dt where id = " + id)
+
+    return document_type
+
+  }
 }
