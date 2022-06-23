@@ -33,6 +33,7 @@ export class UserTypesTranslation extends Entity {
 
   @property({
     type: 'string',
+    jsonSchema: {nullable: true},
     postgresql: {columnName: 'description', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: null, nullable: 'YES'},
   })
   description?: string;
