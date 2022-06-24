@@ -11,14 +11,17 @@ export class EtranslationController {
   ) { }
 
 
-  @get('/getTranslation/{content}')
+  @get('/getTranslation')
   async getTranslation(
-    @param.path.string('content') requiredTranslation: String,
+    @param.query.string('content') requiredTranslation: string,
+    @param.query.string('table') table: string,
+    @param.query.string('type') type: string,
+    @param.query.string('id') id: string,
   ): Promise<any> {
     //Preconditions
     console.log("in the etranslation controller")
     console.log(requiredTranslation)
-    return this.etranslationService.getTranslation(requiredTranslation,"1","process")
+    return this.etranslationService.getTranslation(requiredTranslation, id, table, type)
   }
 }
 

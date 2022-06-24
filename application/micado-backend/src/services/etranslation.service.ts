@@ -49,29 +49,35 @@ export class EtranslationService {
         })() as unknown as EtranslationService;
     }
 
-    public getTranslation(requiredTranslation: String, id: string, contenttype: string): Promise<any> {
+    public getTranslation(requiredTranslation: string, id: string, contentTable:string, contentType: string): Promise<any> {
         //Preconditions
         if(!this.enabled)
             return new Promise((resolve, reject)=>{return reject("etranslation not configured")})
         console.log("in the etranslation service")
         console.log(requiredTranslation)
+        let requiredTranslationBuffer = new Buffer(requiredTranslation);
+        let requiredTranslation64 = requiredTranslationBuffer.toString('base64');
         var args = {
             arg0: {
-                "external-reference": contenttype + "-" + id,
+                "external-reference": contentTable + ":" + contentType + ":" + id,
                 "caller-information": {
-                    "application": "MICADO_migrants_20201216",
-                    "username": "gioppo",
+                    "application": this.et_user,
+                    "username": "micado",
                     "institution": "eu.europa.ec",
                     "department-number": "DGT.R.3.002"
                 },
-                "text-to-translate": requiredTranslation,
+                "document-to-translate-base64":{
+                    "content":requiredTranslation64,
+                    "format":"html",
+                    "file-name":"micado-content"
+                },
                 "source-language": this.source_language,
                 "target-languages": this.target_langs,
                 "domain": "SPD",
-                "output-format": "json",
-                "requester-callback": "https://api.micadoproject.eu/e-translations",
+                "output-format": "html",
                 "destinations": {
                     "email-destination": ["luca.gioppo@csi.it"],
+                    "http-destination":["https://api.micadoproject.eu/e-translations-html"]
                 }
             }
         };
