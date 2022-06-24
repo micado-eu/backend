@@ -21,11 +21,15 @@ import {
 } from '../models';
 import {TopicRepository} from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
 
-@authenticate('micado')
+import {EtranslationService} from '../services/etranslation.service'
+
+//@authenticate('micado')
 export class TopicTopicTranslationController {
   constructor(
     @repository(TopicRepository) protected topicRepository: TopicRepository,
+    @service() public etranslationService: EtranslationService,
   ) { }
 
   @get('/topics/{id}/topic-translations', {
@@ -70,7 +74,11 @@ export class TopicTopicTranslationController {
     }) topicTranslation: TopicTranslation,
 //  }) topicTranslation: Omit<TopicTranslation, 'id'>,
   ): Promise<TopicTranslation> {
+    if(topicTranslation.translated){
+      this.etranslationService.getTranslation(topicTranslation.description ? topicTranslation.description: '', topicTranslation.id.toString(), 'topic', 'description')
+    }
     return this.topicRepository.translations(id).create(topicTranslation);
+
   }
 
   @patch('/topics/{id}/topic-translations', {
