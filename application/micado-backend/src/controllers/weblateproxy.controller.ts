@@ -43,6 +43,22 @@ export class WeblateproxyController {
       }
     }) translation: Object
   ): Promise<any> {
+    console.log("webhook post")
+    console.log(translation)
+  }
+
+
+  @get('/e-translations')
+  async webhook2(
+    @requestBody({
+      content: {
+        'application/x-www-form-urlencoded': {
+          schema: { type: 'object' },
+        }
+      }
+    }) translation: Object
+  ): Promise<any> {
+    console.log("webhook get")
     console.log(translation)
 
   }
