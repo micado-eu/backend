@@ -1,7 +1,16 @@
 // Uncomment these imports to begin using these cool features!
 
 import {inject} from '@loopback/context';
+import {
+  Count,
+  CountSchema,
+  Filter,
+  FilterExcludingWhere,
+  repository,
+  Where,
+} from '@loopback/repository';
 import {get, post,param, requestBody, RequestContext} from '@loopback/rest';
+import { EventRepository} from '../repositories';
 import {
   WeblateService
 } from '../services/weblate.service';
@@ -10,6 +19,8 @@ export class WeblateproxyController {
   constructor(
     @inject('services.Weblate')
     protected weblateService: WeblateService,
+    @repository(EventRepository)
+    public eventRepository: EventRepository,
     @inject.context()
     public context: RequestContext,
   ) { }
@@ -48,6 +59,19 @@ export class WeblateproxyController {
   ): Promise<any> {
     const rawBody = translation.toString();
     console.log(rawBody)
+    let lang = target_language.toLowerCase()
+    let references = external_reference.split(':')
+    console.log(lang)
+    console.log(references)
+let buff = new Buffer(rawBody, 'base64');
+let text = buff.toString('ascii');
+
+    console.log(text)
+    let sql = "update " + references[0]+"_translation SET " + references[1] + "=$1 where lang=$2 and id=$3"
+    let result = await this.eventRepository.dataSource.execute(sql , [text, lang, references[2]]);
+    console.log(result)
+
+    console.log(sql)
   }
 
 
