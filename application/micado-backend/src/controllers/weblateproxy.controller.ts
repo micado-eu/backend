@@ -55,8 +55,11 @@ export class WeblateproxyController {
     console.log("external_reference")
     console.log(external_reference)
     console.log("translation")
-    const rawBody = translation.toString('utf8');
+    const rawBody = translation.toString();
     console.log(rawBody)
+
+    var stringified = JSON.stringify(translation)
+    console.log(stringified)
   }
 
 
