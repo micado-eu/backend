@@ -1,7 +1,7 @@
 // Uncomment these imports to begin using these cool features!
 
 import {inject} from '@loopback/context';
-import {get, post, requestBody, RequestContext} from '@loopback/rest';
+import {get, post,param, requestBody, RequestContext} from '@loopback/rest';
 import {
   WeblateService
 } from '../services/weblate.service';
@@ -33,7 +33,7 @@ export class WeblateproxyController {
 
 
 
-  @post('/e-translations')
+  @post('/e-translations-html')
   async webhook(
     @requestBody({
       content: {
@@ -41,14 +41,24 @@ export class WeblateproxyController {
           schema: { type: 'object' },
         }
       }
-    }) translation: Object
+    }) translation: Object,
+    @param.query.string('request-id') request_id: string,
+    @param.query.string('target-language') target_language: string,
+    @param.query.string('external-reference') external_reference: string,
   ): Promise<any> {
-    console.log("webhook post")
+    console.log("webhook post html")
+    console.log("request_id")
+    console.log(request_id)
+    console.log("target_language")
+    console.log(target_language)
+    console.log("external_reference")
+    console.log(external_reference)
+    console.log("translation")
     console.log(translation)
   }
 
 
-  @get('/e-translations')
+  @post('/e-translations')
   async webhook2(
     @requestBody({
       content: {
@@ -58,7 +68,7 @@ export class WeblateproxyController {
       }
     }) translation: Object
   ): Promise<any> {
-    console.log("webhook get")
+    console.log("webhook post base")
     console.log(translation)
 
   }
