@@ -38,11 +38,10 @@ export class WeblateproxyController {
     @requestBody({
       content: {
         '': {       // Make sure this matches the POST request type
-          'x-parser': 'raw',        // This is the key to skipping parsing
-          schema: {type: 'object'},
+          'x-parser': 'text'        // This is the key to skipping parsing
         },
       },
-    }) translation: Buffer,
+    }) translation: any,
     @param.query.string('request-id') request_id: string,
     @param.query.string('target-language') target_language: string,
     @param.query.string('external-reference') external_reference: string,
@@ -55,7 +54,9 @@ export class WeblateproxyController {
     console.log("external_reference")
     console.log(external_reference)
     console.log("translation")
+    console.log(translation)
     const rawBody = translation.toString();
+    console.log("raw body")
     console.log(rawBody)
 
     var stringified = JSON.stringify(translation)
