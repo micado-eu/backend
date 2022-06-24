@@ -35,7 +35,14 @@ export class WeblateproxyController {
 
   @post('/e-translations-html')
   async webhook(
-    @requestBody() translation: Object,
+    @requestBody({
+      content: {
+        '': {       // Make sure this matches the POST request type
+          'x-parser': 'raw',        // This is the key to skipping parsing
+          schema: {type: 'object'},
+        },
+      },
+    }) translation: Buffer,
     @param.query.string('request-id') request_id: string,
     @param.query.string('target-language') target_language: string,
     @param.query.string('external-reference') external_reference: string,
@@ -48,7 +55,8 @@ export class WeblateproxyController {
     console.log("external_reference")
     console.log(external_reference)
     console.log("translation")
-    console.log(translation)
+    const rawBody = translation.toString('utf8');
+    console.log(rawBody)
   }
 
 
