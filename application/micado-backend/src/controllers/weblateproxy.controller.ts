@@ -35,13 +35,7 @@ export class WeblateproxyController {
 
   @post('/e-translations-html')
   async webhook(
-    @requestBody({
-      content: {
-        'application/x-www-form-urlencoded': {
-          schema: { type: 'object' },
-        }
-      }
-    }) translation: Object,
+    @requestBody() translation: Object,
     @param.query.string('request-id') request_id: string,
     @param.query.string('target-language') target_language: string,
     @param.query.string('external-reference') external_reference: string,
