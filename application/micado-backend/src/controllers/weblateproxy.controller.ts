@@ -37,30 +37,17 @@ export class WeblateproxyController {
   async webhook(
     @requestBody({
       content: {
-        '': {       // Make sure this matches the POST request type
+        'text/plain': {       // Make sure this matches the POST request type
           'x-parser': 'raw'        // This is the key to skipping parsing
         },
       },
-    }) translation: string,
+    }) translation: Object,
     @param.query.string('request-id') request_id: string,
     @param.query.string('target-language') target_language: string,
     @param.query.string('external-reference') external_reference: string,
   ): Promise<any> {
-    console.log("webhook post html")
-    console.log("request_id")
-    console.log(request_id)
-    console.log("target_language")
-    console.log(target_language)
-    console.log("external_reference")
-    console.log(external_reference)
-    console.log("translation")
-    console.log(translation)
     const rawBody = translation.toString();
-    console.log("raw body")
     console.log(rawBody)
-
-    var stringified = JSON.stringify(translation)
-    console.log(stringified)
   }
 
 

@@ -45,9 +45,13 @@ export class MySequence implements SequenceHandler {
       //response.header('Access-Control-Allow-Origin', '*');
         //    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin');
         console.log(request.method)
-        console.log(request.body)
-        console.log(request.headers)
-        console.log(request)
+        console.log(request.headers['user-agent'])
+        console.log(request.headers['content-type'])
+
+        if(request.headers['user-agent']?.includes('Apache-HttpClient') && !request.headers['content-type']){
+          console.log("call from e-translation ")
+          request.headers['content-type']='text/plain'
+        }
                 /*if (request.method == 'OPTIONS') {
                 console.log("I AM IN THE SEQUENCE FOR AN OPTION REQUEST")
                 response.status(200)
