@@ -64,7 +64,7 @@ export class WeblateproxyController {
     console.log(lang)
     console.log(references)
 let buff = new Buffer(rawBody, 'base64');
-let text = buff.toString('ascii');
+let text = buff.toString('utf8');
 
     console.log(text)
     let sql = "update " + references[0]+"_translation SET " + references[1] + "=$1 where lang=$2 and id=$3"
