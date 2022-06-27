@@ -60,12 +60,12 @@ export class WeblateproxyController {
 //$1 is id, $2 is text $3 is lang
     let sqlarray:JSONObject = {
       "topic": { 
-      topic: "insert into micadoapp.topic_translation (id,topic,lang,translation_date,\"translationState\",published) VALUES ($1 ,$2,$3,now(),1,false) on conflict (id,lang) do update set topic=excluded.topic,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
-      description: "insert into micadoapp.topic_translation (id,description,lang,translation_date,\"translationState\",published) VALUES ($1 ,$2,$3,now(),1,false) on conflict (id,lang) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      topic: "insert into micadoapp.topic_translation (id,topic,lang,translation_date,\"translationState\") VALUES ($1 ,$2,$3,now(),1) on conflict (id,lang) do update set topic=excluded.topic,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
+      description: "insert into micadoapp.topic_translation (id,description,lang,translation_date,\"translationState\") VALUES ($1 ,$2,$3,now(),1) on conflict (id,lang) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
       },
       "process": {
-        process: "insert into micadoapp.process_translation (id,process,description,lang,translation_date,\"translationState\",published) VALUES ($1 ,$2,'',$3,now(),1,false) on conflict (id,lang) do update set process=excluded.process,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
-        description: "insert into micadoapp.process_translation (id,process,description,lang,translation_date,\"translationState\",published) VALUES ($1 ,'',$2,$3,now(),1,false) on conflict (id,lang) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+        process: "insert into micadoapp.process_translation (id,process,description,lang,translation_date,\"translationState\") VALUES ($1 ,$2,'',$3,now(),1) on conflict (id,lang) do update set process=excluded.process,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
+        description: "insert into micadoapp.process_translation (id,process,description,lang,translation_date,\"translationState\") VALUES ($1 ,'',$2,$3,now(),1) on conflict (id,lang) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
       },
 
     }
