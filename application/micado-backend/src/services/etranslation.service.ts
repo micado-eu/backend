@@ -30,8 +30,8 @@ export class EtranslationService {
             let settings: any = await this.settingsRepository.find({})
             let languages = await this.languagesRepository.find({ where: { active: true, isDefault: false } });
             this.hostname = (process.env.API_HOSTNAME != undefined ? process.env.API_HOSTNAME : "")
-            console.log(settings)
-            console.log(languages)
+            //console.log(settings)
+            //console.log(languages)
             this.target_langs = languages.map((language) => {
                 return {
                     "target-language": language.lang.toUpperCase()
@@ -51,7 +51,13 @@ export class EtranslationService {
             return this;
         })() as unknown as EtranslationService;
     }
-
+    public async setCredentials(){
+        let settings: any = await this.settingsRepository.find({})
+        let languages = await this.languagesRepository.find({ where: { active: true, isDefault: false } });
+        this.et_password = settings.filter((el: any) => { return el.key === 'e_translation_password' })[0].value
+        this.et_user = settings.filter((el: any) => { return el.key === 'e_translation_user' })[0].value
+        this.enabled = Boolean(this.et_user) && Boolean(this.et_password)
+    }
     public async getTranslation(requiredTranslation: string, id: string, contentTable:string, contentType: string): Promise<any> {
         //Preconditions
         if(!this.enabled){
