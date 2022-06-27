@@ -79,6 +79,7 @@ export class TopicTopicTranslationController {
       if(topicTranslation.description){
         await this.etranslationService.getTranslation(topicTranslation.description, topicTranslation.id.toString(), 'topic', 'description')
       }
+      await new Promise(r => setTimeout(r, 500));
       if(topicTranslation.topic){
         await this.etranslationService.getTranslation(topicTranslation.topic, topicTranslation.id.toString(), 'topic', 'topic')
       }
@@ -112,6 +113,7 @@ export class TopicTopicTranslationController {
       if(topicTranslation.description){
         await this.etranslationService.getTranslation(topicTranslation.description, id.toString(), 'topic', 'description')
       }
+      await new Promise(r => setTimeout(r, 500));
       if(topicTranslation.topic){
         await this.etranslationService.getTranslation(topicTranslation.topic, id.toString(), 'topic', 'topic')
       }
