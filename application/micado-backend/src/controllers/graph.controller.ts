@@ -86,7 +86,7 @@ export class GraphController {
                   if(savingTranslation.description){
                     await this.etranslationService.getTranslation(savingTranslation.description, savingTranslation.id.toString(), 'step', 'description')
                   }
-                  await new Promise(r => setTimeout(r, 500));
+                  await new Promise(r => setTimeout(r, 700));
                   if(savingTranslation.step){
                     await this.etranslationService.getTranslation(savingTranslation.step, savingTranslation.id.toString(), 'step', 'step')
                   }
@@ -165,7 +165,7 @@ export class GraphController {
                   if(editingTranslation.description){
                     await this.etranslationService.getTranslation(editingTranslation.description, editingTranslation.id.toString(), 'step', 'description')
                   }
-                  await new Promise(r => setTimeout(r, 500));
+                  await new Promise(r => setTimeout(r, 700));
                   if(editingTranslation.step){
                     await this.etranslationService.getTranslation(editingTranslation.step, editingTranslation.id.toString(), 'step', 'step')
                   }
