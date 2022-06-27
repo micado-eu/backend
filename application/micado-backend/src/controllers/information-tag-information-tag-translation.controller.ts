@@ -21,11 +21,16 @@ import {
 } from '../models';
 import { InformationTagRepository } from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
+
+import {EtranslationService} from '../services/etranslation.service'
 
 @authenticate('micado')
 export class InformationTagInformationTagTranslationController {
     constructor(
         @repository(InformationTagRepository) protected informationTagRepository: InformationTagRepository,
+        @service() public etranslationService: EtranslationService,
+
     ) { }
 
     @get('/information-tags/{id}/information-tag-translations', {
@@ -70,6 +75,12 @@ export class InformationTagInformationTagTranslationController {
         }) informationTagTranslation: InformationTagTranslation,
         //    }) informationTagTranslation: Omit < InformationTagTranslation, 'id' >,
     ): Promise<InformationTagTranslation> {
+        if(informationTagTranslation.translated){
+            if(informationTagTranslation.tag){
+              await this.etranslationService.getTranslation(informationTagTranslation.tag, informationTagTranslation.id.toString(), 'information_tag', 'tag')
+            }
+            await new Promise(r => setTimeout(r, 500));
+          }
         return this.informationTagRepository.translations(id).create(informationTagTranslation);
     }
 
@@ -93,6 +104,12 @@ export class InformationTagInformationTagTranslationController {
         informationTagTranslation: Partial<InformationTagTranslation>,
         @param.query.object('where', getWhereSchemaFor(InformationTagTranslation)) where?: Where<InformationTagTranslation>,
     ): Promise<Count> {
+        if(informationTagTranslation.translated){
+            if(informationTagTranslation.tag){
+              await this.etranslationService.getTranslation(informationTagTranslation.tag, id.toString(), 'information_tag', 'tag')
+            }
+            await new Promise(r => setTimeout(r, 500));
+          }
         return this.informationTagRepository.translations(id).patch(informationTagTranslation, where);
     }
 

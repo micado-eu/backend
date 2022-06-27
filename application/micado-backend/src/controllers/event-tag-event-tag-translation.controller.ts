@@ -21,11 +21,16 @@ import {
 } from '../models';
 import { EventTagRepository } from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
+
+import {EtranslationService} from '../services/etranslation.service'
 
 @authenticate('micado')
 export class EventTagEventTagTranslationController {
     constructor(
         @repository(EventTagRepository) protected eventTagRepository: EventTagRepository,
+        @service() public etranslationService: EtranslationService,
+
     ) { }
 
     @get('/event-tags/{id}/event-tag-translations', {
@@ -70,6 +75,12 @@ export class EventTagEventTagTranslationController {
         }) eventTagTranslation: EventTagTranslation,
         //    }) eventTagTranslation: Omit < EventTagTranslation, 'id' >,
     ): Promise<EventTagTranslation> {
+        if(eventTagTranslation.translated){
+            if(eventTagTranslation.tag){
+              await this.etranslationService.getTranslation(eventTagTranslation.tag, eventTagTranslation.id.toString(), 'event_tag', 'tag')
+            }
+            await new Promise(r => setTimeout(r, 500));
+          }
         return this.eventTagRepository.translations(id).create(eventTagTranslation);
     }
 
@@ -93,6 +104,12 @@ export class EventTagEventTagTranslationController {
         eventTagTranslation: Partial<EventTagTranslation>,
         @param.query.object('where', getWhereSchemaFor(EventTagTranslation)) where?: Where<EventTagTranslation>,
     ): Promise<Count> {
+        if(eventTagTranslation.translated){
+            if(eventTagTranslation.tag){
+              await this.etranslationService.getTranslation(eventTagTranslation.tag, id.toString(), 'event_tag', 'tag')
+            }
+            await new Promise(r => setTimeout(r, 500));
+          }
         return this.eventTagRepository.translations(id).patch(eventTagTranslation, where);
     }
 

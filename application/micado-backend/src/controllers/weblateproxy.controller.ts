@@ -71,6 +71,33 @@ export class WeblateproxyController {
         step: "insert into micadoapp.step_translation (id,step,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,$2,'',$3,now(),1, true) on conflict (id,lang, translated) do update set step=excluded.step,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
         description: "insert into micadoapp.step_translation (id,step,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,'',$2,$3,now(),1, true) on conflict (id,lang, translated) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
       },
+      "steplink": {
+        description: "insert into micadoapp.step_link_translation (id,description,lang,translation_date,\"translationState\", translated) VALUES ($1,$2,$3,now(),1, true) on conflict (id,lang, translated) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
+      "event": {
+        event: "insert into micadoapp.event_translation (id,event,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,$2,'',$3,now(),1, true) on conflict (id,lang, translated) do update set event=excluded.event,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
+        description: "insert into micadoapp.event_translation (id,event,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,'',$2,$3,now(),1, true) on conflict (id,lang, translated) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
+      "event_category": {
+        event_category: "insert into micadoapp.event_category_translation (id,event_category,lang,translation_date,\"translationState\", translated) VALUES ($1,$2,$3,now(),1, true) on conflict (id,lang, translated) do update set event_category=excluded.event_category,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
+      "event_tag": {
+        tag: "insert into micadoapp.event_tags_translation (id,tag,lang,translation_date,\"translationState\", translated) VALUES ($1,$2,$3,now(),1, true) on conflict (id,lang, translated) do update set tag=excluded.tag,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
+      "glossary": {
+        title: "insert into micadoapp.glossary_translation (id,title,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,$2,'',$3,now(),1, true) on conflict (id,lang, translated) do update set title=excluded.title,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
+        description: "insert into micadoapp.glossary_translation (id,title,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,'',$2,$3,now(),1, true) on conflict (id,lang, translated) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
+      "information_category": {
+        information_category: "insert into micadoapp.information_category_translation (id,information_category,lang,translation_date,\"translationState\", translated) VALUES ($1,$2,$3,now(),1, true) on conflict (id,lang, translated) do update set information_category=excluded.information_category,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
+      "information_tag": {
+        tag: "insert into micadoapp.information_tags_translation (id,tag,lang,translation_date,\"translationState\", translated) VALUES ($1,$2,$3,now(),1, true) on conflict (id,lang, translated) do update set tag=excluded.tag,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
+      "information": {
+        information: "insert into micadoapp.information_translation (id,information,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,$2,'',$3,now(),1, true) on conflict (id,lang, translated) do update set information=excluded.information,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
+        description: "insert into micadoapp.information_translation (id,information,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,'',$2,$3,now(),1, true) on conflict (id,lang, translated) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
 
     }
 

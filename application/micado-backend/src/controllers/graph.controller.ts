@@ -237,7 +237,13 @@ export class GraphController {
               }).catch(error => {
                 console.log(error)
               })
-
+                // here we need to add 
+                if(savingTranslation.translated){
+                  if(savingTranslation.description){
+                    await this.etranslationService.getTranslation(savingTranslation.description, savingTranslation.id.toString(), 'steplink', 'description')
+                  }
+                  await new Promise(r => setTimeout(r, 700));
+                }
           });
         }
         await saveLinkTranslations()
@@ -277,7 +283,13 @@ export class GraphController {
               }).catch(error => {
                 console.log(error)
               })
-
+                // here we need to add 
+                if(editingTranslation.translated){
+                  if(editingTranslation.description){
+                    await this.etranslationService.getTranslation(editingTranslation.description, editingTranslation.id.toString(), 'steplink', 'description')
+                  }
+                  await new Promise(r => setTimeout(r, 700));
+                }
           });
         }
         await editTranslationsLinks()

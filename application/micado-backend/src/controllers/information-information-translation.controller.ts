@@ -24,10 +24,14 @@ import { InformationRepository } from '../repositories';
 import { MarkdownConverterService } from '../services/markdown-converter.service';
 import {authenticate} from '@loopback/authentication';
 
+import {EtranslationService} from '../services/etranslation.service'
+
 @authenticate('micado')
 export class InformationInformationTranslationController {
   constructor(
-    @repository(InformationRepository) protected informationRepository: InformationRepository
+    @repository(InformationRepository) protected informationRepository: InformationRepository,
+    @service() public etranslationService: EtranslationService,
+
   ) { }
 
   @get('/information/{id}/information-translations', {
@@ -72,6 +76,15 @@ export class InformationInformationTranslationController {
     }) informationTranslation: InformationTranslation,
     //    }) informationTranslation: Omit < InformationTranslation, 'id' >,
   ): Promise<InformationTranslation> {
+    if(informationTranslation.translated){
+      if(informationTranslation.description){
+        await this.etranslationService.getTranslation(informationTranslation.description, informationTranslation.id.toString(), 'information', 'description')
+      }
+      await new Promise(r => setTimeout(r, 500));
+      if(informationTranslation.information){
+        await this.etranslationService.getTranslation(informationTranslation.information, informationTranslation.id.toString(), 'information', 'information')
+      }
+    }
     return this.informationRepository.translations(id).create(informationTranslation);
   }
 
@@ -95,6 +108,15 @@ export class InformationInformationTranslationController {
     informationTranslation: Partial<InformationTranslation>,
     @param.query.object('where', getWhereSchemaFor(InformationTranslation)) where?: Where<InformationTranslation>,
   ): Promise<Count> {
+    if(informationTranslation.translated){
+      if(informationTranslation.description){
+        await this.etranslationService.getTranslation(informationTranslation.description, id.toString(), 'information', 'description')
+      }
+      await new Promise(r => setTimeout(r, 500));
+      if(informationTranslation.information){
+        await this.etranslationService.getTranslation(informationTranslation.information, id.toString(), 'information', 'information')
+      }
+    }
     return this.informationRepository.translations(id).patch(informationTranslation, where);
   }
 

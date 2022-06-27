@@ -21,11 +21,16 @@ import {
 } from '../models';
 import { EventCategoryRepository } from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
+
+import {EtranslationService} from '../services/etranslation.service'
 
 @authenticate('micado')
 export class EventCategoryEventCategoryTranslationController {
   constructor(
     @repository(EventCategoryRepository) protected eventCategoryRepository: EventCategoryRepository,
+    @service() public etranslationService: EtranslationService,
+
   ) { }
 
   @get('/event-categories/{id}/event-category-translations', {
@@ -70,6 +75,12 @@ export class EventCategoryEventCategoryTranslationController {
     }) eventCategoryTranslation: EventCategoryTranslation,
     //    }) eventCategoryTranslation: Omit < EventCategoryTranslation, 'id' >,
   ): Promise<EventCategoryTranslation> {
+    if(eventCategoryTranslation.translated){
+      if(eventCategoryTranslation.eventCategory){
+        await this.etranslationService.getTranslation(eventCategoryTranslation.eventCategory, id.toString(), 'event_category', 'event_category')
+      }
+      await new Promise(r => setTimeout(r, 500));
+    }
     return this.eventCategoryRepository.translations(id).create(eventCategoryTranslation);
   }
 
@@ -93,6 +104,12 @@ export class EventCategoryEventCategoryTranslationController {
     eventCategoryTranslation: Partial<EventCategoryTranslation>,
     @param.query.object('where', getWhereSchemaFor(EventCategoryTranslation)) where?: Where<EventCategoryTranslation>,
   ): Promise<Count> {
+    if(eventCategoryTranslation.translated){
+      if(eventCategoryTranslation.eventCategory){
+        await this.etranslationService.getTranslation(eventCategoryTranslation.eventCategory, id.toString(), 'event_category', 'event_category')
+      }
+      await new Promise(r => setTimeout(r, 500));
+    }
     return this.eventCategoryRepository.translations(id).patch(eventCategoryTranslation, where);
   }
 

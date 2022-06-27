@@ -21,11 +21,16 @@ import {
 } from '../models';
 import { InformationCategoryRepository } from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
+
+import {EtranslationService} from '../services/etranslation.service'
 
 @authenticate('micado')
 export class InformationCategoryInformationCategoryTranslationController {
   constructor(
     @repository(InformationCategoryRepository) protected informationCategoryRepository: InformationCategoryRepository,
+    @service() public etranslationService: EtranslationService,
+
   ) { }
 
   @get('/information-categories/{id}/information-category-translations', {
@@ -70,6 +75,12 @@ export class InformationCategoryInformationCategoryTranslationController {
     }) informationCategoryTranslation: InformationCategoryTranslation,
     //    }) informationCategoryTranslation: Omit < InformationCategoryTranslation, 'id' >,
   ): Promise<InformationCategoryTranslation> {
+    if(informationCategoryTranslation.translated){
+      if(informationCategoryTranslation.informationCategory){
+        await this.etranslationService.getTranslation(informationCategoryTranslation.informationCategory, informationCategoryTranslation.id.toString(), 'information_category', 'information_category')
+      }
+      await new Promise(r => setTimeout(r, 500));
+    }
     return this.informationCategoryRepository.translations(id).create(informationCategoryTranslation);
   }
 
@@ -93,6 +104,12 @@ export class InformationCategoryInformationCategoryTranslationController {
     informationCategoryTranslation: Partial<InformationCategoryTranslation>,
     @param.query.object('where', getWhereSchemaFor(InformationCategoryTranslation)) where?: Where<InformationCategoryTranslation>,
   ): Promise<Count> {
+    if(informationCategoryTranslation.translated){
+      if(informationCategoryTranslation.informationCategory){
+        await this.etranslationService.getTranslation(informationCategoryTranslation.informationCategory, id.toString(), 'information_category', 'information_category')
+      }
+      await new Promise(r => setTimeout(r, 500));
+    }
     return this.informationCategoryRepository.translations(id).patch(informationCategoryTranslation, where);
   }
 

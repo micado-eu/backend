@@ -24,10 +24,13 @@ import { GlossaryRepository } from '../repositories';
 import { MarkdownConverterService } from '../services/markdown-converter.service';
 import {authenticate} from '@loopback/authentication';
 
+import {EtranslationService} from '../services/etranslation.service'
 @authenticate('micado')
 export class GlossaryGlossaryTranslationController {
   constructor(
-    @repository(GlossaryRepository) protected glossaryRepository: GlossaryRepository
+    @repository(GlossaryRepository) protected glossaryRepository: GlossaryRepository,
+    @service() public etranslationService: EtranslationService,
+
   ) { }
 
   @get('/glossaries/{id}/glossary-translations', {
@@ -72,6 +75,15 @@ export class GlossaryGlossaryTranslationController {
     }) glossaryTranslation: GlossaryTranslation,
     //    }) glossaryTranslation: Omit < GlossaryTranslation, 'id' >,
   ): Promise<GlossaryTranslation> {
+    if(glossaryTranslation.translated){
+      if(glossaryTranslation.description){
+        await this.etranslationService.getTranslation(glossaryTranslation.description, glossaryTranslation.id.toString(), 'glossary', 'description')
+      }
+      await new Promise(r => setTimeout(r, 500));
+      if(glossaryTranslation.title){
+        await this.etranslationService.getTranslation(glossaryTranslation.title, glossaryTranslation.id.toString(), 'glossary', 'title')
+      }
+    }
     return this.glossaryRepository.translations(id).create(glossaryTranslation);
   }
 
@@ -95,6 +107,15 @@ export class GlossaryGlossaryTranslationController {
     glossaryTranslation: Partial<GlossaryTranslation>,
     @param.query.object('where', getWhereSchemaFor(GlossaryTranslation)) where?: Where<GlossaryTranslation>,
   ): Promise<Count> {
+    if(glossaryTranslation.translated){
+      if(glossaryTranslation.description){
+        await this.etranslationService.getTranslation(glossaryTranslation.description, id.toString(), 'glossary', 'description')
+      }
+      await new Promise(r => setTimeout(r, 500));
+      if(glossaryTranslation.title){
+        await this.etranslationService.getTranslation(glossaryTranslation.title, id.toString(), 'glossary', 'title')
+      }
+    }
     return this.glossaryRepository.translations(id).patch(glossaryTranslation, where);
   }
 
