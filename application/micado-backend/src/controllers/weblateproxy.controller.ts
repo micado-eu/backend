@@ -67,6 +67,10 @@ export class WeblateproxyController {
         process: "insert into micadoapp.process_translation (id,process,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,$2,'',$3,now(),1, true) on conflict (id,lang, translated) do update set process=excluded.process,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
         description: "insert into micadoapp.process_translation (id,process,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,'',$2,$3,now(),1, true) on conflict (id,lang, translated) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
       },
+      "step": {
+        step: "insert into micadoapp.step_translation (id,step,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,$2,'',$3,now(),1, true) on conflict (id,lang, translated) do update set step=excluded.step,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
+        description: "insert into micadoapp.step_translation (id,step,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,'',$2,$3,now(),1, true) on conflict (id,lang, translated) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
 
     }
 

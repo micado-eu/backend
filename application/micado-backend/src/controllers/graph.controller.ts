@@ -23,12 +23,17 @@ import { JSONObject } from '@loopback/core';
 import { StepStepDocumentController } from './step-step-document.controller';
 import { StepRepository, StepLinkRepository } from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
+
+import {EtranslationService} from '../services/etranslation.service'
 
 @authenticate('micado')
 export class GraphController {
   constructor(
     @repository(StepRepository) public stepRepository: StepRepository,
     @repository(StepLinkRepository) public stepLinkRepository: StepLinkRepository,
+    @service() public etranslationService: EtranslationService,
+
   ) { }
   @post('/save-process-steps', {
     responses: {
@@ -67,15 +72,25 @@ export class GraphController {
             let savingTranslation = JSON.parse(JSON.stringify(transl, ['id', 'lang', 'step', 'description', 'translationState','translationDate','translated']));
             let trid = nstep.id
             console.log(savingTranslation)
-
             this.stepRepository.translations(trid).create(savingTranslation)
               .then((trres) => {
                 console.log("saved translation")
                 console.log(trres)
+
+
               }).catch(error => {
                 console.log(error)
               })
-
+                // here we need to add 
+                if(savingTranslation.translated){
+                  if(savingTranslation.description){
+                    await this.etranslationService.getTranslation(savingTranslation.description, savingTranslation.id.toString(), 'step', 'description')
+                  }
+                  await new Promise(r => setTimeout(r, 500));
+                  if(savingTranslation.step){
+                    await this.etranslationService.getTranslation(savingTranslation.step, savingTranslation.id.toString(), 'step', 'step')
+                  }
+                }
           });
         }
         await saveTranslations()
@@ -145,7 +160,16 @@ export class GraphController {
               }).catch(error => {
                 console.log(error)
               })
-
+                // here we need to add 
+                if(editingTranslation.translated){
+                  if(editingTranslation.description){
+                    await this.etranslationService.getTranslation(editingTranslation.description, editingTranslation.id.toString(), 'step', 'description')
+                  }
+                  await new Promise(r => setTimeout(r, 500));
+                  if(editingTranslation.step){
+                    await this.etranslationService.getTranslation(editingTranslation.step, editingTranslation.id.toString(), 'step', 'step')
+                  }
+                }
           });
         }
         await editTranslations()
