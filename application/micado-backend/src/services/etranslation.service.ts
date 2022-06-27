@@ -19,6 +19,9 @@ export class EtranslationService {
     private req: any
     private target_langs: any
     private enabled: boolean
+    private hostname: string
+    private settings: any
+    private languages: any
 
     constructor(@repository(SettingsRepository) protected settingsRepository: SettingsRepository,
         @repository(LanguagesRepository) protected languagesRepository: LanguagesRepository,
@@ -26,7 +29,7 @@ export class EtranslationService {
         return (async (): Promise<EtranslationService> => {
             let settings: any = await this.settingsRepository.find({})
             let languages = await this.languagesRepository.find({ where: { active: true, isDefault: false } });
-
+            this.hostname = (process.env.API_HOSTNAME != undefined ? process.env.API_HOSTNAME : "")
             console.log(settings)
             console.log(languages)
             this.target_langs = languages.map((language) => {
@@ -49,10 +52,19 @@ export class EtranslationService {
         })() as unknown as EtranslationService;
     }
 
-    public getTranslation(requiredTranslation: string, id: string, contentTable:string, contentType: string): Promise<any> {
+    public async getTranslation(requiredTranslation: string, id: string, contentTable:string, contentType: string): Promise<any> {
         //Preconditions
-        if(!this.enabled)
-            return new Promise((resolve, reject)=>{return reject("etranslation not configured")})
+        if(!this.enabled){
+
+            let settings: any = await this.settingsRepository.find({})
+            let languages = await this.languagesRepository.find({ where: { active: true, isDefault: false } });
+            this.et_password = settings.filter((el: any) => { return el.key === 'e_translation_password' })[0].value
+            this.et_user = settings.filter((el: any) => { return el.key === 'e_translation_user' })[0].value
+            this.enabled = Boolean(this.et_user) && Boolean(this.et_password)
+            if(!this.enabled){
+                return new Promise((resolve, reject)=>{return reject("etranslation not configured")})
+            }
+        }
         console.log("in the etranslation service")
         console.log(requiredTranslation)
         let requiredTranslationBuffer = new Buffer(requiredTranslation);
@@ -76,8 +88,7 @@ export class EtranslationService {
                 "domain": "SPD",
                 "output-format": "html",
                 "destinations": {
-                    "email-destination": ["luca.gioppo@csi.it"],
-                    "http-destination":["https://api.micadoproject.eu/e-translations-html"]
+                    "http-destination":["https://" + this.hostname+ "/e-translations-html"]
                 }
             }
         };

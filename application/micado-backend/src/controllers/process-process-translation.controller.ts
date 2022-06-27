@@ -22,11 +22,16 @@ import {
 } from '../models';
 import { ProcessRepository } from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
+
+import {EtranslationService} from '../services/etranslation.service'
+
 
 @authenticate('micado')
 export class ProcessProcessTranslationController {
   constructor(
     @repository(ProcessRepository) protected processRepository: ProcessRepository,
+    @service() public etranslationService: EtranslationService,
   ) { }
 
   @get('/processes/{id}/process-translations', {
@@ -71,6 +76,15 @@ export class ProcessProcessTranslationController {
     }) processTranslation: ProcessTranslation,
     //   }) processTranslation: Omit < ProcessTranslation, 'id' >,
   ): Promise<ProcessTranslation> {
+        // since we save two rows for the main language, we use only the one with translated = true to invoke e-translation
+        if(processTranslation.translated){
+          if(processTranslation.description){
+            await this.etranslationService.getTranslation(processTranslation.description, id.toString(), 'process', 'description')
+          }
+          if(processTranslation.process){
+            await this.etranslationService.getTranslation(processTranslation.process, id.toString(), 'process', 'process')
+          }
+        }
     return this.processRepository.translations(id).create(processTranslation);
   }
 
@@ -94,6 +108,15 @@ export class ProcessProcessTranslationController {
     processTranslation: Partial<ProcessTranslation>,
     @param.query.object('where', getWhereSchemaFor(ProcessTranslation)) where?: Where<ProcessTranslation>,
   ): Promise<Count> {
+        // since we save two rows for the main language, we use only the one with translated = true to invoke e-translation
+        if(processTranslation.translated){
+          if(processTranslation.description){
+            await this.etranslationService.getTranslation(processTranslation.description, id.toString(), 'process', 'description')
+          }
+          if(processTranslation.process){
+            await this.etranslationService.getTranslation(processTranslation.process, id.toString(), 'process', 'process')
+          }
+        }
     return this.processRepository.translations(id).patch(processTranslation, where);
   }
 

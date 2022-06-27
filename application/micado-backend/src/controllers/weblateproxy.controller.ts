@@ -57,9 +57,12 @@ export class WeblateproxyController {
     @param.query.string('target-language') target_language: string,
     @param.query.string('external-reference') external_reference: string,
   ): Promise<any> {
-//$1 is id, $2 is test $3 is lang
+//$1 is id, $2 is text $3 is lang
     let sqlarray:JSONObject = {
-      "topic": { topic: "insert into micadoapp.topic_translation (id,topic,lang,translation_date,\"translationState\",published) VALUES ($1 ,$2,$3,now(),1,false) on conflict (id,lang) do update set topic=excluded.topic,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"" },
+      "topic": { 
+      topic: "insert into micadoapp.topic_translation (id,topic,lang,translation_date,\"translationState\",published) VALUES ($1 ,$2,$3,now(),1,false) on conflict (id,lang) do update set topic=excluded.topic,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
+      description: "insert into micadoapp.topic_translation (id,description,lang,translation_date,\"translationState\",published) VALUES ($1 ,$2,$3,now(),1,false) on conflict (id,lang) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
+      },
       "process": {
         process: "insert into micadoapp.process_translation (id,process,description,lang,translation_date,\"translationState\",published) VALUES ($1 ,$2,'',$3,now(),1,false) on conflict (id,lang) do update set process=excluded.process,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
         description: "insert into micadoapp.process_translation (id,process,description,lang,translation_date,\"translationState\",published) VALUES ($1 ,'',$2,$3,now(),1,false) on conflict (id,lang) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""

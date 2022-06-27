@@ -74,8 +74,14 @@ export class TopicTopicTranslationController {
     }) topicTranslation: TopicTranslation,
 //  }) topicTranslation: Omit<TopicTranslation, 'id'>,
   ): Promise<TopicTranslation> {
+    // since we save two rows for the main language, we use only the one with translated = true to invoke e-translation
     if(topicTranslation.translated){
-      this.etranslationService.getTranslation(topicTranslation.description ? topicTranslation.description: '', topicTranslation.id.toString(), 'topic', 'description')
+      if(topicTranslation.description){
+        await this.etranslationService.getTranslation(topicTranslation.description, topicTranslation.id.toString(), 'topic', 'description')
+      }
+      if(topicTranslation.topic){
+        await this.etranslationService.getTranslation(topicTranslation.topic, topicTranslation.id.toString(), 'topic', 'topic')
+      }
     }
     return this.topicRepository.translations(id).create(topicTranslation);
 
@@ -101,6 +107,15 @@ export class TopicTopicTranslationController {
     topicTranslation: Partial<TopicTranslation>,
     @param.query.object('where', getWhereSchemaFor(TopicTranslation)) where?: Where<TopicTranslation>,
   ): Promise<Count> {
+        // since we save two rows for the main language, we use only the one with translated = true to invoke e-translation
+    if(topicTranslation.translated){
+      if(topicTranslation.description){
+        await this.etranslationService.getTranslation(topicTranslation.description, id.toString(), 'topic', 'description')
+      }
+      if(topicTranslation.topic){
+        await this.etranslationService.getTranslation(topicTranslation.topic, id.toString(), 'topic', 'topic')
+      }
+    }
     return this.topicRepository.translations(id).patch(topicTranslation, where);
   }
 
