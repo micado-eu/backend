@@ -58,7 +58,7 @@ export class WeblateproxyController {
     @param.query.string('external-reference') external_reference: string,
   ): Promise<any> {
 //$1 is id, $2 is text $3 is lang
-    let sqlarray:JSONObject = {
+    /*let sqlarray:JSONObject = {
       "topic": { 
       topic: "insert into micadoapp.topic_translation (id,topic,lang,translation_date,\"translationState\", translated) VALUES ($1 ,$2,$3,now(),1, true) on conflict (id,lang, translated) do update set topic=excluded.topic,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\"",
       description: "insert into micadoapp.topic_translation (id,description,lang,translation_date,\"translationState\", translated) VALUES ($1 ,$2,$3,now(),1, true) on conflict (id,lang, translated) do update set description=excluded.description,translation_date=excluded.translation_date,\"translationState\"=excluded.\"translationState\""
@@ -116,7 +116,8 @@ export class WeblateproxyController {
     let result = await this.eventRepository.dataSource.execute(sql2, [references[2], text, lang ]);
     console.log(result)
 
-    console.log(sql2)
+    console.log(sql2)*/
+    console.log("e-translation-service-answered")
   }
 
 
