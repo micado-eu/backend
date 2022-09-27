@@ -60,16 +60,16 @@ export class Document extends Entity {
   @property({
     type: 'string',
     scale: 0,
-    postgresql: {columnName: 'validated_by_tenant', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+    postgresql: {columnName: 'validated_by_user', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
-  validatedByTenant?: string;
+  validatedByUser?: string;
 
   @property({
     type: 'number',
     scale: 0,
-    postgresql: {columnName: 'validated_by_user', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+    postgresql: {columnName: 'validated_by_tenant', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
-  validatedByUser?: number;
+  validatedByTenant?: number;
 
   @property({
     type: 'boolean',
