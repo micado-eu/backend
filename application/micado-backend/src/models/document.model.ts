@@ -58,11 +58,11 @@ export class Document extends Entity {
   validationDate?: string;
 
   @property({
-    type: 'number',
+    type: 'string',
     scale: 0,
-    postgresql: {columnName: 'validated_by_tenant', dataType: 'integer', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
+    postgresql: {columnName: 'validated_by_tenant', dataType: 'text', dataLength: null, dataPrecision: null, dataScale: 0, nullable: 'YES'},
   })
-  validatedByTenant?: number;
+  validatedByTenant?: string;
 
   @property({
     type: 'number',
