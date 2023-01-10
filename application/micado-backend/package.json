@@ -46,7 +46,7 @@
   ],
   "dependencies": {
     "@loopback/authentication": "^8.0.1",
-    "@loopback/authentication-jwt": "^0.10.1",
+    "@loopback/authentication-jwt": "^0.12.7",
     "@loopback/boot": "^4.0.1",
     "@loopback/context": "^4.0.1",
     "@loopback/core": "^3.0.1",
@@ -65,7 +65,7 @@
     "jsdom": "^16.7.0",
     "json2csv": "^5.0.6",
     "jwt-decode": "^3.1.2",
-    "keycloak-backend": "^2.0.1",
+    "keycloak-backend": "^3.0.0",
     "loopback-connector-postgresql": "^5.5.0",
     "loopback-connector-rest": "^3.7.0",
     "loopback-connector-soap": "^5.2.0",
