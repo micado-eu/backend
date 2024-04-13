@@ -17,9 +17,9 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import { SMTPClient, Message } from 'emailjs';
+//import { SMTPClient, Message } from 'emailjs';
 import { DocumentPicturesRepository, FeedbackRepository, SettingsRepository } from '../repositories';
-const nodemailer = require("nodemailer")
+import nodemailer from 'nodemailer';
 import {authenticate} from '@loopback/authentication';
 
 @authenticate('micado')
@@ -70,14 +70,14 @@ export class MailDocumentController {
     //Usage example:
     //   var file = dataURLtoFile('data:text/plain;base64,aGVsbG8gd29ybGQ=', 'hello.txt');
     //  console.log(file);
-
+/*
     const message = new Message({
       text: 'i hope this works',
       from: process.env.WEBLATE_EMAIL_HOST,
       to: email,
       subject: 'testing emailjs2',
     });
-
+*/
     /*let index = 0
     pictures.forEach((picture) => {
       let picBase: any = picture.picture
