@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   backend:
-    image: micadoproject/micado_backend:12.20.1
+    image: micadoproject/micado_backend:18.19.1
     stdin_open: true
     tty: true
     volumes:
