@@ -1,115 +1,181 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/micado-eu/backend/badge)](https://www.codefactor.io/repository/github/micado-eu/backend)
 
-# Micado backend application
-This is the backend application of the MICADO project.  This is where all the business application logic will reside:
+# Micado Backend Application
+
+This is the backend application of the MICADO project. Here resides all the business application logic, including:
 - API
-- DB migration
+- Integration with auth and translation platform
 
-## Development instructions
-The Docker compose file is there to help development; in particular there are 2 services:
-- backend
-- micado_db
+## Development Instructions
 
-The first is the proper backend code and is based on a specific image to be sure that all use the same coding environment,
-The second is a PostGIS DB coherent with the production for MICADO: it will install itself with all the needed schemas and configurations.
-For more details please consult the "deployment repository" [remember to create the **prod.env** file with password data]
+The Docker Compose file aids in development by defining several services.
 
+### Network Creation
 
-Prepare the backend repo on your local system:
+Before starting the services, you need to create the required network (this operation typically only needs to be done once):
 
 ```bash
-git clone https://github.com/micado-eu/backend.git
-cd backend
-mkdir db_data 
-```
-Create a prod.env file with this content:
-
-```
-WSO2_API_ADMIN_PWD=secretpassword1
-WSO2_IDENTITY_ADMIN_PWD=secretpassword2
-WSO2_IDENTITY_PWD=secretpassword3
-WSO2_SHARED_PWD=secretpassword4
-WSO2_API_PWD=secretpassword5
-MICADO_DB_PWD=secretpassword6
-NGO_REALM_CLIENT_SECRET=secret
-MIGRANT_REALM_CLIENT_SECRET=secret
-PA_REALM_CLIENT_SECRET=secret
-PGADMIN_DEFAULT_PASSWORD=secretpassword7
-
-# -------- DATABASE PART --------
-POSTGRES_PASSWORD=secretpassword8
-
-# -------- WEBLATE PART ----------
-# Weblate setup
-WEBLATE_ADMIN_PASSWORD=secretpassword9
-
-# PostgreSQL setup
-WEBLATE_POSTGRES_PASSWORD=secretpassword10
-WEBLATE_EMAIL_HOST_PASSWORD=secretpassword11
-GITEA_DB_PWD=secretpassword12
-GIT_SECRET_KEY=xxxxx
+docker network create micado_net_dev
 ```
 
+### Setup Instructions
 
-To code you will have to run the following command on a first shell
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/micado-eu/backend.git
+   cd backend
+   mkdir db_data db_init shared_images application git_data
+   ```
 
+2. **Create a `prod.env` File:**
+   Create a file named `prod.env` in the root directory with the following content:
+   ```plaintext
+   # Hostnames
+   MIGRANTS_HOSTNAME=migrant.gioppoluca.it
+   PA_HOSTNAME=micado-pa.gioppoluca.it
+   NGO_HOSTNAME=ngo.micadoproject.eu
+   IDENTITY_HOSTNAME=localhost
+   ANALYTIC_HOSTNAME=monitoring.micadoproject.eu
+   GIT_HOSTNAME=git.micado.eu
+   ROCKETCHAT_HOSTNAME=admin2.micadoproject.eu
+   
+   # Docker Ports
+   IDENTITY_HOSTNAME_PORT=8080
+
+   # Docker Images Tags
+   PGROONGA_IMAGE_TAG=3.2.0-alpine-16-slim
+   KEYCLOAK_IMAGE_TAG=23.0.0
+   GITEA_IMAGE_TAG=1.21.11
+   
+   # Micado Specific
+   MICADO_DB_USER=micadoapp
+   MICADO_DB_SCHEMA=micadoapp
+   MICADO_TRANSLATIONS_DIR=/tmp/translations
+   MICADO_ENV=prod
+   MICADO_GIT_URL=http://git
+   MICADO_DB_PWD=supersecret
+
+   # Keycloak
+   KC_DB=postgres
+   KC_DB_USERNAME=micadoapp
+   KC_DB_PASSWORD=supersecret
+   KC_DB_URL="jdbc:postgresql://micado_db:5432/micado"
+   KC_DB_SCHEMA=micadoapp
+   KC_METRICS_ENABLED=true
+   KC_LOG_LEVEL=INFO
+   KC_REALM_NAME=micado
+   KEYCLOAK_ADMIN=admin
+   KEYCLOAK_ADMIN_PASSWORD=admin
+
+   # Weblate
+   WEBLATE_EMAIL_HOST=smtp.micadoproject.eu
+   WEBLATE_EMAIL_HOST_USER=development@micadoproject.eu
+   WEBLATE_EMAIL_HOST_SSL=false
+
+   # Other
+   ANALYTIC_HOSTNAME=monitoring.micadoproject.eu
+   ```
+
+3. **Run Docker Compose:**
+   Open a terminal and execute:
+   ```bash
+   (set -a; source prod.env; set +a; docker-compose -f docker-compose.yaml up backend micado_db)
+   ```
+   Wait until you see `database system is ready to accept connections`.
+
+4. **Set Up Backend:**
+   Open a new terminal and run:
+   ```bash
+   docker-compose exec backend bash
+   cd micado-backend/
+   npm install
+   npm start
+   ```
+   Wait until you see `Server is running at http://[::1]:3000`.
+
+### Services Description
+
+The `docker-compose.yaml` file defines the following services:
+
+1. **micado_db**
+   - **Image**: `groonga/pgroonga:${PGROONGA_IMAGE_TAG}`
+   - **Description**: This service runs a PostGIS database, which installs itself with all the needed schemas and configurations.
+   - **Ports**: Exposes port `5432`
+   - **Volumes**: 
+     - `postgres_data` mounted at `/var/lib/postgresql/data`
+     - `postgres_init` mounted at `/docker-entrypoint-initdb.d`
+   - **Environment Variables**: `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`
+   - **Healthcheck**: Checks if the database is ready to accept connections.
+
+2. **keycloak**
+   - **Image**: `quay.io/keycloak/keycloak:${KEYCLOAK_IMAGE_TAG}`
+   - **Description**: This service runs the Keycloak identity server.
+   - **Ports**: Exposes port `8080`
+   - **Volumes**: 
+     - `./keycloak/realm.json` mounted at `/opt/keycloak/data/import/realm.json`
+     - `./keycloak/themes` mounted at `/opt/keycloak/themes`
+   - **Environment Variables**: Various Keycloak-related variables including `KC_HOSTNAME_PORT` which is required to expose the service on port 8080 for the admin console access since for development environmenr localhost:8080 will be used to access the admin console.
+   - **Healthcheck**: Checks if Keycloak is running and responsive.
+
+3. **backend**
+   - **Image**: `micadoproject/micado_backend:18.19.1`
+   - **Description**: This service runs the Micado backend application.
+   - **Ports**: Exposes port `3000`
+   - **Volumes**: 
+     - `backend` mounted at `/code`
+     - `/var/run/docker.sock` mounted as read-only
+     - `shared_images` mounted at `/images`
+   - **Environment Variables**: Various backend-related variables.
+
+4. **git**
+   - **Image**: `gitea/gitea:${GITEA_IMAGE_TAG}`
+   - **Description**: This service runs the Gitea Git server for version control.
+   - **Ports**: Exposes port `3000`
+   - **Volumes**: 
+     - `git_data` mounted at `/data`
+     - `/etc/timezone` and `/etc/localtime` mounted as read-only
+   - **Environment Variables**: Various Gitea-related variables.
+   - **Healthcheck**: Depends on the micado_db service.
+
+### Additional Development with Gitea
+
+For developing the backend with Weblate integration, you need to use Gitea:
+
+1. **Run Gitea Container:**
+   The first time you run the container, create the admin user:
+   ```bash
+   docker-compose exec git bash
+   /app/gitea/gitea admin create-user --name=gitea --password=gitea --email=test@xx.com --admin --must-change-password=false
+   ```
+
+2. **Configure Gitea:**
+   Edit `git_data/gitea/conf/app.ini` to include:
+   ```ini
+   [database]
+   ...
+   SCHEMA = gitea
+   ```
+
+### Adding CRUD Endpoints
+
+To expose a model as a CRUD API:
 ```bash
-(set -a; source prod.env; set +a; docker-compose -f docker-compose.yaml  up backend micado_db)
-```
-
-Wait until you see `database system is ready to accept connections`
-
-On a second shell the following commands 
-```bash
-docker-compose exec  backend bash
-cd micado-backend/
-npm install
-npm start
-```
-The container will mount the application folder and it will be possibile to code with preferred editor.
-Wait until you see `Server is running at http://[::1]:3000`
-
-### Work with gitea
-For developing the backend for the weblate integration we need also to use GITEA so this means that we need to install and run the GITEA container
-
-The first time that the container is run we need to create the admin user with the following command from within the container (using custom user and password):
-```
-/app/gitea/gitea admin create-user --name=gitea --password=gitea --email=test@xx.com --admin --must-change-password=false
-```
-
-To execute the container properly at the moment (until an issue is solved) the user will have to open the git_data/gitea/conf/app.ini and add the following:
-```
-[database]
-...
-SCHEMA  = gitea
-```
-
-
-### To add a CRUD endpoint for a Model
-It is possible to expose directly a Model straightforward as a CRUD API the command is like the one that follows.
-This operation is needed to activate the table as managed by the model so that the migration will take it into consideration.
-
-```
 lb4 rest-crud --datasource micadoDS --model Topic
 ```
-
-To control which tables are migrated and in what order there is an array to manage by hand in the 'src/migrate.ts'; the place is the models key.
-```
-  await app.migrateSchema({existingSchema, models: ['FeaturesFlags', 'Topic']});
-
+Update `src/migrate.ts` to include your model:
+```javascript
+await app.migrateSchema({ existingSchema, models: ['FeaturesFlags', 'Topic'] });
 ```
 
+### Database Migration
 
-### How to execute a migration of the DB
-We need to have an option to migrate the DB, at the moment we are using the command line, but there is a way to create an APi that will invoke the migration command.
-
-The way of using the cli is (the environment variable is to see the SQL code that the application is using to better understand errors):
-```
+To migrate the database using the CLI:
+```bash
 npm run build
 DEBUG=loopback:connector:postgresql npm run migrate
 ```
 
+### Funding
 
-### Funded by
-
-![EU Logo](https://github.com/micado-eu/MICADO/blob/master/img/Flag_of_Europe.svg_.png)This project has received funding from the European Union’s H2020 Innovation Action under Grant Agreement No 822717.
+![EU Logo](https://github.com/micado-eu/MICADO/blob/master/img/Flag_of_Europe.svg_.png)
+This project has received funding from the European Union’s H2020 Innovation Action under Grant Agreement No 822717.

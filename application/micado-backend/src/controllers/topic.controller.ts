@@ -187,7 +187,7 @@ export class TopicController {
     @param.query.string('defaultlang') defaultlang = 'en',
     @param.query.string('currentlang') currentlang = 'en'
   ): Promise<void> {
-    return this.topicRepository.dataSource.execute("select * from topic t inner join topic_translation_prod tt on t.id=tt.id and tt.lang=$2 union select * from topic t inner join topic_translation_prod  tt on t.id = tt.id and tt.lang = $1and t.id not in (select t.id from topic t inner join topic_translation_prod tt on t.id = tt.id and tt.lang = $2)",
+    return this.topicRepository.dataSource.execute("select * from topic t inner join topic_translation_prod tt on t.id=tt.id and tt.lang=$2 union select * from topic t inner join topic_translation_prod  tt on t.id = tt.id and tt.lang = $1 and t.id not in (select t.id from topic t inner join topic_translation_prod tt on t.id = tt.id and tt.lang = $2)",
     [defaultlang, currentlang]);
   }
 

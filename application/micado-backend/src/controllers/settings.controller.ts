@@ -20,13 +20,13 @@ import {Settings} from '../models';
 import {SettingsRepository} from '../repositories';
 import {service} from '@loopback/core';
 
-import {EtranslationService} from '../services/etranslation.service'
+//import {EtranslationService} from '../services/etranslation.service'
 
 export class SettingsController {
   constructor(
     @repository(SettingsRepository)
     public settingsRepository : SettingsRepository,
-    @service() public etranslationService: EtranslationService,
+  //  @service() public etranslationService: EtranslationService,
 
   ) {}
 
@@ -53,7 +53,7 @@ export class SettingsController {
   ): Promise<Settings> {
     
     let result = await this.settingsRepository.create(settings);
-    await this.etranslationService.setCredentials()
+//    await this.etranslationService.setCredentials()
     return result
   }
 
@@ -112,7 +112,7 @@ export class SettingsController {
     @param.where(Settings) where?: Where<Settings>,
   ): Promise<Count> { 
     let result = await this.settingsRepository.updateAll(settings, where);
-    await this.etranslationService.setCredentials()
+//    await this.etranslationService.setCredentials()
     return result
   }
 
