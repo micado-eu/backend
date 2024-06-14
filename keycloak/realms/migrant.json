@@ -724,7 +724,7 @@
         "use.refresh.tokens": "true",
         "oidc.ciba.grant.enabled": "false",
         "backchannel.logout.session.required": "true",
-        "backchannel.logout.url": "https://migrant.micado.local",
+        "backchannel.logout.url": "https://${MIGRANTS_HOSTNAME}",
         "client_credentials.use_refresh_token": "false",
         "saml.client.signature": "false",
         "require.pushed.authorization.requests": "false",
@@ -820,47 +820,6 @@
         "microprofile-jwt"
       ],
       "authorizationSettings": {
-        "allowRemoteResourceManagement": true,
-        "policyEnforcementMode": "ENFORCING",
-        "resources": [
-          {
-            "name": "Default Resource",
-            "type": "urn:migrant_app:resources:default",
-            "ownerManagedAccess": false,
-            "attributes": {},
-            "_id": "f97ef6f5-ea6f-436b-a589-da2b4cd080b0",
-            "uris": [
-              "/*"
-            ]
-          }
-        ],
-        "policies": [
-          {
-            "id": "8cf0471b-695c-49cd-9a94-2e8db7688117",
-            "name": "Default Policy",
-            "description": "A policy that grants access only for users within this realm",
-            "type": "js",
-            "logic": "POSITIVE",
-            "decisionStrategy": "AFFIRMATIVE",
-            "config": {
-              "code": "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
-            }
-          },
-          {
-            "id": "d2d105b4-8ae9-4041-973a-0c48d3b8ef17",
-            "name": "Default Permission",
-            "description": "A permission that applies to the default resource type",
-            "type": "resource",
-            "logic": "POSITIVE",
-            "decisionStrategy": "UNANIMOUS",
-            "config": {
-              "defaultResourceType": "urn:migrant_app:resources:default",
-              "applyPolicies": "[\"Default Policy\"]"
-            }
-          }
-        ],
-        "scopes": [],
-        "decisionStrategy": "UNANIMOUS"
       }
     },
     {
