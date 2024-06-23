@@ -411,9 +411,7 @@
       "id" : "be025602-c161-4b2e-9375-9a420c609e48",
       "type" : "password",
       "userLabel" : "My password",
-      "createdDate" : 1719138973601,
-      "secretData" : "{\"value\":\"4X9oBk+DjCM2f3Ju8cqseVO4W20QETtqEWqQzLzoJzM=\",\"salt\":\"zG/hnWIh3Xmt8DAyRpAadQ==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+      "value" : "${MICADO_KC_REALM_ADMIN_PASSWORD}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
