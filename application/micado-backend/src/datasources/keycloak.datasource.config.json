@@ -11,7 +11,7 @@
     {
       "template": {
         "method": "POST",
-        "url": "https://{baseurl}/auth/realms/master/protocol/openid-connect/token",
+        "url": "https://{baseurl}/realms/{realm}/protocol/openid-connect/token",
         "headers": {
           "accept": "*/*",
           "content-type": "application/x-www-form-urlencoded"
@@ -25,6 +25,7 @@
       "functions": {
         "getManager": [
           "baseurl",
+          "realm",
           "payload"
         ]
       }
@@ -152,7 +153,7 @@
     {
       "template": {
         "method": "PUT",
-        "url": "https://{baseurl}/auth/admin/realms/{realm}/users/{userid}",
+        "url": "https://{baseurl}/admin/realms/{realm}/users/{userid}",
         "headers": {
           "accept": "*/*",
           "content-type": "application/json",

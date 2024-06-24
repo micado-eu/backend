@@ -25,15 +25,19 @@ export class KeycloakIdentityTenantManagerController {
   ): Promise<any> {
     //Preconditions
     let data
+    console.log("in the getAdminToken")
+    console.log(realm)
+    console.log(process.env.WSO2_IDENTITY_ADMIN_USER)
+    console.log(process.env.MICADO_KC_REALM_ADMIN_PASSWORD)
     switch (realm) {
       case 'migrant':
         console.log('migrant');
 
         data= {
-          username: process.env.WSO2_IDENTITY_ADMIN_USER,
-          password: process.env.WSO2_IDENTITY_ADMIN_PWD,
-          client_id:'migrant-realm',
-          client_secret:process.env.MIGRANT_REALM_CLIENT_SECRET,
+          username: "migrant-admin",
+          password: process.env.MICADO_KC_REALM_ADMIN_PASSWORD,
+          client_id:'migrant_app',
+          client_secret: process.env.MIGRANT_REALM_CLIENT_SECRET,
           grant_type:"password",
         }
         console.log(data)
@@ -42,10 +46,10 @@ export class KeycloakIdentityTenantManagerController {
         console.log('pa');
 
         data= {
-          username: process.env.WSO2_IDENTITY_ADMIN_USER,
-          password: process.env.WSO2_IDENTITY_ADMIN_PWD,
-          client_id:'pa-realm',
-          client_secret:process.env.PA_REALM_CLIENT_SECRET,
+          username: "mimgrant-admin",
+          password: process.env.MICADO_KC_REALM_ADMIN_PASSWORD,
+          client_id:'pa_app',
+          client_secret: process.env.PA_REALM_CLIENT_SECRET,
           grant_type:"password",
         }
         break;
@@ -53,10 +57,10 @@ export class KeycloakIdentityTenantManagerController {
         console.log('Ngo realm chosen');
 
         data= {
-          username: process.env.WSO2_IDENTITY_ADMIN_USER,
-          password: process.env.WSO2_IDENTITY_ADMIN_PWD,
-          client_id:'ngo-realm',
-          client_secret:process.env.NGO_REALM_CLIENT_SECRET,
+          username: "ngo-admin",
+          password: process.env.MICADO_KC_REALM_ADMIN_PASSWORD,
+          client_id:'ngo_app',
+          client_secret: process.env.NGO_REALM_CLIENT_SECRET,
           grant_type:"password",
         }
         break;
@@ -68,11 +72,13 @@ export class KeycloakIdentityTenantManagerController {
     console.log(data)
     let manager =  await this.keycloakService.getManager(
       hostname ,
+      realm,
       querystring.stringify(data)
     )
+    console.log(manager)
     let token = JSON.parse(manager).access_token
     console.log(token)
-    return token
+    return Promise.resolve(token)
   }
 
 
@@ -365,6 +371,7 @@ export class KeycloakIdentityTenantManagerController {
 
   }
 
+  // TODO here there is still old values
   @post('/createGroup')
   @authenticate('micado')
   async createGroup(
@@ -381,6 +388,7 @@ export class KeycloakIdentityTenantManagerController {
     console.log(data)
     let manager =  await this.keycloakService.getManager(
       hostname ,
+      realm,
       querystring.stringify(data)
     )
     let token = JSON.parse(manager).access_token
@@ -458,7 +466,9 @@ export class KeycloakIdentityTenantManagerController {
   ): Promise<any> {
     //Preconditions
     let token = await this.getAdminToken(realm)
-
+console.log("updateUser:"+token)
+console.log("updateUser:"+hostname)
+console.log("updateUser:"+realm)
     return this.keycloakService.updateUser(
       userid,
       firstName,
