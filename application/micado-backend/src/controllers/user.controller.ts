@@ -108,6 +108,7 @@ export class UserController {
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
   ): Promise<User> {
+    console.log('id' + id)
     return this.userRepository.findById(id, filter);
   }
 

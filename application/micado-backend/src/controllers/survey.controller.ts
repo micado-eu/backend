@@ -186,9 +186,14 @@ export class SurveyController {
     @param.query.string('userid') userid = '',
   ): Promise<any> {
     let surveys = await this.surveyRepository.dataSource.execute('select * from survey where survey.active = true and survey.destination_app =' + destinationApp + ' and survey.expiry_date >= current_date')
+    console.log("the surveys:" + surveys)
+    if (surveys.length == 0) {
+      console.log("No surveys available")
+      return null
+    }
     if (userid != '') {
       let completed_survey = await this.surveyAnswersRepository.dataSource.execute('select * from survey_answers where  EXISTS(SELECT * from survey_answers WHERE id_user =\'' + userid + '\')')
-      console.log(completed_survey)
+      console.log("the completed survey:" + completed_survey)
       if (completed_survey.length > 0) {
         console.log("This survey was already answered")
         return null

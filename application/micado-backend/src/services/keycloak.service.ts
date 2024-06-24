@@ -24,7 +24,7 @@ export interface KeycloakService {
   createGroup(name: String, realm: String, token: String, baseurl:String): Promise<any>;
   addToGroup(userId: String, groupId: String, realm: String, token: String, baseurl:String): Promise<any>;
   getGroupId(baseurl: String, realm: String, token: String): Promise<any>;
-  getManager(baseurl: String,payload:any): Promise<any>;
+  getManager(baseurl: String, realm: String, payload:any): Promise<any>;
   getGroupMembers(baseurl: String,realm: String, groupId:String, token:String): Promise<any>;
   updateUser(userid:String, firstName: String, lastName:String, email: String, birthdate:String, nationality: String, gender: String, phone_number:String, realm: String, token: String, baseurl: String): Promise<any>;
   updateUserPassword(userid:String, password:String, realm: String, token: String, baseurl: String): Promise<any>;

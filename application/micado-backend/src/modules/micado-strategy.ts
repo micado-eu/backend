@@ -32,18 +32,20 @@ export class MicadoAuthenticationStrategy implements AuthenticationStrategy {
 
       const tokenparts: any = request.headers.authorization?.split(' ')
       let decoded: any = jwt_decode(tokenparts[1])
-
+      console.log(tokenparts)
+      console.log(tokenparts[1])
 
       var iss = decoded.iss
 
       var iss_array = iss.split("/");
       var realm = iss_array[iss_array.length - 1]
-
+      console.log(realm)
       console.log('prima di keycloak')
+      console.log('https://' + process.env.IDENTITY_HOSTNAME + '/realms/' + realm + '/protocol/openid-connect/userinfo')
 
       const axios = require('axios').default;
       return axios({
-        url: 'https://' + process.env.IDENTITY_HOSTNAME + '/auth/realms/' + realm + '/protocol/openid-connect/userinfo',
+        url: 'https://' + process.env.IDENTITY_HOSTNAME + '/realms/' + realm + '/protocol/openid-connect/userinfo',
         method: "get",
         headers: { 'Authorization': 'Bearer ' + tokenparts[1] },
         httpsAgent: new https.Agent({ rejectUnauthorized: false })
@@ -51,16 +53,21 @@ export class MicadoAuthenticationStrategy implements AuthenticationStrategy {
       }
       ).then(function (response: any) {
         if (response.status != 200) {
-          return undefined
+          console.log('error in response')
+          console.log(response)
+          return Promise.reject(undefined)
+          //return undefined
         }
         else {
           let uu = new AuthUser({ username: 'pippo' })
-          return uu;
+          return Promise.resolve(uu);
         }
       })
         .catch(function (error: any) {
+          console.log('error in catch')
           console.log(error);
-          return undefined
+          return Promise.reject(undefined)
+          //return undefined
 
         })
     }
