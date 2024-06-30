@@ -46,7 +46,7 @@ export class KeycloakIdentityTenantManagerController {
         console.log('pa');
 
         data= {
-          username: "mimgrant-admin",
+          username: "pa-admin",
           password: process.env.MICADO_KC_REALM_ADMIN_PASSWORD,
           client_id:'pa_app',
           client_secret: process.env.PA_REALM_CLIENT_SECRET,
