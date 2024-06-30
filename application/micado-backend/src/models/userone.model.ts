@@ -1,10 +1,7 @@
-import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
-import {IndividualInterventionPlan} from './individual-intervention-plan.model';
-import {UserPictures} from './user-pictures.model';
-import {UserPreferences} from './user-preferences.model';
-import {UserConsent} from './user-consent.model';
+import { Entity, model, property, hasMany, hasOne } from '@loopback/repository';
 
-@model()
+
+@model({ settings: { forceId: false,idInjection: false, postgresql: {schema: 'micadoapp', table: 'user'} } })
 export class Userone extends Entity {
   @property({
     type: 'string',
@@ -24,6 +21,10 @@ export class Userone extends Entity {
   })
   group?: string;
 
+
+  constructor(data?: Partial<Userone>) {
+    super(data);
+  }
 }
 
 export interface UseroneRelations {

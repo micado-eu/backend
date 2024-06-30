@@ -26,8 +26,6 @@ export class MicadoAuthenticationStrategy implements AuthenticationStrategy {
     //      const userProfile = this.userService.convertToUserProfile(user);
     //  const up = this.userService.convertToUserProfile(null)
     console.log('we are in authenticate of micadoauthstrategy')
-    //console.log(request.headers)
-    //console.log(request.headers.authorization)
     if (request.headers.authorization) {
 
       const tokenparts: any = request.headers.authorization?.split(' ')
@@ -40,7 +38,7 @@ export class MicadoAuthenticationStrategy implements AuthenticationStrategy {
       var iss_array = iss.split("/");
       var realm = iss_array[iss_array.length - 1]
       console.log(realm)
-      console.log('prima di keycloak')
+      console.log('calling keycloak')
       console.log('https://' + process.env.IDENTITY_HOSTNAME + '/realms/' + realm + '/protocol/openid-connect/userinfo')
 
       const axios = require('axios').default;
@@ -52,14 +50,15 @@ export class MicadoAuthenticationStrategy implements AuthenticationStrategy {
 
       }
       ).then(function (response: any) {
+        console.log('response')
+        console.log(response)
         if (response.status != 200) {
           console.log('error in response')
           console.log(response)
           return Promise.reject(undefined)
-          //return undefined
         }
         else {
-          let uu = new AuthUser({ username: 'pippo' })
+          let uu = new AuthUser({ id: response.data.sub, email: response.data.email, username: response.data.preferred_username, firstName: response.data.given_name, lastName: response.data.family_name })
           return Promise.resolve(uu);
         }
       })
@@ -67,35 +66,11 @@ export class MicadoAuthenticationStrategy implements AuthenticationStrategy {
           console.log('error in catch')
           console.log(error);
           return Promise.reject(undefined)
-          //return undefined
-
+  
         })
     }
     else {
       return undefined
     }
-    /* .then(function () {
-       // always executed
-     });*/
-
-    /*
-    const keycloak = require('keycloak-backend')({
-        "realm": "micado",
-        "auth-server-url": "http://keycloak:8100",
-        "client_id": "migrant",
-    //    "client_secret": "c88a2c21-9d1a-4f83-a18d-66d75c4d8020", // if required
-        "username": "admin",
-        "password": "Pa55w0rd"
-    });
-    console.log(keycloak)
-    console.log('prima verify')
-    let token = await keycloak.jwt.verify(tokenparts[1]);
-    
-    console.log(token.isExpired());
-    console.log(token.hasRealmRole('user'));
-    */
-    //}
-    /*let uu = new AuthUser({username: 'pippo'})
-        return uu;*/
   }
 }
