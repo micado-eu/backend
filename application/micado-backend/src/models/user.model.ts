@@ -5,7 +5,7 @@ import {UserPreferences} from './user-preferences.model';
 import {UserConsent} from './user-consent.model';
 import {Tenant} from './tenant.model';
 
-@model()
+@model({ settings: { forceId: false,idInjection: false, postgresql: {schema: 'micadoapp', table: 'user'} } })
 export class User extends Entity {
   @property({
     type: 'string',

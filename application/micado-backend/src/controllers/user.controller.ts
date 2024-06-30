@@ -36,8 +36,6 @@ export class UserController {
       content: {
         'application/json': {
           schema: getModelSchemaRef(User, {
-            title: 'NewUser',
-            
           }),
         },
       },

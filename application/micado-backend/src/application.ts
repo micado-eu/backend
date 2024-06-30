@@ -1,24 +1,33 @@
-// ---------- ADD IMPORTS -------------
-import {AuthenticationComponent} from '@loopback/authentication';
-//import {  JWTAuthenticationComponent} from '@loopback/authentication-jwt';
-//import {AuthenticationComponent, Strategies} from 'loopback4-authentication';
-import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
-import {CrudRestComponent} from '@loopback/rest-crud';
+import { AuthenticationComponent } from '@loopback/authentication';
+import { BootMixin } from '@loopback/boot';
+import { ApplicationConfig } from '@loopback/core';
+import { RepositoryMixin } from '@loopback/repository';
+import { RestApplication } from '@loopback/rest';
+import { CrudRestComponent } from '@loopback/rest-crud';
 import {
   RestExplorerBindings,
   RestExplorerComponent
 } from '@loopback/rest-explorer';
-import {ServiceMixin} from '@loopback/service-proxy';
+import { ServiceMixin } from '@loopback/service-proxy';
 import multer from 'multer';
 import path from 'path';
-import {MySequence} from './sequence';
-import {FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY} from './services/file-upload-service.service';
-//import { KeycloakVerifyProvider } from './modules/keycloak-verify.provider';
-import {registerAuthenticationStrategy} from '@loopback/authentication';
-import {MicadoAuthenticationStrategy} from './modules/micado-strategy'
+import { MySequence } from './sequence';
+import { FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY } from './services/file-upload-service.service';
+import { registerAuthenticationStrategy } from '@loopback/authentication';
+import { MicadoAuthenticationStrategy } from './modules/micado-strategy'
+
+
+/**
+ * The main application class for the Micado Backend application.
+ * This class sets up the application configuration, including:
+ * - CORS settings
+ * - Custom sequence handler
+ * - Static file serving
+ * - REST explorer configuration
+ * - File upload configuration
+ * - Controller and component registration
+ * - Authentication system setup
+ */
 export class MicadoBackendApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
@@ -27,12 +36,12 @@ export class MicadoBackendApplication extends BootMixin(
       origin: '*',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       preflightContinue: true,
-      allowedHeaders:['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'Access-Control-Allow-Origin'],
+      allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'Access-Control-Allow-Origin'],
       optionsSuccessStatus: 204,
       maxAge: 86400,
       credentials: false,
     }
-    
+
   }) {
     super(options);
 
@@ -62,20 +71,15 @@ export class MicadoBackendApplication extends BootMixin(
       },
     };
     this.component(CrudRestComponent);
-    // ------ ADD SNIPPET AT THE BOTTOM ---------
     // Mount authentication system
     this.component(AuthenticationComponent);
     registerAuthenticationStrategy(this, MicadoAuthenticationStrategy);
-    // Mount jwt component
-  //  this.component(JWTAuthenticationComponent);
-  // Customize authentication verify handlers
-    //this.bind(Strategies.Passport.KEYCLOAK_VERIFIER).toProvider(   KeycloakVerifyProvider,  );
   }
 
   /**
  * Configure `multer` options for file upload
  */
-  protected configureFileUpload (destination?: string) {
+  protected configureFileUpload(destination?: string) {
     // Upload files to `dist/.sandbox` by default
     destination = destination ?? path.join(__dirname, '../.sandbox');
     this.bind(STORAGE_DIRECTORY).to(destination);
