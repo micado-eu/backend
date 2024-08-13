@@ -74,7 +74,7 @@
     "sentence-engine": "^0.8.0",
     "showdown": "^2.0.4",
     "simple-git": "^3.22.0",
-    "soap": "^1.0.0",
+    "soap": "^1.1.1",
     "tslib": "^2.0.0",
     "uuid": "^9.0.1"
   },
