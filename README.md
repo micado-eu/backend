@@ -175,6 +175,35 @@ npm run build
 DEBUG=loopback:connector:postgresql npm run migrate
 ```
 
+
+## Authentication strategy
+Here is a breakdown of the auth strategy to help better understand the complexity of the authentication process:
+
+1. **Incoming Request:**
+   - A client sends a request to the REST API with an `Authorization` header containing a Bearer token.
+
+2. **Custom Sequence Handling:**
+   - The `MySequence` sequence handler takes over, executing middleware and finding the appropriate route for the request.
+
+3. **Parameter Parsing:**
+   - The request parameters are parsed and prepared for use in the controller method.
+
+4. **Authentication:**
+   - The `authenticateRequest` function, injected into the sequence handler, invokes the `MicadoAuthenticationStrategy` to authenticate the request.
+   - The `MicadoAuthenticationStrategy` extracts the JWT token from the `Authorization` header, decodes it, and validates it with Keycloak.
+   - The token validation involves sending an HTTPS request to Keycloak's user info endpoint. If Keycloak confirms the token is valid, the process continues.
+   - If the token is invalid, an error is thrown, and the request is rejected.
+
+5. **Method Invocation:**
+   - Once authenticated, the sequence handler invokes the corresponding controller method with the parsed parameters and user profile.
+
+6. **Response Sending:**
+   - The result of the controller method is sent back to the client as the response.
+
+7. **Error Handling:**
+   - If any error occurs during the process, it is caught and handled by the `reject` method, which sends an appropriate error response to the client.
+
+
 ### Funding
 
 ![EU Logo](https://github.com/micado-eu/MICADO/blob/master/img/Flag_of_Europe.svg_.png)
